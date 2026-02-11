@@ -1,1 +1,1 @@
-![Gripper_info](https://github.com/user-attachments/assets/15068425-709b-4f4c-aa60-031e8c0015c6)
+![Gripper_info](https://github.com/user-attachments/assets/f2d2c25d-c4df-4645-a85b-4264de8268e1)
