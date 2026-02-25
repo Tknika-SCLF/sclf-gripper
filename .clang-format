@@ -1,0 +1,56 @@
+# .clang-format — SCLF Gripper v1.0
+# Aplicar con: clang-format -i src/**/*.cpp src/**/*.h
+# Antigravity lo aplica automáticamente al guardar (formatOnSave: true)
+
+BasedOnStyle: Google
+Language: Cpp
+Standard: c++17
+
+# Indentación
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+
+# Ancho de línea
+ColumnLimit: 100
+
+# Llaves
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+
+# Espaciado
+SpaceBeforeParens: ControlStatements
+SpaceAfterCStyleCast: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Punteros y referencias — alineados al tipo
+PointerAlignment: Left
+
+# Includes
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+IncludeCategories:
+  # 1. Cabecera propia del .cpp
+  - Regex: '^"(encoder|motor|comms|faults|config)/'
+    Priority: 1
+  # 2. Arduino / STM32 HAL
+  - Regex: '^<(Arduino|SPI|Wire|HardwareSerial)'
+    Priority: 2
+  # 3. SimpleFOC
+  - Regex: '^<SimpleFOC'
+    Priority: 3
+  # 4. Resto del sistema
+  - Regex: '.*'
+    Priority: 4
+
+# Alineación de comentarios y trailing
+AlignTrailingComments: true
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+
+# Macros y preprocesador
+IndentPPDirectives: None

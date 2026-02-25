@@ -1,0 +1,48 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "SCLF Gripper — ST-Link Debug",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "openocd",
+            "interface": "swd",
+            "device": "STM32G474CE",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32g4x.cfg"
+            ],
+            "svdFile": "${env:HOME}/.platformio/packages/framework-arduinoststm32/system/SVD/STM32G474xx.svd",
+            "executable": "${workspaceFolder}/.pio/build/SCLF_Gripper/firmware.elf",
+            "preLaunchTask": "PlatformIO: Build",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "swoConfig": {
+                "enabled": true,
+                "cpuFrequency": 170000000,
+                "swoFrequency": 2000000,
+                "source": "probe",
+                "decoders": [
+                    {
+                        "type": "console",
+                        "label": "SWO Output",
+                        "port": 0
+                    }
+                ]
+            }
+        },
+        {
+            "name": "SCLF Gripper — Attach (ya flasheado)",
+            "type": "cortex-debug",
+            "request": "attach",
+            "servertype": "openocd",
+            "interface": "swd",
+            "device": "STM32G474CE",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32g4x.cfg"
+            ],
+            "executable": "${workspaceFolder}/.pio/build/SCLF_Gripper/firmware.elf"
+        }
+    ]
+}

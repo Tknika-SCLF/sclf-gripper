@@ -1,0 +1,37 @@
+# PlatformIO build artifacts
+.pio/
+
+# PlatformIO cache
+.pioenvs/
+.piolibdeps/
+
+# VSCode local (no compartir entre desarrolladores)
+.vscode/ipch/
+.vscode/*.log
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Python cache (PlatformIO scripts)
+__pycache__/
+*.pyc
+
+# Compilados y binarios (ya están en .pio/)
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+
+# Logs
+*.log
+
+# Archivos temporales del editor
+*.swp
+*.swo
+*~

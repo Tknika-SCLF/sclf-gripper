@@ -1,0 +1,68 @@
+{
+    // ── Editor ───────────────────────────────────────────────────────────────
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.rulers": [100],
+    "editor.renderWhitespace": "boundary",
+
+    // ── C/C++ (cpptools) ─────────────────────────────────────────────────────
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.cStandard": "c11",
+    "C_Cpp.default.intelliSenseMode": "gcc-arm",
+    "C_Cpp.default.compilerPath": "${env:HOME}/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/src",
+        "${workspaceFolder}/.pio/libdeps/SCLF_Gripper/**",
+        "${env:HOME}/.platformio/packages/framework-arduinoststm32/cores/arduino",
+        "${env:HOME}/.platformio/packages/framework-arduinoststm32/variants/STM32G4xx/G474C(B-C-E)Ux"
+    ],
+    "C_Cpp.default.defines": [
+        "STM32G474xx",
+        "ARDUINO",
+        "HAL_TIM_MODULE_ENABLED",
+        "HAL_SPI_MODULE_ENABLED",
+        "HAL_UART_MODULE_ENABLED",
+        "HAL_ADC_MODULE_ENABLED"
+    ],
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.clang_format_style": "file",
+
+    // ── PlatformIO ───────────────────────────────────────────────────────────
+    "platformio-ide.projectsDir": "${workspaceFolder}",
+    "platformio-ide.autoOpenPioHome": false,
+    "platformio-ide.disablePIOHomeStartup": true,
+
+    // ── Archivos ─────────────────────────────────────────────────────────────
+    "files.associations": {
+        "*.h":   "cpp",
+        "*.cpp": "cpp",
+        "*.ini": "ini",
+        "*.md":  "markdown"
+    },
+    "files.exclude": {
+        "**/.pio":         true,
+        "**/__pycache__":  true,
+        "**/.git":         false
+    },
+
+    // ── Terminal ─────────────────────────────────────────────────────────────
+    "terminal.integrated.env.linux": {
+        "PATH": "${env:HOME}/.platformio/penv/bin:${env:PATH}"
+    },
+    "terminal.integrated.env.windows": {
+        "PATH": "${env:USERPROFILE}\\.platformio\\penv\\Scripts;${env:PATH}"
+    },
+
+    // ── Extensiones recomendadas (recordatorio) ───────────────────────────────
+    // Instalar manualmente via .vsix en Antigravity:
+    //   1. ms-vscode.cpptools      (cpptools-<OS>.vsix)
+    //   2. platformio.platformio-ide (platformio-ide-<ver>.vsix)
+    //   3. marus25.cortex-debug    (cortex-debug.vsix) — debug ST-Link
+    //   4. ms-vscode.cmake-tools   (opcional)
+
+    // ── Git ──────────────────────────────────────────────────────────────────
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false
+}
