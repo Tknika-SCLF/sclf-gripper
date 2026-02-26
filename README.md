@@ -1,295 +1,295 @@
-# SCLF Gripper v1.0 — Firmware
+# SCLF Gripper v1.0 — Firmwarea
 
-[ Euskara ](README.eu.md) | [ English ](README.md) | [ Español ](README.es.md)
+[ Euskara ](README.md) | [ English ](README.en.md) | [ Español ](README.es.md)
 
-> Motor controller firmware for Tknika's SCLF Gripper v1.0.
+> Tknikaren SCLF Gripper v1.0-rako motor kontrolagailuaren firmwarea.
 > STM32G474CEU6 · SimpleFOC · PlatformIO · Antigravity IDE
-> License: CC BY-SA 4.0
+> Lizentzia: CC BY-SA 4.0
 
 ---
 
-## Quick Start
+## Hasiera Azkarra
 
-If you already have the environment configured:
+Ingurunea konfiguratuta baduzu dagoeneko:
 
 ```bash
-# 1. Build
+# 1. Konpilatu
 pio run
 
-# 2. Flash (with ST-Link connected)
+# 2. Flasheatu (ST-Link konektatuta)
 pio run --target upload
 
-# 3. Serial Monitor (Gripper's USB-C to PC)
+# 3. Serie-monitorea (Gripper-aren USB-C PC-ra)
 pio device monitor --baud 115200
 ```
 
 ---
 
-## Environment Setup from Scratch
+## Ingurunearen Konfigurazioa Hutsetik
 
-### Step 1 — Install Antigravity
+### 1. Urratsa — Antigravity Instalatu
 
-Download and install Antigravity from its official website. It is a fork of VSCode/Windsurf and works identically.
+Deskargatu eta instalatu Antigravity bere webgune ofizialetik. VSCode/Windsurf-en fork bat da eta modu berean funtzionatzen du.
 
 ---
 
-### Step 2 — Install C/C++ Tools
+### 2. Urratsa — C/C++ Tools Instalatu
 
-> ⚠️ PlatformIO is **not available in Open VSX** (Antigravity's marketplace). Both extensions must be installed manually from `.vsix` files.
+> ⚠️ PlatformIO **ez dago Open VSX-en** (Antigravity-ren marketplace-a). Bi hedapenak eskuz instalatu behar dira `.vsix` fitxategietatik.
 
-**2a.** Go to: https://github.com/microsoft/vscode-cpptools/releases
+**2a.** Joan hona: https://github.com/microsoft/vscode-cpptools/releases
 
-Download the file for your operating system:
+Deskargatu zure sistema eragileari dagokion fitxategia:
 
-| System | File to download |
+| Sistema | Deskargatu beharreko fitxategia |
 |---|---|
 | Windows (64-bit) | `cpptools-win32-x64.vsix` |
 | macOS (Apple Silicon) | `cpptools-osx-arm64.vsix` |
 | macOS (Intel) | `cpptools-osx-x64.vsix` |
 | Linux (64-bit) | `cpptools-linux-x64.vsix` |
 
-**2b.** In Antigravity: `Extensions (Ctrl+Shift+X)` → `···` icon (three dots) → **Install from VSIX** → select the downloaded `.vsix` file.
+**2b.** Antigravity-n: `Hedapenak / Extensions (Ctrl+Shift+X)` → `···` ikonoa (hiru puntu) → **Install from VSIX** → hautatu deskargatutako `.vsix` fitxategia.
 
 ---
 
-### Step 3 — Install PlatformIO
+### 3. Urratsa — PlatformIO Instalatu
 
-**3a.** Go to: https://github.com/platformio/platformio-vscode-ide/releases
+**3a.** Joan hona: https://github.com/platformio/platformio-vscode-ide/releases
 
-Download the latest file: `platformio-ide-X.X.X.vsix`
+Deskargatu fitxategi berriena: `platformio-ide-X.X.X.vsix`
 
-**3b.** In Antigravity: `Extensions (Ctrl+Shift+X)` → `···` → **Install from VSIX** → select `platformio-ide-X.X.X.vsix`.
+**3b.** Antigravity-n: `Hedapenak / Extensions (Ctrl+Shift+X)` → `···` → **Install from VSIX** → hautatu `platformio-ide-X.X.X.vsix`.
 
-**3c.** Restart Antigravity. PlatformIO will install its dependencies automatically the first time (may take 2-5 minutes).
+**3c.** Berrabiarazi Antigravity. PlatformIOk bere mendekotasunak automatikoki instalatuko ditu lehenengo aldian (2-5 minutu har ditzake).
 
-> ⚠️ **Important Note:** PlatformIO inside Antigravity is not officially supported. If you have build or upload issues, check the [Troubleshooting](#troubleshooting) section at the end of this document.
+> ⚠️ **Ohar garrantzitsua:** PlatformIOren instalazioa Antigravity-n ez dago ofizialki onartuta. Konpilazio edo igoera (upload) arazoak badituzu, kontsultatu [Arazoen Konponbidea](#arazoen-konponbidea) atala dokumentu honen amaieran.
 
 ---
 
-### Step 4 — Install cortex-debug (for ST-Link debugging)
+### 4. Urratsa — cortex-debug Instalatu (ST-Link-ekin debug egiteko)
 
-**4a.** Go to: https://github.com/Marus/cortex-debug/releases
+**4a.** Joan hona: https://github.com/Marus/cortex-debug/releases
 
-Download: `cortex-debug-X.X.X.vsix`
+Deskargatu: `cortex-debug-X.X.X.vsix`
 
-**4b.** Install as above (Install from VSIX).
+**4b.** Instalatu aurrekoak bezala (Install from VSIX).
 
-**4c.** Also install OpenOCD, if you don't have it. PlatformIO usually bundles it:
+**4c.** Instalatu OpenOCD ere, ez baduzu. PlatformIOk ekarri ohi du:
 ```
 ~/.platformio/packages/tool-openocd/
 ```
 
 ---
 
-### Step 5 — Open the Project
+### 5. Urratsa — Proiektua Ireki
 
 ```bash
-# Clone or copy the firmware folder
-# Open Antigravity in the root folder (where platformio.ini is located)
+# Klonatu edo kopiatu firmwarearen karpeta
+# Ireki Antigravity erro karpetan (platformio.ini dagoen lekuan)
 ```
 
-In Antigravity: `File → Open Folder` → select the `SCLF_Gripper_v1_0_firmware/` folder.
+Antigravity-n: `File → Open Folder` → hautatu `SCLF_Gripper_v1_0_firmware/` karpeta.
 
-PlatformIO will automatically detect `platformio.ini` and download the following:
+PlatformIOk automatikoki detektatuko du `platformio.ini` eta honako hauek deskargatuko ditu:
 - Platform `ststm32`
 - Framework `framework-arduinoststm32`
 - Toolchain `toolchain-gccarmnoneeabi`
-- `SimpleFOC` library
+- `SimpleFOC` liburutegia
 
 ---
 
-### Step 6 — First Build
+### 6. Urratsa — Lehenengo Konpilazioa
 
-In Antigravity's bottom bar, click PlatformIO's ✓ (Build) icon, or from the terminal:
+Antigravity-ren beheko barran, egin klik PlatformIOren ✓ (Build) ikonoan, edo terminaletik:
 
 ```bash
 pio run
 ```
 
-**Expected output:**
+**Espero den emaitza:**
 ```
 [SUCCESS] Took X.XX seconds
 RAM:   [=         ]  X.X% (used XXXX bytes from 131072 bytes)
 Flash: [=         ]  X.X% (used XXXXX bytes from 524288 bytes)
 ```
 
-If it fails to build → see [Troubleshooting](#troubleshooting).
+Konpilatzen ez badu → ikusi [Arazoen Konponbidea](#arazoen-konponbidea).
 
 ---
 
-### Step 7 — Connect ST-Link and Flash
+### 7. Urratsa — ST-Link Konektatu eta Flasheatu
 
-Connect the ST-Link to the SCLF Gripper's SWD port:
+Konektatu ST-Link SCLF Gripper-aren SWD atakara:
 
-| ST-Link pin | Gripper pad | Signal |
+| ST-Link pin | Gripper pad | Seinalea |
 |---|---|---|
 | SWDIO | DIO | PA13 |
 | SWCLK | CLK | PA14 |
 | RST | RST | PG10 |
 | GND | GND | — |
-| 3.3V | — | (power the board separately with 24V) |
+| 3.3V | — | (plaka bereizita elikatu 24V-rekin) |
 
-> ⚠️ **Do not power the board from the ST-Link**. Use an external 24V power supply from the robot or a desktop PSU.
+> ⚠️ **Ez elikatu plaka ST-Link-etik**. Erabili 24V-ko kanpo elikadura robota edo elikadura iturritik.
 
-Flash:
+Flasheatu:
 ```bash
 pio run --target upload
 ```
 
-**Expected output:** LED (PC6) will start blinking every 500ms.
+**Espero den emaitza:** LEDa (PC6) 500ms-ro keinu egiten hasiko da.
 
 ---
 
-### Step 8 — Verify USB VCP
+### 8. Urratsa — USB VCP Egiaztatu
 
-1. Connect a USB-C cable between the Gripper and the PC.
-2. Open PlatformIO's serial monitor (🔌 icon in the bottom bar) or:
+1. Konektatu USB-C kable bat Gripperraren eta PCaren artean.
+2. Ireki PlatformIOren serie-monitorea (🔌 ikonoa beheko barran) edo:
    ```bash
    pio device monitor --baud 115200
    ```
-3. You should see this:
+3. Hau ikusi beharko zenuke:
    ```
    ========================================
-     SCLF Gripper v1.0 — Firmware PHASE 0
+     SCLF Gripper v1.0 — Firmwarea 0 FASEA
    ========================================
      MCU: STM32G474CEU6 @ 170 MHz
-     State: SMOKE TEST (No FOC, No motor)
+     Egoera: SMOKE TEST (FOC gabe, motor gabe)
    ========================================
-     Pins initialized correctly.
+     Pinak ondo hasieratu dira.
    [0s] loops/s≈XXXXX  LED=ON
    [1s] loops/s≈XXXXX  LED=OFF
    ```
 
-✅ **If you see this, the environment is 100% operational.** Update `MEMORY.md` and mark PHASE 0 tasks as completed in `TASKS.md`.
+✅ **Hau ikusten baduzu, ingurunea %100 operatibo dago.** Eguneratu `MEMORY.md` eta markatu 0 FASEKO zereginak beteta bezala `TASKS.md`-n.
 
 ---
 
-### Step 9 — Configure AI Agent
+### 9. Urratsa — IA Agentea Konfiguratu
 
-To work with Antigravity's built-in AI assistant:
+Antigravity-n barneratuta dagoen IA laguntzailearekin lan egiteko:
 
-1. Open the agent's chat panel (AI icon in the sidebar).
-2. At the beginning of each session, paste:
+1. Ireki agentearen txat-panela (IA ikonoa alboko barran).
+2. Saio bakoitzaren hasieran, idatzi:
 
 ```
-Read these context files before helping:
-- AGENT.md   (hardware, pins, architecture)
-- MEMORY.md  (persistent state, calibrated parameters)
-- TASKS.md   (the task I'm working on now)
-- RULES.md   (rules generated code must respect)
+Irakurri testuinguru-fitxategi hauek lagundu aurretik:
+- AGENT.md   (hardwarea, pinak, arkitektura)
+- MEMORY.md  (uneko egoera, kalibratutako parametroak)
+- TASKS.md   (orain lantzen ari naizen zeregina)
+- RULES.md   (sortutako kodeak errespetatu behar dituen arauak)
 ```
 
-3. Then, describe which task you want to tackle from `TASKS.md`.
+3. Gero, deskribatu zein zeregin landu nahi duzun `TASKS.md`-tik.
 
 ---
 
-## Project Structure
+## Proiektuaren Egitura
 
 ```
 SCLF_Gripper_v1_0_firmware/
 │
 ├── src/
-│   ├── main.cpp                    ← Entry point. PHASE 0: smoke test
+│   ├── main.cpp                    ← Sarrera puntua. 0 FASEA: smoke test
 │   ├── config/
-│   │   └── pins.h                  ← ALL Pins. Verified against schematic.
+│   │   └── pins.h                  ← Pin GUZTIAK. Eskematikoarekin egiaztatuta.
 │   ├── encoder/
-│   │   ├── MT6701.h                ← Encoder API (skeleton ready)
-│   │   └── MT6701.cpp              ← Implement in PHASE 1.1
+│   │   ├── MT6701.h                ← Encoder-aren APIa (eskeletoa prest)
+│   │   └── MT6701.cpp              ← 1.1 FASEAN inplementatu
 │   ├── motor/
-│   │   ├── DRV8316.h               ← Gate driver API (skeleton ready)
-│   │   └── DRV8316.cpp             ← Implement in PHASE 1.2
+│   │   ├── DRV8316.h               ← Gate driver-aren APIa (eskeletoa prest)
+│   │   └── DRV8316.cpp             ← 1.2 FASEAN inplementatu
 │   ├── comms/
-│   │   ├── RS485.h                 ← RS-485 API (skeleton ready)
-│   │   └── RS485.cpp               ← Implement in PHASE 1.4
+│   │   ├── RS485.h                 ← RS-485 APIa (eskeletoa prest)
+│   │   └── RS485.cpp               ← 1.4 FASEAN inplementatu
 │   └── faults/
-│       ├── FaultManager.h          ← Fault manager API (skeleton ready)
-│       └── FaultManager.cpp        ← Implement in PHASE 6
+│       ├── FaultManager.h          ← Akats kudeatzailearen APIa (eskeletoa prest)
+│       └── FaultManager.cpp        ← 6 FASEAN inplementatu
 │
-├── lib/                            ← Local libraries (currently empty)
-├── test/                           ← PlatformIO Unity tests (PHASE 8)
+├── lib/                            ← Bertako liburutegiak (oraindik hutsik)
+├── test/                           ← PlatformIO Unity testak (8 FASEA)
 │
 ├── .vscode/
-│   ├── settings.json               ← IDE config (IntelliSense, formatting)
-│   ├── extensions.json             ← Recommended extensions
-│   └── launch.json                 ← Debug ST-Link with cortex-debug
+│   ├── settings.json               ← IDE konfigurazioa (IntelliSense, formatua)
+│   ├── extensions.json             ← Gomendatutako hedapenak
+│   └── launch.json                 ← Debug ST-Link cortex-debug-ekin
 │
-├── platformio.ini                  ← Build and upload config
-├── .clang-format                   ← Code style (applied on save)
+├── platformio.ini                  ← Build eta upload konfigurazioa
+├── .clang-format                   ← Kode estiloa (gordetzean aplikatzen da)
 ├── .gitignore
 │
-├── AGENT.md    ← 📋 Context for the AI agent
-├── MEMORY.md   ← 🧠 Persistent project state
-├── TASKS.md    ← ✅ Full backlog by phases
-├── RULES.md    ← 📏 Project rules
-└── SRS.md      ← 📄 Software Requirements Specification
+├── AGENT.md    ← 📋 IA agentearentzako testuingurua
+├── MEMORY.md   ← 🧠 Proiektuaren egoera iraunkorra
+├── TASKS.md    ← ✅ Backlog osoa faseka
+├── RULES.md    ← 📏 Proiektuaren arauak
+└── SRS.md      ← 📄 Eskakizunen zehaztapena
 ```
 
 ---
 
-## Most Used PlatformIO Commands
+## PlatformIO Komando Erabilienak
 
 ```bash
-pio run                          # Build
-pio run --target upload          # Build and flash (ST-Link)
-pio run --target upload_dfu      # Flash via USB DFU (BOOT + RST)
-pio device monitor               # Serial monitor (USB VCP, 115200 baud)
-pio test                         # Run unit tests
-pio run --target clean           # Clean build artifacts
-pio lib install "Simple FOC"     # Install library manually
-pio pkg update                   # Update platform and libraries
+pio run                          # Konpilatu
+pio run --target upload          # Konpilatu eta flasheatu (ST-Link)
+pio run --target upload_dfu      # USB DFU bidez flasheatu (BOOT + RST)
+pio device monitor               # Serie-monitorea (USB VCP, 115200 baud)
+pio test                         # Test unitarioak exekutatu
+pio run --target clean           # Konpilazio-artefaktuak garbitu
+pio lib install "Simple FOC"     # Eskuz instalatu liburutegia
+pio pkg update                   # Plataforma eta liburutegiak eguneratu
 ```
 
 ---
 
-## DFU Bootloader (Flash without ST-Link)
+## DFU Bootloader (Flasheatu ST-Link gabe)
 
-If you don't have an ST-Link available, you can flash via USB DFU:
+ST-Link erabilgarririk ez baduzu, USB DFU bidez flashea dezakezu:
 
-1. Press and hold the **BOOT** (PB8) button.
-2. Press and release the **RESET** (PG10) button.
-3. Release **BOOT**.
-4. The Gripper will appear as a DFU device on the PC.
-5. Change to `upload_protocol = dfu` in `platformio.ini`.
-6. Run `pio run --target upload`.
+1. Mantendu sakatuta **BOOT** (PB8) botoia.
+2. Sakatu eta askatu **RESET** (PG10) botoia.
+3. Askatu **BOOT**.
+4. Gripperra DFU gailu gisa agertuko da PCan.
+5. Aldatu `upload_protocol = dfu` fitxategian `platformio.ini`.
+6. Exekutatu `pio run --target upload`.
 
 ---
 
-## Troubleshooting
+## Arazoen Konponbidea
 
-### PlatformIO fails to build / toolchain error
+### PlatformIOk ez du konpilatzen / toolchain errorea
 ```bash
-# Reinstall STM32 platform
+# STM32 plataforma berrinstalatu
 pio platform install ststm32
 
-# Clean and rebuild
+# Garbitu eta berriro konpilatu
 pio run --target clean && pio run
 ```
 
-### ST-Link does not detect the board
-- Verify ST-Link GND is connected to Gripper GND.
-- Verify board is powered (PWR LED is on).
-- Try `openocd -f interface/stlink.cfg -f target/stm32g4x.cfg` in the terminal.
-- If OpenOCD fails: update ST-Link firmware via STM32CubeProgrammer.
+### ST-Link-ek ez du plaka detektatzen
+- Egiaztatu ST-Link-eko GNDa gripperreko GND-ra konektatuta dagoela.
+- Egiaztatu plakak elikadura duela (PWR LEDa piztuta).
+- Probatu `openocd -f interface/stlink.cfg -f target/stm32g4x.cfg` terminalean.
+- OpenOCD-k huts egiten badu: eguneratu ST-Link firmwarea STM32CubeProgrammer-etik.
 
-### USB VCP does not appear on PC
-- Install STM32 VCP driver: https://www.st.com/en/development-tools/stsw-stm32102.html (Windows only)
-- No driver needed on Linux/macOS. Check with `ls /dev/ttyACM*`.
+### USB VCP ez da agertzen PCan
+- Instalatu STM32 VCP kontrolatzailea (driverra): https://www.st.com/en/development-tools/stsw-stm32102.html (Windows soilik)
+- Linux/macOS sistemetan ez dago kontrolatzailerik behar. Egiaztatu `ls /dev/ttyACM*` erabiliz.
 
-### IntelliSense cannot find `Arduino.h` or STM32 headers
-- Wait for PlatformIO to finish its first build (generates includes index).
-- If issue persists: `Ctrl+Shift+P` → "C/C++: Reset IntelliSense Database".
+### IntelliSense-k ez du `Arduino.h` edo STM32 header-ak aurkitzen
+- Itxaron PlatformIOk lehenengo konpilazioa amaitu arte (includes indizea sortzen du).
+- Arazoak jarraitzen badu: `Ctrl+Shift+P` → "C/C++: Reset IntelliSense Database".
 
-### Antigravity / PlatformIO fails to communicate with board
-- This is a known issue documented by the community. PlatformIO in Antigravity
-  is not officially supported. If building works but upload fails,
-  try running `pio run --target upload` **from the internal terminal** instead
-  of using the PlatformIO UI button.
+### Antigravity / PlatformIO ez da plakarekin komunikatzen
+- Hau komunitatean dokumentatuta dagoen arazo ezaguna da. PlatformIO Antigravity-n
+  ez dago ofizialki onartuta. Konpilazioak funtzionatzen badu baina igotzeak (upload) huts egiten badu,
+  saiatu `pio run --target upload` exekutatzen **barne terminaletik**, PlatformIOko
+  UI botoiaren ordez.
 
 ---
 
-## Reference Hardware
+## Erreferentziazko Hardwarea
 
-| Component | Part | Datasheet |
+| Osagaia | Zatia | Datasheet-a |
 |---|---|---|
 | MCU | STM32G474CEU6 | [ST.com](https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf) |
 | Gate Driver | DRV8316CRRGFR | [TI.com](https://www.ti.com/lit/ds/symlink/drv8316.pdf) |
@@ -299,4 +299,4 @@ pio run --target clean && pio run
 
 ---
 
-*Designed by Tknika — Licensed under CC BY-SA 4.0*
+*Tknikak diseinatua — Licensed under CC BY-SA 4.0*

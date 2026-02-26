@@ -1,6 +1,6 @@
 # SCLF Gripper v1.0 — Firmware
 
-[ Euskara ](README.eu.md) | [ English ](README.md) | [ Español ](README.es.md)
+[ Euskara ](README.md) | [ English ](README.en.md) | [ Español ](README.es.md)
 
 > Firmware del controlador de motor para el SCLF Gripper v1.0 de Tknika.
 > STM32G474CEU6 · SimpleFOC · PlatformIO · IDE Antigravity
