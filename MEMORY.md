@@ -1,40 +1,113 @@
 # MEMORY.md — SCLF Gripper v1.0 Firmware
-> Estado persistente del proyecto entre sesiones de desarrollo.
-> **Actualizar este fichero al final de cada sesión productiva.**
-> El agente de IA debe leer este fichero al inicio de cada sesión.
+> Proiektuaren egoera iraunkorra garapen saioen artean.
+> **Fitxategi hau eguneratu saio produktibo bakoitzaren amaieran.**
+> IA agenteak fitxategi hau irakurri behar du saio bakoitzaren hasieran.
 
 ---
 
-## Estado Actual del Proyecto
+## Proiektuaren Uneko Egoera
 
-| Campo | Valor |
+| Eremua | Balioa |
 |---|---|
-| **Fase activa** | FASE 1 — Inicialización FOC y Hardware |
-| **Última actualización** | 2026-02-25 |
-| **Compilación** | ✅ Exitosa. Solucionados bugs de PlatformIO (MAX_PATH y Unicode Linker). |
-| **Hardware conectado** | ⏳ Pendiente probar subida (Upload) con ST-Link |
-| **Motor probado** | ❌ No |
+| **Fase aktiboa** | FASE 0 — Ingurunea eta Scaffolding |
+| **Azken eguneraketa** | 2026-02-26 |
+| **Konpilazioa** | ✅ Egiaztatuta (Ondo konpilatzen du) |
+| **Konektatutako hardwarea** | ⏳ ST-Link bidezko lehen konexioaren zain |
+| **Motorra probatuta** | ❌ Ez |
 
 ---
 
-## Entorno de Desarrollo
+## Garapen Ingurunea
 
-| Campo | Valor |
+| Eremua | Balioa |
 |---|---|
-| IDE | Antigravity / Solucionado bug Unicode en PlatformIO |
-| PlatformIO Core | Configurado en `C:/Users/Public/.pio_core` para evitar MAX_PATH limits |
+| IDE | Antigravity (Windsurf/VSCode fork-a) |
+| PlatformIO | ✅ Instalatuta |
+| cpptools | ✅ Instalatuta |
+| cortex-debug | ✅ Instalatuta |
+| Garatzailearen OS | Windows |
+| ST-Link bertsioa | Ezezaguna — baieztatu |
+
+### `.vsix` deskarga estekak
+- cpptools: https://github.com/microsoft/vscode-cpptools/releases
+- platformio-ide: https://github.com/platformio/platformio-vscode-ide/releases
 
 ---
 
-(Esquemático, Pin Map y Parámetros del Motor sin cambios)
+## Egiaztatutako Hardwarea
+
+### Eskematikoa
+- **Fitxategia:** `SCLF_Gripper_v1_0.kicad_sch` ✅ Analizatuta
+- **PCB:** `SCLF_Gripper_v1_0.kicad_pcb` ✅ Eskuragarri
+- **BOM:** `SCLF_Gripper_v1_0_bom.csv` ✅ Analizatuta
+
+### Eskematikoko aurkikuntza kritikoak
+1. DRV8316-ren `nFAULT` **EZ DAGO KONEKTATUTA** STM32-ra — soilik tokiko pull-up
+2. DRV8316-ren `DRVOFF` **GND**-ra konektatuta — driverra beti gaituta
+3. MAX3485-en `DE/RE` = **PB9** (`RS485_DIR`)
+4. SPI1 partekatua: DRV8316 (CS=PC4) + MT6701 (CS=PA4) bus berean PB3/PB4/PB5
+5. PB6, PB7, PA15 izendatutako net gisa agertzen dira baina **funtziorik gabe** — erreserbatuta
 
 ---
 
-## Parámetros FOC Calibrados
+## Baieztatutako Pin Map-a
 
-> Rellenar tras ejecutar `motor.initFOC()` por primera vez.
+| STM32 Pin | Net | Funtzioa |
+|---|---|---|
+| PA0 | CURA | Phase A current sense ADC |
+| PA1 | CURB | Phase B current sense ADC |
+| PA2 | CURC | Phase C current sense ADC (test pad) |
+| PA4 | ENC_CS | MT6701 encoder SPI CS |
+| PA5 | ENC_CLK | MT6701 encoder SPI CLK |
+| PA6 | ENC_SDO | MT6701 encoder SPI MISO |
+| PA8 | CH | Phase C High PWM |
+| PA9 | BH | Phase B High PWM |
+| PA10 | AH | Phase A High PWM |
+| PA11 | D- | USB D- |
+| PA12 | D+ | USB D+ |
+| PA13 | SWDIO | SWD programming |
+| PA14 | SWCLK | SWD programming |
+| PB3 | DRV_CLK | DRV8316 SPI CLK (SPI1) |
+| PB4 | DRV_MISO | DRV8316 SPI MISO (SPI1) |
+| PB5 | DRV_MOSI | DRV8316 SPI MOSI (SPI1) |
+| PB8 | BOOT0 | Boot button (DFU mode) |
+| PB9 | RS485_DIR | RS-485 DE/RE direction |
+| PB11 | VSENS | DC bus voltage sense |
+| PB13 | AL | Phase A Low PWM |
+| PB14 | BL | Phase B Low PWM |
+| PB15 | CL | Phase C Low PWM |
+| PC4 | DRV_CS | DRV8316 SPI CS |
+| PC6 | LED_PC6 | Status LED |
+| PC10 | RS485_TX | RS-485 UART TX |
+| PC11 | RS485_RX | RS-485 UART RX |
+| PF0 | XIN | Crystal 16 MHz OSC_IN |
+| PF1 | XOUT | Crystal 16 MHz OSC_OUT |
+| PG10 | RST | Reset button / SWD RST |
 
-| Parámetro | Valor | Fecha |
+---
+
+## Motorraren Parametroak
+
+> ⚠️ Bete erabiliko den motor zehatza ezagutzen denean.
+
+| Parametroa | Balioa | Egoera |
+|---|---|---|
+| Fabrikatzailea/Modeloa | ? | ⏳ Zain |
+| Mota | BLDC / PMSM | — |
+| Polo pare kopurua | ? | ⏳ Zain |
+| Fase-erresistentzia (Ω) | ? | ⏳ Zain |
+| Fase-induktantzia (mH) | ? | ⏳ Zain |
+| Korronte izendatua (A) | ? | ⏳ Zain |
+| Korronte-gailurra (A) | ? | ⏳ Zain |
+| Abiadura maximoa (rpm) | ? | ⏳ Zain |
+
+---
+
+## Kalibratutako FOC Parametroak
+
+> Bete `motor.initFOC()` lehen aldiz exekutatu ondoren.
+
+| Parametroa | Balioa | Data |
 |---|---|---|
 | `zero_electric_angle` | ? | — |
 | `sensor_direction` | ? | — |
@@ -43,67 +116,75 @@
 
 ---
 
-## PID Gains Activos
+## PID Irabazi Aktiboak
 
-> Empezar con valores conservadores. Actualizar aquí cada vez que se cambien.
+> Balio kontserbadoreekin hasi. Hemen eguneratu aldatzen diren bakoitzean.
 
 ### Torque / Current loop
-| Gain | Valor | Notas |
+| Irabazia | Balioa | Oharrak |
 |---|---|---|
-| KP | 0.5 | Inicial conservador |
-| KI | 10.0 | Inicial conservador |
+| KP | 0.5 | Hasierakoa (kontserbadorea) |
+| KI | 10.0 | Hasierakoa (kontserbadorea) |
 | KD | 0.0 | — |
 
 ### Velocity loop
-| Gain | Valor | Notas |
+| Irabazia | Balioa | Oharrak |
 |---|---|---|
-| KP | 0.1 | Inicial conservador |
-| KI | 1.0 | Inicial conservador |
+| KP | 0.1 | Hasierakoa (kontserbadorea) |
+| KI | 1.0 | Hasierakoa (kontserbadorea) |
 | KD | 0.0 | — |
 
 ### Position loop
-| Gain | Valor | Notas |
+| Irabazia | Balioa | Oharrak |
 |---|---|---|
-| KP | 5.0 | Inicial conservador |
+| KP | 5.0 | Hasierakoa (kontserbadorea) |
 | KI | 0.0 | — |
 | KD | 0.0 | — |
 
 ---
 
-## Límites de Seguridad Activos
+## Segurtasun Muga Aktiboak
 
-| Parámetro | Valor actual | Máximo permitido |
+| Parametroa | Uneko balioa | Baimendutako maximoa |
 |---|---|---|
-| `motor.voltage_limit` | 2.0 V | — (ajustar con motor real) |
-| `motor.current_limit` | 1.0 A | — (ajustar con motor real) |
-| `motor.velocity_limit` | 10.0 rad/s | — (ajustar con motor real) |
+| `motor.voltage_limit` | 2.0 V | — (motor errealarekin doitu) |
+| `motor.current_limit` | 1.0 A | — (motor errealarekin doitu) |
+| `motor.velocity_limit` | 10.0 rad/s | — (motor errealarekin doitu) |
 
 ---
 
-## Versiones de Librerías Verificadas
+## Egiaztatutako Liburutegi Bertsioak
 
-| Librería | Versión | Estado |
+| Liburutegia | Bertsioa | Egoera |
 |---|---|---|
-| SimpleFOC | `v2.3.3` (Git fetch) | ✅ Compila / Ruta forzada por bugs LDF Windows |
-| STM32duino (platform) | latest | ✅ Compila |
+| SimpleFOC | ^2.3.3 | ✅ Probatuta (Konpilazioa OK) |
+| STM32duino (platform) | latest | ✅ Probatuta (Konpilazioa OK) |
+| cpptools | 1.23.6 | ✅ Instalatuta |
+| platformio-ide | 3.3.4 | ✅ Instalatuta |
 
 ---
 
-## Sesiones de Desarrollo
+## Garapen Saioak
 
-### 2026-02-25 — Sesión inicial y Hardware Init
-- ✅ Analizado esquemático KiCad completo y pines Mapeados.
-- ✅ Escrito el código inicial en `src/main.cpp` (DRV8316 + MT6701 SPI).
-- ✅ Solucionados bugs críticos de PlatformIO en Windows (Unicode linker crash y MAX_PATH limit) redirigiendo el `core_dir` a `C:/Users/Public`.
-- ✅ Compilación de firmware exitosa (`firmware.elf` y `.bin`).
-- ⏳ Pendiente probar comando de subida (pio run -t upload) con placa conectada.
+### 2026-02-25 — Hasierako saioa
+- ✅ KiCad eskematiko osoa analizatuta
+- ✅ STM32 pin guztiak egiaztatuta eskematikoarekin
+- ✅ Sortuak: `SRS.md`, `AGENT.md`, `TASKS.md`, `RULES.md`, `MEMORY.md`, `pins.h`, `platformio.ini`
+- ⏳ Zain: PlatformIO instalatzea Antigravityn eta lehen konpilazioa egiaztatzea
+
+### 2026-02-26 — Euskera Garapena eta Konpilazioa Egiaztatzea
+- ✅ Proiektuaren dokumentazioa Euskerara itzulia (garapena Euskeraz jarraitzeko).
+- ✅ README-ak hiru hizkuntzatan egituratuta (EN, EU, ES).
+- ✅ Firmwarea ondo konpilatzen dela egiaztatuta PlatformIO-ren bidez azken mendetasunekin.
+
+### YYYY-MM-DD — [bete beharrekoa]
+- ...
 
 ---
 
-## Notas y Decisiones Pendientes
+## Oharrak eta Erabakiak (Zain)
 
-- [ ] Confirmar el modelo exacto de motor BLDC que se usará con el gripper
-- [ ] Confirmar si PB6/PB7/PA15 tienen función en el diseño final o son reservas
-- [ ] Confirmar OS del desarrollador para descargar la versión correcta de `.vsix`
-- [ ] Decidir si el ID RS-485 del dispositivo se configura por hardware (DIP switch?) o por comando software
-- [ ] Decidir frecuencia de polling del DRV8316 STATUS (cada loop? cada 10 ms?)
+- [ ] Baieztatu gripperrarekin erabiliko den BLDC motorraren eredu zehatza
+- [ ] Baieztatu PB6/PB7/PA15 funtziorik daukaten azken diseinuan ala erreserbak diren
+- [ ] Erabaki gailuaren RS-485 IDa hardware bidez (DIP switch?) ala software komando bidez konfiguratzen den
+- [ ] Erabaki DRV8316 STATUS-aren polling maiztasuna (loop bakoitzeko? 10 ms-ro?)
