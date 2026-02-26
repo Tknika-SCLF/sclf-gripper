@@ -1,293 +1,295 @@
 # SCLF Gripper v1.0 — Firmware
 
-> Motor controller firmware para el SCLF Gripper v1.0 de Tknika.
+[ Euskara ](README.eu.md) | [ English ](README.md) | [ Español ](README.es.md)
+
+> Motor controller firmware for Tknika's SCLF Gripper v1.0.
 > STM32G474CEU6 · SimpleFOC · PlatformIO · Antigravity IDE
-> Licencia: CC BY-SA 4.0
+> License: CC BY-SA 4.0
 
 ---
 
-## Inicio Rápido
+## Quick Start
 
-Si ya tienes el entorno configurado:
+If you already have the environment configured:
 
 ```bash
-# 1. Compilar
+# 1. Build
 pio run
 
-# 2. Flashear (ST-Link conectado)
+# 2. Flash (with ST-Link connected)
 pio run --target upload
 
-# 3. Monitor serie (USB-C del gripper al PC)
+# 3. Serial Monitor (Gripper's USB-C to PC)
 pio device monitor --baud 115200
 ```
 
 ---
 
-## Configuración del Entorno desde Cero
+## Environment Setup from Scratch
 
-### Paso 1 — Instalar Antigravity
+### Step 1 — Install Antigravity
 
-Descarga e instala Antigravity desde su web oficial. Es un fork de VSCode/Windsurf y funciona igual.
+Download and install Antigravity from its official website. It is a fork of VSCode/Windsurf and works identically.
 
 ---
 
-### Paso 2 — Instalar C/C++ Tools
+### Step 2 — Install C/C++ Tools
 
-> ⚠️ PlatformIO **no está en Open VSX** (el marketplace de Antigravity). Hay que instalar ambas extensiones manualmente desde archivos `.vsix`.
+> ⚠️ PlatformIO is **not available in Open VSX** (Antigravity's marketplace). Both extensions must be installed manually from `.vsix` files.
 
-**2a.** Ve a: https://github.com/microsoft/vscode-cpptools/releases
+**2a.** Go to: https://github.com/microsoft/vscode-cpptools/releases
 
-Descarga el archivo correspondiente a tu sistema operativo:
+Download the file for your operating system:
 
-| Sistema | Archivo a descargar |
+| System | File to download |
 |---|---|
 | Windows (64-bit) | `cpptools-win32-x64.vsix` |
 | macOS (Apple Silicon) | `cpptools-osx-arm64.vsix` |
 | macOS (Intel) | `cpptools-osx-x64.vsix` |
 | Linux (64-bit) | `cpptools-linux-x64.vsix` |
 
-**2b.** En Antigravity: `Extensiones (Ctrl+Shift+X)` → icono `···` (tres puntos) → **Install from VSIX** → selecciona el archivo `.vsix` descargado.
+**2b.** In Antigravity: `Extensions (Ctrl+Shift+X)` → `···` icon (three dots) → **Install from VSIX** → select the downloaded `.vsix` file.
 
 ---
 
-### Paso 3 — Instalar PlatformIO
+### Step 3 — Install PlatformIO
 
-**3a.** Ve a: https://github.com/platformio/platformio-vscode-ide/releases
+**3a.** Go to: https://github.com/platformio/platformio-vscode-ide/releases
 
-Descarga el archivo más reciente: `platformio-ide-X.X.X.vsix`
+Download the latest file: `platformio-ide-X.X.X.vsix`
 
-**3b.** En Antigravity: `Extensiones (Ctrl+Shift+X)` → `···` → **Install from VSIX** → selecciona `platformio-ide-X.X.X.vsix`.
+**3b.** In Antigravity: `Extensions (Ctrl+Shift+X)` → `···` → **Install from VSIX** → select `platformio-ide-X.X.X.vsix`.
 
-**3c.** Reinicia Antigravity. PlatformIO instalará sus dependencias automáticamente la primera vez (puede tardar 2-5 minutos).
+**3c.** Restart Antigravity. PlatformIO will install its dependencies automatically the first time (may take 2-5 minutes).
 
-> ⚠️ **Aviso importante:** La instalación de PlatformIO en Antigravity no está oficialmente soportada. Si encuentras problemas de compilación o upload, consulta la sección [Resolución de Problemas](#resolución-de-problemas) al final de este documento.
+> ⚠️ **Important Note:** PlatformIO inside Antigravity is not officially supported. If you have build or upload issues, check the [Troubleshooting](#troubleshooting) section at the end of this document.
 
 ---
 
-### Paso 4 — Instalar cortex-debug (debug con ST-Link)
+### Step 4 — Install cortex-debug (for ST-Link debugging)
 
-**4a.** Ve a: https://github.com/Marus/cortex-debug/releases
+**4a.** Go to: https://github.com/Marus/cortex-debug/releases
 
-Descarga: `cortex-debug-X.X.X.vsix`
+Download: `cortex-debug-X.X.X.vsix`
 
-**4b.** Instala igual que las anteriores (Install from VSIX).
+**4b.** Install as above (Install from VSIX).
 
-**4c.** Instala también OpenOCD si no lo tienes. PlatformIO suele incluirlo:
+**4c.** Also install OpenOCD, if you don't have it. PlatformIO usually bundles it:
 ```
 ~/.platformio/packages/tool-openocd/
 ```
 
 ---
 
-### Paso 5 — Abrir el proyecto
+### Step 5 — Open the Project
 
 ```bash
-# Clona o copia la carpeta del firmware
-# Abre Antigravity en la carpeta raíz (donde está platformio.ini)
+# Clone or copy the firmware folder
+# Open Antigravity in the root folder (where platformio.ini is located)
 ```
 
-En Antigravity: `File → Open Folder` → selecciona la carpeta `SCLF_Gripper_v1_0_firmware/`
+In Antigravity: `File → Open Folder` → select the `SCLF_Gripper_v1_0_firmware/` folder.
 
-PlatformIO detectará el `platformio.ini` automáticamente y descargará:
+PlatformIO will automatically detect `platformio.ini` and download the following:
 - Platform `ststm32`
 - Framework `framework-arduinoststm32`
 - Toolchain `toolchain-gccarmnoneeabi`
-- Librería `SimpleFOC`
+- `SimpleFOC` library
 
 ---
 
-### Paso 6 — Primera compilación
+### Step 6 — First Build
 
-En la barra inferior de Antigravity, haz clic en el icono ✓ (Build) de PlatformIO, o desde terminal:
+In Antigravity's bottom bar, click PlatformIO's ✓ (Build) icon, or from the terminal:
 
 ```bash
 pio run
 ```
 
-**Resultado esperado:**
+**Expected output:**
 ```
 [SUCCESS] Took X.XX seconds
 RAM:   [=         ]  X.X% (used XXXX bytes from 131072 bytes)
 Flash: [=         ]  X.X% (used XXXXX bytes from 524288 bytes)
 ```
 
-Si no compila → ver [Resolución de Problemas](#resolución-de-problemas).
+If it fails to build → see [Troubleshooting](#troubleshooting).
 
 ---
 
-### Paso 7 — Conectar el ST-Link y flashear
+### Step 7 — Connect ST-Link and Flash
 
-Conecta el ST-Link al puerto SWD del SCLF Gripper:
+Connect the ST-Link to the SCLF Gripper's SWD port:
 
-| ST-Link pin | Gripper pad | Señal |
+| ST-Link pin | Gripper pad | Signal |
 |---|---|---|
 | SWDIO | DIO | PA13 |
 | SWCLK | CLK | PA14 |
 | RST | RST | PG10 |
 | GND | GND | — |
-| 3.3V | — | (alimentar la placa por separado con 24V) |
+| 3.3V | — | (power the board separately with 24V) |
 
-> ⚠️ **No alimentar la placa desde el ST-Link**. Usar 24V externos desde el robot o fuente de alimentación.
+> ⚠️ **Do not power the board from the ST-Link**. Use an external 24V power supply from the robot or a desktop PSU.
 
-Flashear:
+Flash:
 ```bash
 pio run --target upload
 ```
 
-**Resultado esperado:** El LED (PC6) empieza a parpadear cada 500ms.
+**Expected output:** LED (PC6) will start blinking every 500ms.
 
 ---
 
-### Paso 8 — Verificar USB VCP
+### Step 8 — Verify USB VCP
 
-1. Conecta un cable USB-C entre el Gripper y el PC.
-2. Abre el monitor serie de PlatformIO (icono 🔌 en la barra inferior) o:
+1. Connect a USB-C cable between the Gripper and the PC.
+2. Open PlatformIO's serial monitor (🔌 icon in the bottom bar) or:
    ```bash
    pio device monitor --baud 115200
    ```
-3. Deberías ver:
+3. You should see this:
    ```
    ========================================
-     SCLF Gripper v1.0 — Firmware FASE 0
+     SCLF Gripper v1.0 — Firmware PHASE 0
    ========================================
      MCU: STM32G474CEU6 @ 170 MHz
-     Estado: SMOKE TEST (sin FOC, sin motor)
+     State: SMOKE TEST (No FOC, No motor)
    ========================================
-     Pines inicializados correctamente.
+     Pins initialized correctly.
    [0s] loops/s≈XXXXX  LED=ON
    [1s] loops/s≈XXXXX  LED=OFF
    ```
 
-✅ **Si ves esto, el entorno está 100% operativo.** Actualiza `MEMORY.md` y marca las tareas de FASE 0 como completadas en `TASKS.md`.
+✅ **If you see this, the environment is 100% operational.** Update `MEMORY.md` and mark PHASE 0 tasks as completed in `TASKS.md`.
 
 ---
 
-### Paso 9 — Configurar el agente de IA
+### Step 9 — Configure AI Agent
 
-Para trabajar con el asistente de IA integrado en Antigravity:
+To work with Antigravity's built-in AI assistant:
 
-1. Abre el panel de chat del agente (icono de IA en la barra lateral).
-2. Al inicio de cada sesión, escribe:
+1. Open the agent's chat panel (AI icon in the sidebar).
+2. At the beginning of each session, paste:
 
 ```
-Lee los siguientes ficheros de contexto antes de ayudarme:
-- AGENT.md   (hardware, pines, arquitectura)
-- MEMORY.md  (estado actual, parámetros calibrados)
-- TASKS.md   (tarea en la que estoy trabajando ahora)
-- RULES.md   (reglas que debe respetar el código generado)
+Read these context files before helping:
+- AGENT.md   (hardware, pins, architecture)
+- MEMORY.md  (persistent state, calibrated parameters)
+- TASKS.md   (the task I'm working on now)
+- RULES.md   (rules generated code must respect)
 ```
 
-3. Luego describe qué tarea de `TASKS.md` quieres trabajar.
+3. Then, describe which task you want to tackle from `TASKS.md`.
 
 ---
 
-## Estructura del Proyecto
+## Project Structure
 
 ```
 SCLF_Gripper_v1_0_firmware/
 │
 ├── src/
-│   ├── main.cpp                    ← Punto de entrada. FASE 0: smoke test
+│   ├── main.cpp                    ← Entry point. PHASE 0: smoke test
 │   ├── config/
-│   │   └── pins.h                  ← TODOS los pines. Verificado vs esquemático.
+│   │   └── pins.h                  ← ALL Pins. Verified against schematic.
 │   ├── encoder/
-│   │   ├── MT6701.h                ← API del encoder (esqueleto listo)
-│   │   └── MT6701.cpp              ← Implementar en FASE 1.1
+│   │   ├── MT6701.h                ← Encoder API (skeleton ready)
+│   │   └── MT6701.cpp              ← Implement in PHASE 1.1
 │   ├── motor/
-│   │   ├── DRV8316.h               ← API del gate driver (esqueleto listo)
-│   │   └── DRV8316.cpp             ← Implementar en FASE 1.2
+│   │   ├── DRV8316.h               ← Gate driver API (skeleton ready)
+│   │   └── DRV8316.cpp             ← Implement in PHASE 1.2
 │   ├── comms/
-│   │   ├── RS485.h                 ← API RS-485 (esqueleto listo)
-│   │   └── RS485.cpp               ← Implementar en FASE 1.4
+│   │   ├── RS485.h                 ← RS-485 API (skeleton ready)
+│   │   └── RS485.cpp               ← Implement in PHASE 1.4
 │   └── faults/
-│       ├── FaultManager.h          ← API gestor de fallos (esqueleto listo)
-│       └── FaultManager.cpp        ← Implementar en FASE 6
+│       ├── FaultManager.h          ← Fault manager API (skeleton ready)
+│       └── FaultManager.cpp        ← Implement in PHASE 6
 │
-├── lib/                            ← Librerías locales (vacío por ahora)
-├── test/                           ← Tests PlatformIO Unity (FASE 8)
+├── lib/                            ← Local libraries (currently empty)
+├── test/                           ← PlatformIO Unity tests (PHASE 8)
 │
 ├── .vscode/
-│   ├── settings.json               ← Configuración IDE (IntelliSense, formato)
-│   ├── extensions.json             ← Extensiones recomendadas
-│   └── launch.json                 ← Debug ST-Link con cortex-debug
+│   ├── settings.json               ← IDE config (IntelliSense, formatting)
+│   ├── extensions.json             ← Recommended extensions
+│   └── launch.json                 ← Debug ST-Link with cortex-debug
 │
-├── platformio.ini                  ← Configuración de build y upload
-├── .clang-format                   ← Estilo de código (se aplica al guardar)
+├── platformio.ini                  ← Build and upload config
+├── .clang-format                   ← Code style (applied on save)
 ├── .gitignore
 │
-├── AGENT.md    ← 📋 Contexto para el agente de IA
-├── MEMORY.md   ← 🧠 Estado persistente del proyecto
-├── TASKS.md    ← ✅ Backlog completo por fases
-├── RULES.md    ← 📏 Reglas del proyecto
-└── SRS.md      ← 📄 Especificación de requisitos
+├── AGENT.md    ← 📋 Context for the AI agent
+├── MEMORY.md   ← 🧠 Persistent project state
+├── TASKS.md    ← ✅ Full backlog by phases
+├── RULES.md    ← 📏 Project rules
+└── SRS.md      ← 📄 Software Requirements Specification
 ```
 
 ---
 
-## Comandos PlatformIO Más Usados
+## Most Used PlatformIO Commands
 
 ```bash
-pio run                          # Compilar
-pio run --target upload          # Compilar y flashear (ST-Link)
-pio run --target upload_dfu      # Flashear por USB DFU (BOOT + RST)
-pio device monitor               # Monitor serie (USB VCP, 115200 baud)
-pio test                         # Ejecutar tests unitarios
-pio run --target clean           # Limpiar artefactos de compilación
-pio lib install "Simple FOC"     # Instalar librería manualmente
-pio pkg update                   # Actualizar plataforma y librerías
+pio run                          # Build
+pio run --target upload          # Build and flash (ST-Link)
+pio run --target upload_dfu      # Flash via USB DFU (BOOT + RST)
+pio device monitor               # Serial monitor (USB VCP, 115200 baud)
+pio test                         # Run unit tests
+pio run --target clean           # Clean build artifacts
+pio lib install "Simple FOC"     # Install library manually
+pio pkg update                   # Update platform and libraries
 ```
 
 ---
 
-## DFU Bootloader (flashear sin ST-Link)
+## DFU Bootloader (Flash without ST-Link)
 
-Si no tienes ST-Link disponible, puedes flashear por USB DFU:
+If you don't have an ST-Link available, you can flash via USB DFU:
 
-1. Mantén pulsado el botón **BOOT** (PB8).
-2. Pulsa y suelta el botón **RESET** (PG10).
-3. Suelta **BOOT**.
-4. El gripper aparece como dispositivo DFU en el PC.
-5. Cambia `upload_protocol = dfu` en `platformio.ini`.
-6. Ejecuta `pio run --target upload`.
+1. Press and hold the **BOOT** (PB8) button.
+2. Press and release the **RESET** (PG10) button.
+3. Release **BOOT**.
+4. The Gripper will appear as a DFU device on the PC.
+5. Change to `upload_protocol = dfu` in `platformio.ini`.
+6. Run `pio run --target upload`.
 
 ---
 
-## Resolución de Problemas
+## Troubleshooting
 
-### PlatformIO no compila / error de toolchain
+### PlatformIO fails to build / toolchain error
 ```bash
-# Reinstalar la plataforma STM32
+# Reinstall STM32 platform
 pio platform install ststm32
 
-# Limpiar y recompilar
+# Clean and rebuild
 pio run --target clean && pio run
 ```
 
-### ST-Link no detecta la placa
-- Verifica que GND del ST-Link está conectado al GND del gripper.
-- Verifica que la placa tiene alimentación (LED PWR encendido).
-- Prueba `openocd -f interface/stlink.cfg -f target/stm32g4x.cfg` en terminal.
-- Si OpenOCD falla: actualiza el firmware del ST-Link desde STM32CubeProgrammer.
+### ST-Link does not detect the board
+- Verify ST-Link GND is connected to Gripper GND.
+- Verify board is powered (PWR LED is on).
+- Try `openocd -f interface/stlink.cfg -f target/stm32g4x.cfg` in the terminal.
+- If OpenOCD fails: update ST-Link firmware via STM32CubeProgrammer.
 
-### USB VCP no aparece en el PC
-- Instala el driver STM32 VCP: https://www.st.com/en/development-tools/stsw-stm32102.html (solo Windows)
-- En Linux/macOS no necesita drivers. Verifica con `ls /dev/ttyACM*`.
+### USB VCP does not appear on PC
+- Install STM32 VCP driver: https://www.st.com/en/development-tools/stsw-stm32102.html (Windows only)
+- No driver needed on Linux/macOS. Check with `ls /dev/ttyACM*`.
 
-### IntelliSense no encuentra `Arduino.h` o headers STM32
-- Espera a que PlatformIO termine la primera compilación (genera el índice de includes).
-- Si persiste: `Ctrl+Shift+P` → "C/C++: Reset IntelliSense Database".
+### IntelliSense cannot find `Arduino.h` or STM32 headers
+- Wait for PlatformIO to finish its first build (generates includes index).
+- If issue persists: `Ctrl+Shift+P` → "C/C++: Reset IntelliSense Database".
 
-### Antigravity / PlatformIO no se comunica con el board
-- Este es el problema conocido documentado en la comunidad. PlatformIO en Antigravity
-  no está oficialmente soportado. Si la compilación funciona pero el upload falla,
-  intenta usar `pio run --target upload` desde el **terminal integrado** en lugar del
-  botón de la UI de PlatformIO.
+### Antigravity / PlatformIO fails to communicate with board
+- This is a known issue documented by the community. PlatformIO in Antigravity
+  is not officially supported. If building works but upload fails,
+  try running `pio run --target upload` **from the internal terminal** instead
+  of using the PlatformIO UI button.
 
 ---
 
-## Hardware de Referencia
+## Reference Hardware
 
-| Componente | Parte | Datasheet |
+| Component | Part | Datasheet |
 |---|---|---|
 | MCU | STM32G474CEU6 | [ST.com](https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf) |
 | Gate Driver | DRV8316CRRGFR | [TI.com](https://www.ti.com/lit/ds/symlink/drv8316.pdf) |
@@ -297,4 +299,4 @@ pio run --target clean && pio run
 
 ---
 
-*Diseñado por Tknika — Licensed under CC BY-SA 4.0*
+*Designed by Tknika — Licensed under CC BY-SA 4.0*
