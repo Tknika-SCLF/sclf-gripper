@@ -271,7 +271,10 @@ ST-Link erabilgarririk ez baduzu, USB DFU bidez flashea dezakezu:
 6. Exekutatu `pio run --target upload`.
 
 > 💡 **Oharra ST-Link gabe DFU erabiltzearen inguruan (PA9 pina):**
-> Ohiko STM32etan (F1/F4), USB kablea konektatuta dagoela nabaritzeko (VBUS sensing) `PA9` pina erabiltzen da. Gure diseinuan, ordea, `PA9` pina motorraren B fasera (DRV8316) konektatuta dago (`PIN_BH`). Baina ez larritu! **STM32G4 familiak VBUS sentsorea hardware bidez desgaituta dauka** bere Bootloader nagusian (AN2606). Hori dela eta, DFU moduak primeran funtzionatuko du soilik `PA11` eta `PA12` datu-pinak erabiliz, hardware aldaketen beharrik gabe. Hala ere, garapenerako, beti gomendatzen da ST-Link erabiltzea arazketa (debugging) aurreratua egiteko.
+> Ohiko STM32etan (F1/F4), USB kablea konektatuta dagoela nabaritzeko (VBUS sensing) `PA9` pina erabiltzen da. Gure diseinuan, ordea, `PA9` pina motorraren B fasera (DRV8316) konektatuta dago (`PIN_BH`). Baina ez larritu! **STM32G4 familiak VBUS sentsorea hardware bidez desgaituta dauka** bere Bootloader nagusian (AN2606). Hori dela eta, DFU moduak primeran funtzionatuko du soilik `PA11` eta `PA12` datu-pinak erabiliz, hardware aldaketen beharrik gabe.
+> 
+> **⚠️ KONTUZ Arazketa (Debugging) egiteko orduan:**
+> Kontuan izan USB DFU metodoa "itsu-itsuan pentsatua" dela: kodearen irudia (`.bin`) mikroaren memorian kargatzeko **soilik** balio du. Garapen-fasean zaudenean eta SimpleFOC motorraren ezusteko portaera bat ikertu behar duzunean, **ezinbestekoa da ST-Link (edo SWD) bat erabiltzea**. ST-Link batek zuzenean ARM Cortex muinera konektatzen zaitu `PA13/PA14` bidez, eta aukera ematen dizu kodea pausatzeko (Breakpoints), aldagaien balioak denbora errealean irakurtzeko eta exekuzioa lerroz lerro aztertzeko VS Code-n. USB-ak ezin du horrelakorik egin.
 
 ---
 

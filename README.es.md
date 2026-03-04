@@ -270,7 +270,10 @@ Si no tienes un ST-Link disponible, puedes flashear vía USB DFU:
 6. Ejecuta `pio run --target upload`.
 
 > 💡 **Nota sobre usar DFU sin ST-Link (pin PA9):**
-> En los STM32 antiguos (como F1/F4), el pin `PA9` es necesario para detectar la conexión USB (VBUS sensing). En nuestro diseño, `PA9` está conectado a la Fase B del driver del motor (`PIN_BH`). ¡No te preocupes! La familia **STM32G4 tiene el sensor VBUS deshabilitado** en su Bootloader interno de fábrica (AN2606). Por lo tanto, el flasheo DFU funcionará perfectamente utilizando únicamente los pines de datos `PA11` y `PA12`, sin necesidad de cambios en el hardware. No obstante, para el desarrollo, siempre se recomienda usar un ST-Link para permitir la depuración avanzada en vivo.
+> En los STM32 antiguos (como F1/F4), el pin `PA9` es necesario para detectar la conexión USB (VBUS sensing). En nuestro diseño, `PA9` está conectado a la Fase B del driver del motor (`PIN_BH`). ¡No te preocupes! La familia **STM32G4 tiene el sensor VBUS deshabilitado** en su Bootloader interno de fábrica (AN2606). Por lo tanto, el flasheo DFU funcionará perfectamente utilizando únicamente los pines de datos `PA11` y `PA12`, sin necesidad de cambios en el hardware.
+> 
+> **⚠️ PRECAUCIÓN sobre la Depuración (Debugging):**
+> Ten en cuenta que el método USB DFU es una "subida a ciegas": sirve **únicamente** para volcar la imagen del código (`.bin`) en la memoria del MCU. Cuando estés en fase de desarrollo y necesites investigar un comportamiento inesperado del motor con SimpleFOC, **es indispensable usar un ST-Link (o sonda SWD)**. Un ST-Link se conecta directamente al núcleo ARM Cortex mediante `PA13/PA14`, permitiéndote pausar la ejecución (Breakpoints), leer valores de variables en tiempo real y analizar el código línea por línea en VS Code. El puerto USB no permite hacer esto.
 
 ---
 
