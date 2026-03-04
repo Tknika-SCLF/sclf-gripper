@@ -227,6 +227,20 @@ SCLF_Gripper_v1_0_firmware/
 └── SRS.md      ← 📄 Especificación de Requisitos de Software
 ```
 
+### Explicación de la Arquitectura Modular
+
+Este proyecto está desarrollado para ser desacoplado y organizado:
+* **`main.cpp` ("El Director"):** Contiene únicamente el bucle de control FOC y la configuración inicial. No se abarrota con código espagueti.
+* **Archivos `.cpp` específicos ("Los Músicos"):** Cada chip tiene su archivo dedicado para sus funciones más complejas (ej. `MT6701.cpp` para leer la posición directamente manejando errores, o `DRV8316.cpp` para informar de temperatura o cortocircuitos).
+* **De esta manera:** `main.cpp` da comandos básicos, y cada módulo sabe exactamente cómo tocar su instrumento, haciendo que futuros cambios de hardware sean increíblemente fáciles.
+
+### Seguridad de Hardware y Desarrollo (⚠️ MUY IMPORTANTE)
+
+Al desarrollar este proyecto en Antigravity, se establecen [Reglas Estrictas (RULES.md)](RULES.md):
+1. **Prohibido Bloquear:** Nunca uses `delay()`, `HAL_Delay`, o bucles `while()` infinitos dentro de la ejecución FOC. SimpleFOC requiere el 100% de atención del MCU para calcular la corriente en tiempo real. Poner el MCU a "dormir" puede resultar en quemar el motor o el driver en un segundo.
+2. **Herramienta `foc-hardware-setup` (Skill):** Antes de escribir código, nuestro asistente de IA tiene una herramienta específica para leer esquemáticos eléctricos de KiCad directamente (`.kicad_sch`) y generar el archivo `pins.h` perfecto sin margen de error humano. ¡Es tu amiga, úsala para verificar la asignación final de pines del proyecto!
+3. **Magia de Cortex-Debug:** Con un clon de ST-Link v2 u original, la placa puede ser controlada y pausada en vivo. Si quieres descubrir por qué una variable toma cierto valor en el programa, pon un Breakpoint (punto de interrupción) en Antigravity, ¡y el código se pausará directamente en el STM32!
+
 ---
 
 ## Comandos más usados de PlatformIO

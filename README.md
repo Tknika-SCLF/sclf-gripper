@@ -228,6 +228,20 @@ SCLF_Gripper_v1_0_firmware/
 └── SRS.md      ← 📄 Eskakizunen zehaztapena
 ```
 
+### Arkitektura Modularraren Azalpena
+
+Proiektu hau berezibila eta antolatua izateko garatu da:
+* **`main.cpp` ("Zuzendaria"):** FOC kontrol-begizta eta hasierako konfigurazioa soilik ditu. Ez da kode nahaspilatuz betetzen.
+* **`.cpp` espezifikoak ("Musikariak"):** Txip bakoitzak bere artxibo dedikatua dauka bere funtzio jakingarriagoetarako (adibidez `MT6701.cpp` posizioa zuzenean irakurtzeko erroreak kontrolatuz, edo `DRV8316.cpp` tenperatura edo zirkuitulabur kasuez informatzeko).
+* **Modu honetan:** `main.cpp`-ak oinarrizko aginduak ematen ditu, eta modulu bakoitzak badaki bere tresna zehazki nola erabili, etorkizuneko hardware aldaketak izugarri erraztuz.
+
+### Hardware Segurtasuna eta Garapena (⚠️ OSO GARRANTZITSUA)
+
+Antigravity barruan proiektu hau garatzean, [Arau Zorrotzak (RULES.md)](RULES.md) ezarrita daude:
+1. **Debekatuta dago Blokeatzea:** Inoiz ez erabili `delay()`, `HAL_Delay` edo `while()` begizta infiniturik FOC exekuzioan. SimpleFOC-ek mikroren %100 erabiltzea eskatzen du korrontea denbora errealean kalkulatzeko. Mikroa "lotaratzeak" motorra edo driverra segundo batean erretzea ekar dezake.
+2. **`foc-hardware-setup` Tresna (Skill):** Kodea garatzen hasi aurretik, gure IA laguntzaileak badu tresna espezifiko bat KiCad-eko eskema elektrikoak zuzenean irakurtzeko (`.kicad_sch`) eta `pins.h` fitxategi ezin hobea sortzeko, inolako giza-akatsik gabe. Zure laguna da, erabili proiektuaren azken pinen zehaztapenak egiaztatzeko!
+3. **Cortex-Debug Magia:** ST-Link v2 klonarekin edo jatorrizkoarekin, Plaka zuzenean kontrolatu eta pausatu daiteke. Programan aldagairen batek zergatik hartzen duen balio jakin bat deskubritu nahi bada, jarri Breakpoint (eten-puntu) bat Antigravity-n, eta kodea zuzen-zuzenean pausatuko da STM32-an!
+
 ---
 
 ## PlatformIO Komando Erabilienak

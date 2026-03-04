@@ -227,6 +227,20 @@ SCLF_Gripper_v1_0_firmware/
 └── SRS.md      ← 📄 Software Requirements Specification
 ```
 
+### Modular Architecture Explanation
+
+This project is developed to be decoupled and organized:
+* **`main.cpp` ("The Conductor"):** Contains only the FOC control loop and initial setup. It is not cluttered with spaghetti code.
+* **Specific `.cpp` files ("The Musicians"):** Each chip has its own dedicated file for its more complex functions (e.g., `MT6701.cpp` to read position directly handling errors, or `DRV8316.cpp` to report temperature or short-circuit faults).
+* **This way:** `main.cpp` gives basic commands, and each module knows exactly how to play its instrument, making future hardware changes incredibly easy.
+
+### Hardware Safety & Development (⚠️ VERY IMPORTANT)
+
+While developing this project in Antigravity, [Strict Rules (RULES.md)](RULES.md) are established:
+1. **Blocking is Prohibited:** Never use `delay()`, `HAL_Delay`, or infinite `while()` loops within the FOC execution. SimpleFOC requires 100% of the MCU's attention to calculate real-time current. Putting the MCU to "sleep" can result in burning the motor or driver in a second.
+2. **`foc-hardware-setup` Skill:** Before writing code, our AI assistant has a specific tool to read KiCad electrical schematics directly (`.kicad_sch`) and generate the perfect `pins.h` file with zero human error. It is your friend; use it to verify the final pin assignments of the project!
+3. **Cortex-Debug Magic:** With an ST-Link v2 clone or original, the board can be live-controlled and paused. If you want to discover why a variable takes a certain value in the program, set a Breakpoint in Antigravity, and the code will pause directly on the STM32!
+
 ---
 
 ## Most Used PlatformIO Commands
