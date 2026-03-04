@@ -269,6 +269,9 @@ Si no tienes un ST-Link disponible, puedes flashear vía USB DFU:
 5. Cambia a `upload_protocol = dfu` en el archivo `platformio.ini`.
 6. Ejecuta `pio run --target upload`.
 
+> 💡 **Nota sobre usar DFU sin ST-Link (pin PA9):**
+> En los STM32 antiguos (como F1/F4), el pin `PA9` es necesario para detectar la conexión USB (VBUS sensing). En nuestro diseño, `PA9` está conectado a la Fase B del driver del motor (`PIN_BH`). ¡No te preocupes! La familia **STM32G4 tiene el sensor VBUS deshabilitado** en su Bootloader interno de fábrica (AN2606). Por lo tanto, el flasheo DFU funcionará perfectamente utilizando únicamente los pines de datos `PA11` y `PA12`, sin necesidad de cambios en el hardware. No obstante, para el desarrollo, siempre se recomienda usar un ST-Link para permitir la depuración avanzada en vivo.
+
 ---
 
 ## Solución de Problemas
