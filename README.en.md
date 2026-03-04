@@ -288,6 +288,12 @@ pio platform install ststm32
 pio run --target clean && pio run
 ```
 
+### Error: Unknown board ID `genericSTM32G474CE`
+This error occurs when compiling because PlatformIO does not recognize the `genericSTM32G474CE` board in combination with the Arduino framework.
+To fix it, modify the `platformio.ini` file:
+1. Change the board to `board = nucleo_g474re`. This Nucleo board has the exact same underlying microcontroller and supports the Arduino framework.
+2. Comment out or remove the `debug_server_arguments` line, as it is deprecated and throws warnings.
+
 ### ST-Link does not detect the board
 - Verify ST-Link GND is connected to Gripper GND.
 - Verify board is powered (PWR LED is on).
