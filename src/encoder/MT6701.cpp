@@ -16,15 +16,22 @@
 #include "encoder/MT6701.h"
 
 MT6701::MT6701()
-    : _spiSettings(5'000'000, MSBFIRST, SPI_MODE0)
-    , _ok(false)
-{}
+    : _spiSettings(5'000'000, MSBFIRST, SPI_MODE0),
+      _spi(&SPI)  // por defecto
+      ,
+      _ok(false) {}
 
-bool MT6701::begin() {
+bool MT6701::begin(SPIClass* spi_ptr) {
+    if (spi_ptr != nullptr) {
+        _spi = spi_ptr;
+    }
+
     pinMode(PIN_ENC_CS, OUTPUT);
-    digitalWrite(PIN_ENC_CS, HIGH);   // CS inactivo = HIGH
+    digitalWrite(PIN_ENC_CS, HIGH);  // CS inactivo = HIGH
 
-    SPI.begin();
+    // Asumimos que el SPI ya fue inicializado (begin) en main.cpp,
+    // pero por si acaso podríamos hacer _spi->begin() si quisiéramos.
+    // Dejamos que main.cpp haga SPI_ENC.begin().
 
     // Leer una vez para verificar que no devuelve 0x0000 ni 0xFFFF
     uint16_t raw = _readRaw();
@@ -35,7 +42,8 @@ bool MT6701::begin() {
 
 float MT6701::getAngleRad() {
     uint16_t raw = _readRaw();
-    if (!_ok) return -1.0f;
+    if (!_ok)
+        return -1.0f;
 
     // Extraer los 14 bits de ángulo (bits [15:2]) y convertir a radianes
     uint16_t counts = (raw >> 2) & 0x3FFF;
@@ -44,22 +52,23 @@ float MT6701::getAngleRad() {
 
 uint16_t MT6701::getRawCounts() {
     uint16_t raw = _readRaw();
-    if (!_ok) return 0xFFFF;
+    if (!_ok)
+        return 0xFFFF;
     return (raw >> 2) & 0x3FFF;
 }
 
 // ── Privado ──────────────────────────────────────────────────────────────────
 
 uint16_t MT6701::_readRaw() {
-    SPI.beginTransaction(_spiSettings);
+    _spi->beginTransaction(_spiSettings);
     digitalWrite(PIN_ENC_CS, LOW);
 
     // TODO (FASE 1.1): verificar el frame SPI exacto contra el datasheet MT6701
     // El MT6701 en modo SPI devuelve 16 bits: [15:2]=angle, [1:0]=status
-    uint16_t raw = SPI.transfer16(0x0000);
+    uint16_t raw = _spi->transfer16(0x0000);
 
     digitalWrite(PIN_ENC_CS, HIGH);
-    SPI.endTransaction();
+    _spi->endTransaction();
 
     // Validación básica: si todos los bits son iguales, probablemente hay error de bus
     _ok = (raw != 0x0000) && (raw != 0xFFFF);
