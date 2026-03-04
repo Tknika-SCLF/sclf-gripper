@@ -37,15 +37,15 @@ Descarga e instala Antigravity desde su sitio web oficial. Es un fork de VSCode/
 
 > ⚠️ PlatformIO **no está disponible en Open VSX** (el marketplace de Antigravity). Ambas extensiones deben instalarse manualmente desde archivos `.vsix`.
 
-**2a.** Ve a: https://github.com/microsoft/vscode-cpptools/releases
+**2a.** Ve a: https://github.com/microsoft/vscode-cpptools/releases/latest
 
 Descarga el archivo correspondiente a tu sistema operativo:
 
 | Sistema | Archivo a descargar |
 |---|---|
-| Windows (64-bit) | `cpptools-win32-x64.vsix` |
-| macOS (Apple Silicon) | `cpptools-osx-arm64.vsix` |
-| macOS (Intel) | `cpptools-osx-x64.vsix` |
+| Windows (64-bit) | `cpptools-windows-x64.vsix` |
+| macOS (Apple Silicon) | `cpptools-macOS-arm64.vsix` |
+| macOS (Intel) | `cpptools-macOS-x64.vsix` |
 | Linux (64-bit) | `cpptools-linux-x64.vsix` |
 
 **2b.** En Antigravity: `Extensiones (Ctrl+Shift+X)` → icono `···` (tres puntos) → **Instalar desde VSIX** → selecciona el archivo `.vsix` descargado.
@@ -54,11 +54,11 @@ Descarga el archivo correspondiente a tu sistema operativo:
 
 ### Paso 3 — Instalar PlatformIO
 
-**3a.** Ve a: https://github.com/platformio/platformio-vscode-ide/releases
+**3a.** Ve a: https://github.com/platformio/platformio-vscode-ide/releases/latest
 
-Descarga el archivo más reciente: `platformio-ide-X.X.X.vsix`
+Abre la sección **"Assets"** de la última versión y descarga el archivo (ejemplo: `platformio-ide-3.3.3.vsix`).
 
-**3b.** En Antigravity: `Extensiones (Ctrl+Shift+X)` → `···` → **Instalar desde VSIX** → selecciona `platformio-ide-X.X.X.vsix`.
+**3b.** En Antigravity: `Extensiones (Ctrl+Shift+X)` → `···` → **Instalar desde VSIX** → selecciona el archivo `.vsix` descargado.
 
 **3c.** Reinicia Antigravity. PlatformIO instalará sus dependencias automáticamente la primera vez (puede tardar de 2 a 5 minutos).
 
@@ -68,16 +68,19 @@ Descarga el archivo más reciente: `platformio-ide-X.X.X.vsix`
 
 ### Paso 4 — Instalar cortex-debug (para depurar con ST-Link)
 
-**4a.** Ve a: https://github.com/Marus/cortex-debug/releases
+> 💡 **¿Qué es Open VSX?** Es un registro de extensiones de código abierto gestionado por la Fundación Eclipse. Es el repositorio oficial y seguro que utilizan Antigravity y VSCodium para evitar las restricciones de Microsoft.
 
-Descarga: `cortex-debug-X.X.X.vsix`
+**4a.** Ve a: https://open-vsx.org/extension/marus25/cortex-debug
+
+En el lado derecho, en el menú desplegable **"Version"**, selecciona la última versión estable que NO diga **"Pre-release"** (ejemplo: `1.12.1`). Luego, haz clic en el botón morado **`DOWNLOAD`** que aparece debajo para obtener el archivo `.vsix`.
 
 **4b.** Instálalo como en el paso anterior (Instalar desde VSIX).
 
-**4c.** Instala también OpenOCD, si no lo tienes. Normalmente PlatformIO lo incluye:
-```
-~/.platformio/packages/tool-openocd/
-```
+**4c.** Configurar OpenOCD:
+> 💡 **Buena noticia:** ¡No necesitas descargar o instalar nada manualmente! PlatformIO descarga OpenOCD automáticamente la primera vez que compilas o subes el proyecto a la placa. Su ubicación en Windows suele ser:
+`C:\Users\TU_USUARIO\.platformio\packages\tool-openocd\bin\openocd.exe`
+
+*(Si Cortex-Debug da un error diciendo que no encuentra OpenOCD, ve a la configuración de Antigravity y establece esta ruta exacta en la opción `cortex-debug.openocdPath`).*
 
 ---
 
@@ -284,6 +287,16 @@ pio run --target clean && pio run
   no tiene soporte oficial. Si la compilación funciona pero la subida falla,
   intenta ejecutar `pio run --target upload` **desde el terminal interno** en lugar de
   usar el botón UI de PlatformIO.
+
+### PlatformIO pide constantemente "ms-vscode.cpptools" (Cirugía de dependencias)
+PlatformIO a veces exige la instalación de la extensión de Microsoft aunque ya esté instalada a mano. Para solucionarlo:
+1. Cierra Antigravity por completo.
+2. Abre el explorador de archivos y ve a: `%USERPROFILE%\.antigravity\extensions\` (Windows) o `~/.antigravity/extensions/` (Linux/macOS).
+3. Entra en la carpeta que empieza por `platformio.platformio-ide-...`.
+4. Abre el archivo `package.json` con un editor de texto.
+5. Busca `"extensionDependencies": ["ms-vscode.cpptools"]`.
+6. Déjalo vacío de esta manera: `"extensionDependencies": []`
+7. Guarda el archivo y reinicia Antigravity.
 
 ---
 

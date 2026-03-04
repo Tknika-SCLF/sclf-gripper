@@ -37,15 +37,15 @@ Download and install Antigravity from its official website. It is a fork of VSCo
 
 > ⚠️ PlatformIO is **not available in Open VSX** (Antigravity's marketplace). Both extensions must be installed manually from `.vsix` files.
 
-**2a.** Go to: https://github.com/microsoft/vscode-cpptools/releases
+**2a.** Go to: https://github.com/microsoft/vscode-cpptools/releases/latest
 
 Download the file for your operating system:
 
 | System | File to download |
 |---|---|
-| Windows (64-bit) | `cpptools-win32-x64.vsix` |
-| macOS (Apple Silicon) | `cpptools-osx-arm64.vsix` |
-| macOS (Intel) | `cpptools-osx-x64.vsix` |
+| Windows (64-bit) | `cpptools-windows-x64.vsix` |
+| macOS (Apple Silicon) | `cpptools-macOS-arm64.vsix` |
+| macOS (Intel) | `cpptools-macOS-x64.vsix` |
 | Linux (64-bit) | `cpptools-linux-x64.vsix` |
 
 **2b.** In Antigravity: `Extensions (Ctrl+Shift+X)` → `···` icon (three dots) → **Install from VSIX** → select the downloaded `.vsix` file.
@@ -54,11 +54,11 @@ Download the file for your operating system:
 
 ### Step 3 — Install PlatformIO
 
-**3a.** Go to: https://github.com/platformio/platformio-vscode-ide/releases
+**3a.** Go to: https://github.com/platformio/platformio-vscode-ide/releases/latest
 
-Download the latest file: `platformio-ide-X.X.X.vsix`
+Open the **"Assets"** section of the latest release and download the file (e.g., `platformio-ide-3.3.3.vsix`).
 
-**3b.** In Antigravity: `Extensions (Ctrl+Shift+X)` → `···` → **Install from VSIX** → select `platformio-ide-X.X.X.vsix`.
+**3b.** In Antigravity: `Extensions (Ctrl+Shift+X)` → `···` → **Install from VSIX** → select the downloaded `.vsix` file.
 
 **3c.** Restart Antigravity. PlatformIO will install its dependencies automatically the first time (may take 2-5 minutes).
 
@@ -68,16 +68,19 @@ Download the latest file: `platformio-ide-X.X.X.vsix`
 
 ### Step 4 — Install cortex-debug (for ST-Link debugging)
 
-**4a.** Go to: https://github.com/Marus/cortex-debug/releases
+> 💡 **What is Open VSX?** It's an open-source extension registry managed by the Eclipse Foundation. It is the official and secure repository used by Antigravity and VSCodium to bypass Microsoft Marketplace restrictions.
 
-Download: `cortex-debug-X.X.X.vsix`
+**4a.** Go to: https://open-vsx.org/extension/marus25/cortex-debug
+
+On the right side, in the **"Version"** dropdown menu, select the latest stable version that does NOT say **"Pre-release"** (e.g., `1.12.1`). Then, click the purple **`DOWNLOAD`** button below it to get the `.vsix` file.
 
 **4b.** Install as above (Install from VSIX).
 
-**4c.** Also install OpenOCD, if you don't have it. PlatformIO usually bundles it:
-```
-~/.platformio/packages/tool-openocd/
-```
+**4c.** Configure OpenOCD:
+> 💡 **Good news:** You don't need to download or install it manually! PlatformIO automatically downloads OpenOCD the first time you build or upload the project. Its location on Windows is typically:
+`C:\Users\YOUR_USERNAME\.platformio\packages\tool-openocd\bin\openocd.exe`
+
+*(If Cortex-Debug throws an error saying it cannot find OpenOCD, go to Antigravity settings and set this exact path in the `cortex-debug.openocdPath` setting).*
 
 ---
 
@@ -284,6 +287,16 @@ pio run --target clean && pio run
   is not officially supported. If building works but upload fails,
   try running `pio run --target upload` **from the internal terminal** instead
   of using the PlatformIO UI button.
+
+### PlatformIO keeps asking for "ms-vscode.cpptools" (Dependency Surgery)
+PlatformIO sometimes forces the installation of the Microsoft extension even if it's already installed manually. To fix this:
+1. Close Antigravity completely.
+2. Open your file explorer and go to: `%USERPROFILE%\.antigravity\extensions\` (Windows) or `~/.antigravity/extensions/` (Linux/macOS).
+3. Open the folder starting with `platformio.platformio-ide-...`.
+4. Open the `package.json` file with a text editor.
+5. Search for `"extensionDependencies": ["ms-vscode.cpptools"]`.
+6. Leave it empty like this: `"extensionDependencies": []`
+7. Save the file and restart Antigravity.
 
 ---
 

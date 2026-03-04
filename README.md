@@ -16,6 +16,7 @@ Ingurunea konfiguratuta baduzu dagoeneko:
 # 1. Konpilatu
 pio run
 
+
 # 2. Flasheatu (ST-Link konektatuta)
 pio run --target upload
 
@@ -37,15 +38,15 @@ Deskargatu eta instalatu Antigravity bere webgune ofizialetik. VSCode/Windsurf-e
 
 > ⚠️ PlatformIO **ez dago Open VSX-en** (Antigravity-ren marketplace-a). Bi hedapenak eskuz instalatu behar dira `.vsix` fitxategietatik.
 
-**2a.** Joan hona: https://github.com/microsoft/vscode-cpptools/releases
+**2a.** Joan hona: https://github.com/microsoft/vscode-cpptools/releases/latest
 
 Deskargatu zure sistema eragileari dagokion fitxategia:
 
 | Sistema | Deskargatu beharreko fitxategia |
 |---|---|
-| Windows (64-bit) | `cpptools-win32-x64.vsix` |
-| macOS (Apple Silicon) | `cpptools-osx-arm64.vsix` |
-| macOS (Intel) | `cpptools-osx-x64.vsix` |
+| Windows (64-bit) | `cpptools-windows-x64.vsix` |
+| macOS (Apple Silicon) | `cpptools-macOS-arm64.vsix` |
+| macOS (Intel) | `cpptools-macOS-x64.vsix` |
 | Linux (64-bit) | `cpptools-linux-x64.vsix` |
 
 **2b.** Antigravity-n: `Hedapenak / Extensions (Ctrl+Shift+X)` → `···` ikonoa (hiru puntu) → **Install from VSIX** → hautatu deskargatutako `.vsix` fitxategia.
@@ -54,11 +55,11 @@ Deskargatu zure sistema eragileari dagokion fitxategia:
 
 ### 3. Urratsa — PlatformIO Instalatu
 
-**3a.** Joan hona: https://github.com/platformio/platformio-vscode-ide/releases
+**3a.** Joan hona: https://github.com/platformio/platformio-vscode-ide/releases/latest
 
-Deskargatu fitxategi berriena: `platformio-ide-X.X.X.vsix`
+Ireki azken bertsioaren **"Assets"** atala eta deskargatu fitxategia (adibidez: `platformio-ide-3.3.3.vsix`).
 
-**3b.** Antigravity-n: `Hedapenak / Extensions (Ctrl+Shift+X)` → `···` → **Install from VSIX** → hautatu `platformio-ide-X.X.X.vsix`.
+**3b.** Antigravity-n: `Hedapenak / Extensions (Ctrl+Shift+X)` → `···` → **Install from VSIX** → hautatu deskargatutako `.vsix` fitxategia.
 
 **3c.** Berrabiarazi Antigravity. PlatformIOk bere mendekotasunak automatikoki instalatuko ditu lehenengo aldian (2-5 minutu har ditzake).
 
@@ -68,16 +69,19 @@ Deskargatu fitxategi berriena: `platformio-ide-X.X.X.vsix`
 
 ### 4. Urratsa — cortex-debug Instalatu (ST-Link-ekin debug egiteko)
 
-**4a.** Joan hona: https://github.com/Marus/cortex-debug/releases
+> 💡 **Zer da Open VSX?** Kode irekiko luzapenen erregistro alternatiboa da (Eclipse Foundation-ek kudeatua). Antigravity-k eta VSCodium-ek ofizialki erabiltzen duten biltegia da, Microsoft-en murrizketak ekiditeko, eta segurua da.
 
-Deskargatu: `cortex-debug-X.X.X.vsix`
+**4a.** Joan hona: https://open-vsx.org/extension/marus25/cortex-debug
+
+Eskuin aldean dagoen **"Version"** goitibeherako menuan, hautatu **"Pre-release"** jartzen EZ duen azken bertsio egonkorra (adibidez: `1.12.1`). Ondoren, sakatu azpian agertzen den **`DOWNLOAD`** botoi morean `.vsix` fitxategia eskuratzeko.
 
 **4b.** Instalatu aurrekoak bezala (Install from VSIX).
 
-**4c.** Instalatu OpenOCD ere, ez baduzu. PlatformIOk ekarri ohi du:
-```
-~/.platformio/packages/tool-openocd/
-```
+**4c.** OpenOCD konfiguratzea:
+> 💡 **Albiste ona:** Ez duzu ezer deskargatu edo instalatu behar! PlatformIO-k automatikoki deskargatzen du OpenOCD lehenengo aldiz proiektua konpilatzen edo plakan kargatzen duzunean. Bere kokapena hau izaten da Windows-en:
+`C:\Users\ZURE_ERABILTZAILEA\.platformio\packages\tool-openocd\bin\openocd.exe`
+
+*(Cortex-Debug-ek errorea ematen badu OpenOCD ez duela aurkitzen esanez, joan Antigravity-ren ezarpenetara eta ezarri ibilbide hori `cortex-debug.openocdPath` aukeran).*
 
 ---
 
@@ -284,6 +288,16 @@ pio run --target clean && pio run
   ez dago ofizialki onartuta. Konpilazioak funtzionatzen badu baina igotzeak (upload) huts egiten badu,
   saiatu `pio run --target upload` exekutatzen **barne terminaletik**, PlatformIOko
   UI botoiaren ordez.
+
+### PlatformIOk "ms-vscode.cpptools" eskatzen du etengabe (Menpekotasunen Kirurgia)
+PlatformIOk batzuetan Microsoft-en hedapena instalatzea exijitzen du, nahiz eta eskuz instalatuta izan. Arazoa konpontzeko:
+1. Itxi Antigravity erabat.
+2. Ireki fitxategi-esploratzailea eta joan hona: `%USERPROFILE%\.antigravity\extensions\` (Windows) edo `~/.antigravity/extensions/` (Linux/macOS).
+3. Sartu `platformio.platformio-ide-...` izeneko karpetan.
+4. Ireki `package.json` fitxategia testu-editore batekin.
+5. Bilatu `"extensionDependencies": ["ms-vscode.cpptools"]` lerroa.
+6. Utzi hutsik horrela: `"extensionDependencies": []`
+7. Gorde fitxategia eta berrabiarazi Antigravity.
 
 ---
 
