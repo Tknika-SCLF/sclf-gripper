@@ -15,47 +15,49 @@
  * ⚠️  FASE 1.2 — Implementar en DRV8316.cpp
  */
 
+#include "config/pins.h"
+
 #include <Arduino.h>
 #include <SPI.h>
-#include "config/pins.h"
 
 // ── Mapa de registros DRV8316 (datasheet Table 7-x) ─────────────────────────
 namespace DRV8316_REG {
-    constexpr uint8_t STATUS1   = 0x00;
-    constexpr uint8_t STATUS2   = 0x01;
-    constexpr uint8_t CONTROL1  = 0x02;
-    constexpr uint8_t CONTROL2  = 0x03;
-    constexpr uint8_t CONTROL3  = 0x04;
-    constexpr uint8_t CONTROL4  = 0x05;
-    constexpr uint8_t CONTROL5  = 0x06;
-    constexpr uint8_t CONTROL6  = 0x07;
-    constexpr uint8_t CONTROL7  = 0x08;
-    constexpr uint8_t CONTROL8  = 0x09;
-    constexpr uint8_t CONTROL9  = 0x0A;
-    constexpr uint8_t CONTROL10 = 0x0B;
-}
+constexpr uint8_t STATUS1 = 0x00;
+constexpr uint8_t STATUS2 = 0x01;
+constexpr uint8_t CONTROL1 = 0x02;
+constexpr uint8_t CONTROL2 = 0x03;
+constexpr uint8_t CONTROL3 = 0x04;
+constexpr uint8_t CONTROL4 = 0x05;
+constexpr uint8_t CONTROL5 = 0x06;
+constexpr uint8_t CONTROL6 = 0x07;
+constexpr uint8_t CONTROL7 = 0x08;
+constexpr uint8_t CONTROL8 = 0x09;
+constexpr uint8_t CONTROL9 = 0x0A;
+constexpr uint8_t CONTROL10 = 0x0B;
+}  // namespace DRV8316_REG
 
 // ── Códigos de fallo ─────────────────────────────────────────────────────────
 enum class DRV8316Fault : uint8_t {
-    NONE        = 0,
-    FAULT       = 1,    // Fallo genérico (leer STATUS1/2 para detalle)
-    OCP         = 2,    // Overcurrent protection
-    OVP         = 3,    // Overvoltage protection
-    OTSD        = 4,    // Overtemperature shutdown
-    OTP_ERR     = 5,    // OTP memory error
-    SPI_FAULT   = 6,    // Error de comunicación SPI
+    NONE = 0,
+    FAULT = 1,      // Fallo genérico (leer STATUS1/2 para detalle)
+    OCP = 2,        // Overcurrent protection
+    OVP = 3,        // Overvoltage protection
+    OTSD = 4,       // Overtemperature shutdown
+    OTP_ERR = 5,    // OTP memory error
+    SPI_FAULT = 6,  // Error de comunicación SPI
 };
 
 class DRV8316 {
-public:
+   public:
     DRV8316();
 
     /**
      * Inicializa SPI y verifica comunicación con el DRV8316.
      * Lee el registro STATUS1 como handshake.
+     * @param spi_ptr Puntero al objeto SPIClass (ej. &SPI_DRV)
      * @return true si la comunicación es correcta.
      */
-    bool begin();
+    bool begin(SPIClass* spi_ptr);
 
     /**
      * Lee un registro de 11 bits del DRV8316.
@@ -98,14 +100,15 @@ public:
      */
     uint16_t getStatus2Raw() { return readRegister(DRV8316_REG::STATUS2); }
 
-private:
-    SPISettings   _spiSettings;
-    DRV8316Fault  _lastFault = DRV8316Fault::NONE;
-    bool          _ok        = false;
+   private:
+    SPISettings _spiSettings;
+    SPIClass* _spi;
+    DRV8316Fault _lastFault = DRV8316Fault::NONE;
+    bool _ok = false;
 
     // Frame SPI: 16 bits, [15]=R/W, [14:11]=addr, [10:0]=data
-    static constexpr uint16_t READ_FLAG  = 0x8000;
+    static constexpr uint16_t READ_FLAG = 0x8000;
     static constexpr uint16_t WRITE_FLAG = 0x0000;
-    static constexpr uint16_t DATA_MASK  = 0x07FF;
+    static constexpr uint16_t DATA_MASK = 0x07FF;
     static constexpr uint16_t ADDR_SHIFT = 11;
 };

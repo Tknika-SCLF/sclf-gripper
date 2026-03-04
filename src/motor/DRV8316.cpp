@@ -13,18 +13,19 @@
 #include "motor/DRV8316.h"
 
 DRV8316::DRV8316()
-    // TODO (FASE 1.2): verificar SPI mode — algunos datasheets indican MODE1
-    : _spiSettings(5'000'000, MSBFIRST, SPI_MODE1)
-    , _lastFault(DRV8316Fault::NONE)
-    , _ok(false)
-{}
+    // TODO (FASE 1.2): verificar SPI mode — datasheets indica MODE1 (CPOL=0, CPHA=1)
+    : _spiSettings(5'000'000, MSBFIRST, SPI_MODE1),
+      _spi(&SPI),
+      _lastFault(DRV8316Fault::NONE),
+      _ok(false) {}
 
-bool DRV8316::begin() {
+bool DRV8316::begin(SPIClass* spi_ptr) {
+    if (spi_ptr != nullptr) {
+        _spi = spi_ptr;
+    }
+
     pinMode(PIN_DRV_CS, OUTPUT);
     digitalWrite(PIN_DRV_CS, HIGH);
-
-    // SPI ya inicializado por MT6701 o lo iniciamos aquí
-    SPI.begin();
 
     // Leer STATUS1 como handshake — si devuelve 0xFFFF hay error de bus
     uint16_t s1 = readRegister(DRV8316_REG::STATUS1);
@@ -40,11 +41,11 @@ bool DRV8316::begin() {
 uint16_t DRV8316::readRegister(uint8_t addr) {
     uint16_t txWord = READ_FLAG | (static_cast<uint16_t>(addr) << ADDR_SHIFT);
 
-    SPI.beginTransaction(_spiSettings);
+    _spi->beginTransaction(_spiSettings);
     digitalWrite(PIN_DRV_CS, LOW);
-    uint16_t rxWord = SPI.transfer16(txWord);
+    uint16_t rxWord = _spi->transfer16(txWord);
     digitalWrite(PIN_DRV_CS, HIGH);
-    SPI.endTransaction();
+    _spi->endTransaction();
 
     if (rxWord == 0xFFFF) {
         _lastFault = DRV8316Fault::SPI_FAULT;
@@ -54,15 +55,14 @@ uint16_t DRV8316::readRegister(uint8_t addr) {
 }
 
 void DRV8316::writeRegister(uint8_t addr, uint16_t value) {
-    uint16_t txWord = WRITE_FLAG
-                    | (static_cast<uint16_t>(addr) << ADDR_SHIFT)
-                    | (value & DATA_MASK);
+    uint16_t txWord =
+        WRITE_FLAG | (static_cast<uint16_t>(addr) << ADDR_SHIFT) | (value & DATA_MASK);
 
-    SPI.beginTransaction(_spiSettings);
+    _spi->beginTransaction(_spiSettings);
     digitalWrite(PIN_DRV_CS, LOW);
-    SPI.transfer16(txWord);
+    _spi->transfer16(txWord);
     digitalWrite(PIN_DRV_CS, HIGH);
-    SPI.endTransaction();
+    _spi->endTransaction();
 }
 
 bool DRV8316::hasFault() {
@@ -92,6 +92,6 @@ void DRV8316::clearFaults() {
     uint16_t ctrl1 = readRegister(DRV8316_REG::CONTROL1);
     writeRegister(DRV8316_REG::CONTROL1, ctrl1 | 0x001);  // bit CLR_FLT
     delayMicroseconds(10);
-    writeRegister(DRV8316_REG::CONTROL1, ctrl1 & ~0x001); // limpiar bit
+    writeRegister(DRV8316_REG::CONTROL1, ctrl1 & ~0x001);  // limpiar bit
     _lastFault = DRV8316Fault::NONE;
 }
