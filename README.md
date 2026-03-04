@@ -168,7 +168,19 @@ pio run --target upload
 
 ---
 
-### 9. Urratsa — IA Agentea Konfiguratu
+### 9. Urratsa — Faseen Probak eta Adibideak (`examples/`)
+
+Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `ROADMAP.md`). Fase bakoitzean idatzitako kode-probak (test standalone-ak) **`examples/`** karpetaren barruan gordetzen dira.
+
+Hardware berria muntatzen baduzu edo sentsore zehatz bat probatu nahi baduzu:
+1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test`).
+2. **Irakurri karpeta horretan dagoen `README.md` fitxategia** argibide zehatzak ikusteko.
+3. Kopiatu bertako `main.cpp` fitxategia eta ordezkatu zure probako `src/main.cpp` fitxategiarekin. 
+4. Konpilatu eta igo (`pio run --target upload`).
+
+---
+
+### 10. Urratsa — IA Agentea Konfiguratu
 
 Antigravity-n barneratuta dagoen IA laguntzailearekin lan egiteko:
 
