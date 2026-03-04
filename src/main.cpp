@@ -2,51 +2,24 @@
  * SCLF Gripper v1.0 — Firmware Hardware Initialization
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
- * Library:   SimpleFOC
  *
- * ─── FASE 1 — Hardware Configuration & FOC Init ────────────────────────────
- * Objetivo: inicializar el sensor MT6701, configurar el DRV8316C en modo
- * 3-PWM a través de SPI e iniciar la librería SimpleFOC en bucle abierto o cerrado.
+ * ─── FASE 1.1 — MT6701 Standalone Test ─────────────────────────────────────
+ * Objetivo: Leer correctamente el encoder magnético MT6701 vía SPI (o SSI).
+ * NOTA: Motor y Driver desactivados por seguridad en esta fase.
  * ───────────────────────────────────────────────────────────────────────────
  */
 
 #include "config/pins.h"
+#include "encoder/MT6701.h"
 
 #include <Arduino.h>
 #include <SPI.h>
 
-#include <SimpleFOC.h>
-
-#include "communication/SimpleFOCDebug.h"
-
 // ─── Instancias de Hardware ──────────────────────────────────────────────────
-MagneticSensorSPI sensor = MagneticSensorSPI(PIN_ENC_CS, 14, 0x0000);
-BLDCMotor motor = BLDCMotor(11);  // 11 pares de polos por defecto (ajustar según el motor real)
-BLDCDriver3PWM driver = BLDCDriver3PWM(PIN_AH, PIN_BH, PIN_CH);
+MT6701 sensor;
 
-// Buses SPI separados para el sensor y el driver
-SPIClass SPI_DRV(PIN_DRV_MOSI, PIN_DRV_MISO, PIN_DRV_CLK);
+// Bus SPI dedicado para el sensor
 SPIClass SPI_ENC(NC, PIN_ENC_SDO, PIN_ENC_CLK);
-
-// ─── Funciones Auxiliares ────────────────────────────────────────────────────
-void configureDRV8316() {
-    // Configura el DRV8316 en modo 3-PWM vía SPI
-    // Trama SPI: 16 bits -> [15] W0/R1 | [14:9] ADDR | [8:0] DATA
-    // Dirección 0x02 (PWM_CTRL_1), Datos: [1:0] = 01b (3-PWM mode)
-    uint16_t cmd = 0x0000;
-    cmd |= (0 << 15);    // Comando de escritura
-    cmd |= (0x02 << 9);  // Registro 0x02 (PWM_CTRL_1)
-    cmd |= (0x01);       // Dato: PWM_MODE = 01b (3-PWM)
-
-    // El DRV8316 usa SPI_MODE1 (CPOL=0, CPHA=1) hasta 10 MHz
-    SPI_DRV.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1));
-    digitalWrite(PIN_DRV_CS, LOW);
-    SPI_DRV.transfer16(cmd);
-    digitalWrite(PIN_DRV_CS, HIGH);
-    SPI_DRV.endTransaction();
-
-    Serial.println("  [DRV8316] Configurado en 3-PWM Mode.");
-}
 
 // ─── setup() ──────────────────────────────────────────────────────────────────
 void setup() {
@@ -56,64 +29,65 @@ void setup() {
     }
 
     Serial.println("========================================");
-    Serial.println("  SCLF Gripper v1.0 — Hardware Init     ");
+    Serial.println("  SCLF Gripper v1.0 — Fase 1.1          ");
+    Serial.println("  Iniciando Test MT6701 (Sensor)        ");
     Serial.println("========================================");
 
-    // 1. Configurar pines auxiliares
+    // 1. Configurar pines auxiliares (desactivar motor)
     pinMode(PIN_DRV_CS, OUTPUT);
-    digitalWrite(PIN_DRV_CS, HIGH);
+    digitalWrite(PIN_DRV_CS, HIGH);  // Driver deshabilitado
+
+    // Configurar pines PWM del driver en LOW por seguridad
+    pinMode(PIN_AH, OUTPUT);
+    digitalWrite(PIN_AH, LOW);
+    pinMode(PIN_BH, OUTPUT);
+    digitalWrite(PIN_BH, LOW);
+    pinMode(PIN_CH, OUTPUT);
+    digitalWrite(PIN_CH, LOW);
 
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, LOW);
 
-    pinMode(PIN_RS485_DIR, OUTPUT);
-    digitalWrite(PIN_RS485_DIR, LOW);  // Modo RX por defecto
+    pinMode(PIN_ENC_CS, OUTPUT);
+    digitalWrite(PIN_ENC_CS, HIGH);
 
-    // 2. Inicializar buses SPI
-    SPI_DRV.begin();
+    // 2. Inicializar bus SPI para el encoder (Pines PB14=MISO, PB13=CLK)
     SPI_ENC.begin();
 
-    // 3. Configurar DRV8316 vía SPI a 3-PWM
-    configureDRV8316();
+    // 3. Inicializar Sensor MT6701
+    Serial.print("  [MT6701] Iniciando... ");
+    // MT6701.cpp ahora acepta la instancia SPI_ENC correctamente
+    if (sensor.begin(&SPI_ENC)) {
+        Serial.println("OK.");
+    } else {
+        Serial.println("ERROR. ¿Magneto alineado? ¿SPI conectado?");
+    }
 
-    // 4. Inicializar Sensor (MT6701)
-    sensor.init(&SPI_ENC);
-    motor.linkSensor(&sensor);
-    Serial.println("  [Sensor] MT6701 inicializado.");
-
-    // 5. Inicializar Driver (SimpleFOC)
-    driver.voltage_power_supply = 24.0;  // Voltaje del bus
-    driver.init();
-    motor.linkDriver(&driver);
-    Serial.println("  [Driver] SimpleFOC 3-PWM inicializado.");
-
-    // 6. Configurar FOC y Motor
-    motor.voltage_sensor_align = 2.0;  // Voltaje para la rutina de alineación
-    motor.velocity_limit = 10.0;       // Límite de velocidad
-    motor.controller = MotionControlType::angle;
-
-    // Iniciar FOC y alineación
-    motor.init();
-    motor.initFOC();
-
-    Serial.println("  [SimpleFOC] Init completado.");
     Serial.println("========================================");
 }
 
 // ─── loop() ───────────────────────────────────────────────────────────────────
 void loop() {
-    // Mantener la ejecución del FOC en todo momento
-    motor.loopFOC();
-    motor.move(0);  // Objetivo 0 en ángulo (mantener posición)
+    // Leer el sensor
+    float current_angle = sensor.getAngleRad();
+    uint16_t raw_counts = sensor.getRawCounts();
 
-    // Telemetría básica a 1 Hz
+    // Imprimir por Serial Plotter cada 50ms para ver la curva suave
     static uint32_t last_print = 0;
-    if (millis() - last_print > 1000) {
-        Serial.print("Angulo Sensor: ");
-        Serial.println(sensor.getAngle());
+    if (millis() - last_print >= 50) {
+        // Enviar formato para Teleplot/Serial Plotter
+        Serial.print(">Angle_Rad:");
+        Serial.println(current_angle, 4);
+        Serial.print(">Raw_Counts:");
+        Serial.println(raw_counts);
 
-        // Toggle LED
-        digitalWrite(PIN_LED, !digitalRead(PIN_LED));
         last_print = millis();
+    }
+
+    // Toggle LED a 1Hz
+    static uint32_t last_led = 0;
+    if (millis() - last_led >= 500) {
+        digitalWrite(PIN_LED, !digitalRead(PIN_LED));
+        last_led = millis();
     }
 }

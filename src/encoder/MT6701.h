@@ -12,30 +12,31 @@
  *     Este fichero es el esqueleto de la API. No modificar la interfaz pública.
  */
 
-#include <Arduino.h>
-#include <SPI.h>
 #include "config/pins.h"
 
+#include <Arduino.h>
+#include <SPI.h>
+
 class MT6701 {
-public:
+   public:
     // Constructor — usa los pines definidos en pins.h
     MT6701();
 
     /**
-     * Inicializa el bus SPI y verifica comunicación con el sensor.
-     * @return true si la comunicación SPI es correcta, false si falla.
+     * @brief Inicializa el bus SPI y prepara el sensor
+     * @param spi_ptr Puntero al objeto SPIClass (ej. &SPI_ENC)
+     * @return true si la comunicación inicial es válida
      */
-    bool begin();
+    bool begin(SPIClass* spi_ptr = &SPI);
 
     /**
-     * Lee el ángulo actual.
-     * @return Ángulo en radianes [0, 2π). Devuelve -1.0f si hay error de comunicación.
+     * @brief Lee el ángulo actual en radianes
+     * @return Ángulo [0, 2PI] o negativo en caso de error
      */
     float getAngleRad();
 
     /**
-     * Lee el valor crudo del sensor.
-     * @return Valor 14-bit [0, 16383]. 0xFFFF si hay error.
+     * @brief Lee los conteos crudos del sensor (0 - 16383)
      */
     uint16_t getRawCounts();
 
@@ -46,12 +47,13 @@ public:
     bool isOk() const { return _ok; }
 
     // Constantes del sensor
-    static constexpr uint16_t COUNTS_PER_REV = 16384;   // 2^14
-    static constexpr float    RAD_PER_COUNT  = TWO_PI / COUNTS_PER_REV;
+    static constexpr uint16_t COUNTS_PER_REV = 16384;  // 2^14
+    static constexpr float RAD_PER_COUNT = TWO_PI / COUNTS_PER_REV;
 
-private:
+   private:
     SPISettings _spiSettings;
-    bool        _ok = false;
+    SPIClass* _spi;
+    bool _ok = false;
 
     uint16_t _readRaw();
 };
