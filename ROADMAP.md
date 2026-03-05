@@ -17,7 +17,7 @@ Garapen prozesu seguru eta sistematiko bat ziurtatzeko, firmwarearen garapena fa
 
 ### 3 Fasea: Zinematika eta Kontrolaren Doikuntza
 *   **3.1 Abiadura eta Angeluaren Doikuntza (Tuning):** PI kontrolagailuak abiadurarako eta P kontrolagailua angelurako doitu (tuneatu). Motorra oszilaziorik gabe angelu zehatzetara joateko gai dela ziurtatu.
-*   **3.2 Pintzaren Zinematika (Gripper Kinematics):** Motorraren angelua (radianak) pintzaren hatzen distantziarekin (mm) lotu. Diseinu mekanikoaren arabera, muga fisikoak zehaztu (`min_angle`, `max_angle`).
+*   **(EGINA) 3.2 Pintzaren Zinematika (Gripper Kinematics):** Motorraren angelua (radianak) pintzaren hatzen distantziarekin (mm) lotu. Diseinu mekanikoaren arabera, muga fisikoak zehaztu (`min_angle`, `max_angle`).
 
 ### 4 Fasea: Goi-Mailako Logika eta Komunikazioa
 *   **4.1 Indar Sentsatzea (Sentsorerik gabe):** Pintzak objektu bati heltzean (istripua / stall) harrapatu duela detektatzeko modu bat inplementatu. Hori motorraren `motor.current_sp` (edo tentsio/korronte aginduak) irakurriz eta pikoak detektatuz egin daiteke.
