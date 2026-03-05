@@ -9,7 +9,7 @@ Garapen prozesu seguru eta sistematiko bat ziurtatzeko, firmwarearen garapena fa
 ### 1 Fasea: Hardwarearen Egiaztapena (Hardware Bring-up)
 *   **(EGINA) 1.1 MT6701 Sentsorearen Testa:** Sentsore magnetikoak SPI bidez angelua ondo irakurtzen duela ziurtatu (motorra piztu gabe).
 *   **(EGINA) 1.2 DRV8316 SPI Konfigurazioa:** DRV8316 driverrarekin SPI bidez komunikatu 3-PWM modua konfiguratzeko eta akatsak (faults) garbitzeko.
-*   **1.3 Begizta Irekiko (Open-Loop) Tentsio Kontrola:** Motorra sentsorerik gabe birarazi (`velocity_openloop` edo `angle_openloop`). Horrek 3-PWM seinaleak eta driverra ondo dabiltzala frogatuko du. *Kritikoa: Oso tentsio muga baxuarekin hasi (adib. 1-2V).*
+*   **(EGINA) 1.3 Begizta Irekiko (Open-Loop) Tentsio Kontrola:** Motorra sentsorerik gabe birarazi (`velocity_openloop` edo `angle_openloop`). Horrek 3-PWM seinaleak eta driverra ondo dabiltzala frogatuko du. *Kritikoa: Oso tentsio muga baxuarekin hasi (adib. 1-2V).*
 
 ### 2 Fasea: Begizta Itxiko Kalibrazioa (Closed-Loop SimpleFOC)
 *   **2.1 Sentsore-Motor Lerrokatzea:** Sentsorea motorrari lotu SimpleFOC-en eta `initFOC()` errutina exekutatu. Motorrak "dantza" txiki bat egingo du angelu elektrikoa zeroan jartzeko eta polo pareen norabidea aurkitzeko.

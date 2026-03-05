@@ -173,7 +173,7 @@ pio run --target upload
 Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `ROADMAP.md`). Fase bakoitzean idatzitako kode-probak (test standalone-ak) **`examples/`** karpetaren barruan gordetzen dira.
 
 Hardware berria muntatzen baduzu edo sentsore zehatz bat probatu nahi baduzu:
-1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test` edo `fase1_2_drv_spi`).
+1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test`, `fase1_2_drv_spi` edo `1_3_open_loop_v_control`).
 2. **Irakurri karpeta horretan dagoen `README.md` fitxategia** argibide zehatzak ikusteko.
 3. Kopiatu bertako `main.cpp` fitxategia eta ordezkatu zure probako `src/main.cpp` fitxategiarekin. 
 4. Konpilatu eta igo (`pio run --target upload`).
