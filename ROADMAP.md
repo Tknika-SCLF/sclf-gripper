@@ -21,4 +21,4 @@ Garapen prozesu seguru eta sistematiko bat ziurtatzeko, firmwarearen garapena fa
 
 ### 4 Fasea: Goi-Mailako Logika eta Komunikazioa
 *   **4.1 Indar Sentsatzea (Sentsorerik gabe):** Pintzak objektu bati heltzean (istripua / stall) harrapatu duela detektatzeko modu bat inplementatu. Hori motorraren `motor.current_sp` (edo tentsio/korronte aginduak) irakurriz eta pikoak detektatuz egin daiteke.
-*   **4.2 RS485 / Aginduak:** `RS485.cpp` modulua gaitu edo Serial Commander erabili robot kontrolagailu nagusitik aginduak jasotzeko, esaterako `GRIP(force)`, `RELEASE()`, edo `MOVE(position)`.
+*   **(EGINA) 4.2 RS485 / Aginduak:** `RS485.cpp` modulua gaitu edo Serial Commander erabili robot kontrolagailu nagusitik aginduak jasotzeko, esaterako `GRIP(force)`, `RELEASE()`, edo `MOVE(position)`.

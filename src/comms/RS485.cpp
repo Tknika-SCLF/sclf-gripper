@@ -9,22 +9,20 @@
  */
 
 #include "comms/RS485.h"
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
-// En STM32duino, Serial1/2/3 dependen del pinout
-// PC10/PC11 mapean a Serial3 en la mayoría de configuraciones STM32G4
-// TODO (FASE 1.4): verificar qué instancia Serial usa PC10/PC11 en STM32G474
-#define RS485_SERIAL Serial3
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+HardwareSerial RS485_SERIAL(PIN_RS485_RX, PIN_RS485_TX);
 
 void RS485::begin(uint8_t deviceId, uint32_t baudrate) {
     _deviceId = deviceId;
-    _rxIdx    = 0;
+    _rxIdx = 0;
 
     // Pin de dirección
     pinMode(PIN_RS485_DIR, OUTPUT);
-    _setRxMode();   // por defecto: escuchar
+    _setRxMode();  // por defecto: escuchar
 
     // UART
     RS485_SERIAL.begin(baudrate);
@@ -34,7 +32,7 @@ void RS485::send(const char* frame) {
     _setTxMode();
 
     RS485_SERIAL.print(frame);
-    RS485_SERIAL.flush();   // espera a que el último byte salga del shift register
+    RS485_SERIAL.flush();  // espera a que el último byte salga del shift register
 
     // Pequeña espera para que el último bit llegue al bus antes de cambiar DIR
     delayMicroseconds(50);
@@ -57,7 +55,8 @@ bool RS485::update(RS485Frame& out) {
                 _rxBuf[_rxIdx] = '\0';
                 bool ok = _parseFrame(_rxBuf, out);
                 _rxIdx = 0;
-                if (ok) return true;
+                if (ok)
+                    return true;
             }
         } else if (_rxIdx < RS485_MAX_FRAME - 1) {
             _rxBuf[_rxIdx++] = c;
@@ -80,11 +79,13 @@ bool RS485::_parseFrame(const char* raw, RS485Frame& out) {
     tmp[sizeof(tmp) - 1] = '\0';
 
     char* tok = strtok(tmp, ":");
-    if (!tok) return false;
+    if (!tok)
+        return false;
     out.deviceId = static_cast<uint8_t>(atoi(tok));
 
     tok = strtok(nullptr, ":");
-    if (!tok) return false;
+    if (!tok)
+        return false;
     strncpy(out.cmd, tok, sizeof(out.cmd) - 1);
 
     tok = strtok(nullptr, ":");
@@ -100,7 +101,7 @@ bool RS485::_parseFrame(const char* raw, RS485Frame& out) {
 
 void RS485::_setTxMode() {
     digitalWrite(PIN_RS485_DIR, HIGH);
-    delayMicroseconds(2);   // propagation delay del MAX3485
+    delayMicroseconds(2);  // propagation delay del MAX3485
 }
 
 void RS485::_setRxMode() {
