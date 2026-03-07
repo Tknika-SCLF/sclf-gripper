@@ -14,7 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-HardwareSerial RS485_SERIAL(PIN_RS485_RX, PIN_RS485_TX);
+// Instanciar específicamente el puerto Serial3 usando los pines configurados
+HardwareSerial Serial3(PIN_RS485_RX, PIN_RS485_TX);
 
 void RS485::begin(uint8_t deviceId, uint32_t baudrate) {
     _deviceId = deviceId;
@@ -24,15 +25,17 @@ void RS485::begin(uint8_t deviceId, uint32_t baudrate) {
     pinMode(PIN_RS485_DIR, OUTPUT);
     _setRxMode();  // por defecto: escuchar
 
-    // UART
-    RS485_SERIAL.begin(baudrate);
+    // Configurar pines explícitamente y luego inicializar
+    Serial3.setRx(PIN_RS485_RX);
+    Serial3.setTx(PIN_RS485_TX);
+    Serial3.begin(baudrate);
 }
 
 void RS485::send(const char* frame) {
     _setTxMode();
 
-    RS485_SERIAL.print(frame);
-    RS485_SERIAL.flush();  // espera a que el último byte salga del shift register
+    Serial3.print(frame);
+    Serial3.flush();  // espera a que el último byte salga del shift register
 
     // Pequeña espera para que el último bit llegue al bus antes de cambiar DIR
     delayMicroseconds(50);
@@ -47,8 +50,8 @@ void RS485::reply(const char* cmd, float value) {
 }
 
 bool RS485::update(RS485Frame& out) {
-    while (RS485_SERIAL.available()) {
-        char c = RS485_SERIAL.read();
+    while (Serial3.available()) {
+        char c = Serial3.read();
 
         if (c == '\n' || c == '\r') {
             if (_rxIdx > 0) {
@@ -66,6 +69,27 @@ bool RS485::update(RS485Frame& out) {
         }
     }
     return false;
+}
+
+bool RS485::simulateRx(const char* str, RS485Frame& out) {
+    bool gotFrame = false;
+    while (*str) {
+        char c = *str++;
+        if (c == '\n' || c == '\r') {
+            if (_rxIdx > 0) {
+                _rxBuf[_rxIdx] = '\0';
+                bool ok = _parseFrame(_rxBuf, out);
+                _rxIdx = 0;
+                if (ok) gotFrame = true;
+            }
+        } else if (_rxIdx < RS485_MAX_FRAME - 1) {
+            _rxBuf[_rxIdx++] = c;
+        } else {
+            // Buffer overflow
+            _rxIdx = 0;
+        }
+    }
+    return gotFrame;
 }
 
 // ── Privado ──────────────────────────────────────────────────────────────────

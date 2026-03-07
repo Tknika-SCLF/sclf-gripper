@@ -125,46 +125,73 @@ Konpilatzen ez badu → ikusi [Arazoen Konponbidea](#arazoen-konponbidea).
 
 Konektatu ST-Link SCLF Gripper-aren SWD atakara:
 
-| ST-Link pin | Gripper pad | Seinalea |
+| Pin ST-Link | Pad Gripper | Seinalea |
 |---|---|---|
 | SWDIO | DIO | PA13 |
 | SWCLK | CLK | PA14 |
 | RST | RST | PG10 |
 | GND | GND | — |
-| 3.3V | — | (plaka bereizita elikatu 24V-rekin) |
+| 3.3V | 3V3 | (STM32 soilik elikatzen du, ez encoderra ez driverra) |
 
-> ⚠️ **Ez elikatu plaka ST-Link-etik**. Erabili 24V-ko kanpo elikadura robota edo elikadura iturritik.
+> ⚠️ **Elikadura:**
+> - ST-Link-aren 3.3V pina **nahikoa da** STM32 flasheatzeko eta oinarrizko kodea exekutatzeko (LED blink).
+> - **BAINA** MT6701 encoderrak eta DRV8316 driverrak DRV8316-ren step-down bihurgailutik elikatzen dira, eta horrek **24V kanpokoa** behar du. 24V gabe, encoderrak beti `0xFFFF` bueltatzen du.
+> - Test osoetarako (encoder + motorra), beti konektatu 24V elikadura.
 
 Flasheatu:
 ```bash
 pio run --target upload
 ```
 
-**Espero den emaitza:** LEDa (PC6) 500ms-ro keinu egiten hasiko da.
+**Espero den emaitza:** `[SUCCESS]` eta D4 LEDa (PC6) keinuka hasiko da.
+
+#### Aurre-test gomendatua: LED Heartbeat
+
+Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
+
+1. Aldatu `build_src_filter` `platformio.ini`-n:
+   ```ini
+   build_src_filter = +<../examples/fase0_led_heartbeat>
+   ```
+2. Flasheatu `pio run --target upload` erabiliz.
+3. D4 LEDak 5Hz-ra keinuka egin behar du (200ms). Keinurik ez bada → elikadura edo ST-Link kableatu arazoa.
+4. Berreskuratu jatorrizko `build_src_filter` Fase 1.1-era itzuli nahi duzunean.
 
 ---
 
-### 8. Urratsa — USB VCP Egiaztatu
+### 8. Urratsa — Encoderra Egiaztatu (Fase 1.1)
+
+> ⚠️ **Baldintzak:** 24V elikadura konektatuta (pogo pinak edo laborategiko iturria). 24V gabe, MT6701 encoderrak ez du energiarik eta SPI-k beti `0xFFFF` bueltatzen du.
+
+`fase1_1_mt6701_test`-eko firmware-ak D4 LEDa diagnostiko bisual modura erabiltzen du (Serial gabe):
+
+1. Egiaztatu `build_src_filter` horrela dagoela `platformio.ini`-n:
+   ```ini
+   build_src_filter = +<../examples/fase1_1_mt6701_test> +<encoder/>
+   ```
+2. Flasheatu: `pio run --target upload`
+3. Begiratu D4 LEDa:
+
+| LED portaera | Esanahia |
+|---|---|
+| 3 keinu azkar abiaraztean | `setup()` ondo amaituta |
+| LED motela (700ms, ~0.7Hz) | Motorra lehen erdibiraketan (0°-180°) |
+| LED azkarra (80ms, ~6Hz) | Motorra bigarren erdibiraketan (180°-360°) |
+| **Motorra biratzean aldatzen da** ✅ | **MT6701 encoderrak funtzionatzen du!** |
+| Beti azkar aldaketarik gabe | SPI-k 0xFFFF bueltatzen du → encoderrak elikadurarik ez |
+
+✅ **LEDak motorra biratzean aldatzen badu, Fase 1.1 gaindituta dago.**
+
+### 8b. Urratsa — Serial Monitor Egiaztatu (USB VCP)
+
+> ✅ **EGOERA:** Ondo funtzionatzen du. Firmwareak `SystemClock_Config` bloke bat dauka `main.cpp`-n STM32G4-ren USB periferikorako behar den HSI48 osziladorea gaitzeko.
 
 1. Konektatu USB-C kable bat Gripperraren eta PCaren artean.
-2. Ireki PlatformIOren serie-monitorea (🔌 ikonoa beheko barran) edo:
+2. Ireki PlatformIOren serie-monitorea (🔌 ikonoa beheko barran) edo sartu:
    ```bash
    pio device monitor --baud 115200
    ```
-3. Hau ikusi beharko zenuke:
-   ```
-   ========================================
-     SCLF Gripper v1.0 — Firmwarea 0 FASEA
-   ========================================
-     MCU: STM32G474CEU6 @ 170 MHz
-     Egoera: SMOKE TEST (FOC gabe, motor gabe)
-   ========================================
-     Pinak ondo hasieratu dira.
-   [0s] loops/s≈XXXXX  LED=ON
-   [1s] loops/s≈XXXXX  LED=OFF
-   ```
-
-✅ **Hau ikusten baduzu, ingurunea %100 operatibo dago.** Eguneratu `MEMORY.md` eta markatu 0 FASEKO zereginak beteta bezala `TASKS.md`-n.
+3. Testaren irteera ikusi beharko zenuke pantailan (Adib. `MT6701 Raw (con o sin 24V): X` edo biratzean aldatzen den balio bat).
 
 ---
 
@@ -310,6 +337,14 @@ pio run --target clean && pio run
 ### USB VCP ez da agertzen PCan
 - Instalatu STM32 VCP kontrolatzailea (driverra): https://www.st.com/en/development-tools/stsw-stm32102.html (Windows soilik)
 - Linux/macOS sistemetan ez dago kontrolatzailerik behar. Egiaztatu `ls /dev/ttyACM*` erabiliz.
+
+### LEDak ez du keinurik egiten flasheatu ondoren
+- **Ziurtatu erlojuaren konfigurazioa duzula:** STM32duino framework-ak `-DUSBCON` flag-ekin (berez aktibatuta proiektu honetan) USB CDC possesses `setup()` baino **lehenago** hasieratzen du. `main.cpp`-ren amaieran HSI48 aktibatzen duen `SystemClock_Config(void)` funtzioa falta bada, firmwarea blokeatu egiten da.
+- Probatu `examples/fase0_led_heartbeat` (LED soilik, menpekotasunik gabe). Horrek ere funtzionatzen ez badu → elikadura edo kableatu arazoa.
+
+### Serial Monitoreak ez du daturik erakusten (pantaila hutsik)
+- Ziurtatu COM ataka zuzenean konektatzen zarela. ST-Link-ek COM bereizi bat sortzen du: COM hori beti isilik egongo da. Bilatu "STM32 Virtual COM Port" Gailu Kudeatzailean.
+- Flasheatu berri baduzu, Windows-ek segundo bat behar izan dezake USB berria ezagutzeko. PlatformIO-k ataka zaharrean monitorea ireki badu, "zintzilik" geratuko da. Kantzelatu terminalean `Ctrl+C` erabiliz eta exekutatu `pio device monitor` berriro.
 
 ### IntelliSense-k ez du `Arduino.h` edo STM32 header-ak aurkitzen
 - Itxaron PlatformIOk lehenengo konpilazioa amaitu arte (includes indizea sortzen du).

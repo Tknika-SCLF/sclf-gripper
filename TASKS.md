@@ -7,15 +7,15 @@
 ## FASE 0 — Entorno y Scaffolding
 > Objetivo: proyecto compila y hace parpadear un LED. Nada más.
 
-- [x] Crear `platformio.ini` con target `genericSTM32G474CE`, 170 MHz, ST-Link
+- [x] Crear `platformio.ini` con target `nucleo_g474re`, 170 MHz, ST-Link
 - [x] Crear `src/config/pins.h` verificado contra el esquemático KiCad
 - [x] Crear `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
-- [ ] Instalar PlatformIO en Antigravity via `.vsix` (cpptools + platformio-ide)
-- [ ] Instalar extensión `cortex-debug` para debug con ST-Link
-- [ ] Verificar que `pio run` compila sin errores (empty `setup()`/`loop()`)
-- [ ] Hacer `pio run --target upload` y confirmar que el ST-Link detecta la placa
-- [ ] Hacer parpadear `PIN_LED` (PC6) cada 500ms como smoke test
-- [ ] Confirmar que el monitor serie USB VCP funciona (`Serial.println("OK")`)
+- [x] Instalar PlatformIO en Antigravity via `.vsix` (cpptools + platformio-ide)
+- [x] Instalar extensión `cortex-debug` para debug con ST-Link
+- [x] Verificar que `pio run` compila sin errores
+- [x] Hacer `pio run --target upload` y confirmar que el ST-Link detecta la placa
+- [x] Hacer parpadear `PIN_LED` (PC6/D4) — pre-test `fase0_led_heartbeat` ✅
+- [x] Confirmar que el monitor serie USB VCP funciona (`Serial.begin()`) ✅
 
 ---
 
@@ -23,14 +23,16 @@
 > Objetivo: leer encoder, leer corriente, hablar por RS-485. Sin FOC todavía.
 
 ### 1.1 MT6701 Encoder Driver
-- [ ] Crear `src/encoder/MT6701.h` — API pública:
-  - `bool begin()` — inicializa SPI (PA4/PA5/PA6, 5 MHz, MODE0)
+- [x] Crear `src/encoder/MT6701.h` — API pública:
+  - `bool begin()` — inicializa SPI (PA5=CLK, PA6=SDO, PA7=MOSI dummy)
   - `float getAngleRad()` — devuelve ángulo en radianes [0, 2π)
   - `uint16_t getRawCounts()` — devuelve valor crudo 14-bit [0–16383]
   - `bool isOk()` — comprueba que la lectura SPI es válida
-- [ ] Crear `src/encoder/MT6701.cpp` — implementación
-- [ ] Test manual: imprimir ángulo por VCP y girar eje a mano
-- [ ] Verificar wrap-around correcto (16383 → 0 sin salto brusco en `getAngleRad`)
+- [x] Crear `src/encoder/MT6701.cpp` — implementación
+- [x] Crear `examples/fase1_1_mt6701_test/main.cpp` — test manual
+- [x] Test manual: imprimir ángulo/raw por VCP (Funciona con ST-Link 3.3V)
+- [x] Verificar encoder: El LED cambia velocidad y USB muestra raw=0-16383
+- [x] Verificar wrap-around correcto (16383 → 0 sin salto brusco en `getAngleRad`)
 
 ### 1.2 DRV8316 SPI Driver
 - [ ] Crear `src/motor/DRV8316.h` — API pública:
@@ -209,3 +211,8 @@
 | 2026-02-25 | Fault detection por SPI polling, no por GPIO IRQ | Sin pin disponible para nFAULT |
 | 2026-02-25 | SPI compartido entre DRV8316 (PC4 CS) y MT6701 (PA4 CS) | PB3/PB4/PB5 son el bus SPI1 |
 | 2026-02-25 | RS-485 half-duplex con PB9 como DE/RE | Confirmado en esquemático |
+| 2026-03-07 | Board cambiado de `genericSTM32G474CE` a `nucleo_g474re` | `generic` no soporta Arduino framework |
+| 2026-03-07 | SPIClass MOSI: usar `PA7` en vez de `NC` | `NC` bloquea la inicialización del periférico SPI |
+| 2026-03-07 | ST-Link 3.3V alimenta el MCU y el Encoder | **El MT6701 funciona sin la fuente de 24V**. Solo el driver lo necesita. |
+| 2026-03-07 | **Solución USB CDC:** Añadido `SystemClock_Config` en `main.cpp` | STM32G4 requiere activar `HSI48` para el reloj USB |
+| 2026-03-07 | Solución de testeo Half-Duplex RS-485 | MAX3485 bloquea RX durante TX. Creado `simulateRx()` para bypass y test. |

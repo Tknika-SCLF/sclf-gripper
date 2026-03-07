@@ -130,40 +130,67 @@ Connect the ST-Link to the SCLF Gripper's SWD port:
 | SWCLK | CLK | PA14 |
 | RST | RST | PG10 |
 | GND | GND | — |
-| 3.3V | — | (power the board separately with 24V) |
+| 3.3V | 3V3 | (powers STM32 only, not encoder or driver) |
 
-> ⚠️ **Do not power the board from the ST-Link**. Use an external 24V power supply from the robot or a desktop PSU.
+> ⚠️ **Power supply:**
+> - The ST-Link's 3.3V pin **IS sufficient** to flash the STM32 and run basic code (LED blink).
+> - **BUT** the MT6701 encoder and DRV8316 driver are powered from the DRV8316's internal step-down converter, which requires **external 24V**. Without 24V, the encoder always returns `0xFFFF` (floating MISO line).
+> - For full tests (encoder + motor), always connect 24V.
 
 Flash:
 ```bash
 pio run --target upload
 ```
 
-**Expected output:** LED (PC6) will start blinking every 500ms.
+**Expected output:** `[SUCCESS]` and LED D4 (PC6) will start blinking.
+
+#### Recommended pre-test: LED Heartbeat
+
+Before attempting complex tests, verify the STM32 boots:
+
+1. Change `build_src_filter` in `platformio.ini` to:
+   ```ini
+   build_src_filter = +<../examples/fase0_led_heartbeat>
+   ```
+2. Flash with `pio run --target upload`.
+3. LED D4 should blink at 5Hz (200ms). If it doesn't blink → power or ST-Link wiring issue.
+4. Restore the original `build_src_filter` when you want to go back to Phase 1.1.
 
 ---
 
-### Step 8 — Verify USB VCP
+### Step 8 — Verify Encoder (Phase 1.1)
+
+> ⚠️ **Requirements:** 24V power supply connected (pogo pins or bench supply). Without 24V, the MT6701 encoder has no power and SPI always returns `0xFFFF`.
+
+The current `fase1_1_mt6701_test` firmware uses LED D4 as visual diagnostics (no Serial):
+
+1. Make sure `build_src_filter` in `platformio.ini` is:
+   ```ini
+   build_src_filter = +<../examples/fase1_1_mt6701_test> +<encoder/>
+   ```
+2. Flash: `pio run --target upload`
+3. Observe LED D4:
+
+| LED behavior | Meaning |
+|---|---|
+| 3 quick flashes on startup | `setup()` completed OK |
+| LED slow (700ms, ~0.7Hz) | Motor in first half of rotation (0°-180°) |
+| LED fast (80ms, ~6Hz) | Motor in second half of rotation (180°-360°) |
+| **Changes when rotating motor** ✅ | **MT6701 encoder works!** |
+| Always fast without changing | SPI returns 0xFFFF → encoder unpowered |
+
+✅ **If the LED changes when you rotate the motor, Phase 1.1 is passed.**
+
+### Step 8b — Verify USB Serial Monitor (VCP)
+
+> ✅ **STATUS:** Works correctly. The firmware includes a `SystemClock_Config` override block in `main.cpp` that enables the internal HSI48 oscillator required for the STM32G4 USB peripheral.
 
 1. Connect a USB-C cable between the Gripper and the PC.
-2. Open PlatformIO's serial monitor (🔌 icon in the bottom bar) or:
+2. Open PlatformIO's serial monitor (🔌 icon in the bottom bar or command palette) or run:
    ```bash
    pio device monitor --baud 115200
    ```
-3. You should see this:
-   ```
-   ========================================
-     SCLF Gripper v1.0 — Firmware PHASE 0
-   ========================================
-     MCU: STM32G474CEU6 @ 170 MHz
-     State: SMOKE TEST (No FOC, No motor)
-   ========================================
-     Pins initialized correctly.
-   [0s] loops/s≈XXXXX  LED=ON
-   [1s] loops/s≈XXXXX  LED=OFF
-   ```
-
-✅ **If you see this, the environment is 100% operational.** Update `MEMORY.md` and mark PHASE 0 tasks as completed in `TASKS.md`.
+3. You should see the current test output (e.g. `MT6701 Raw (con o sin 24V): X` or a value changing as you rotate).
 
 ---
 
@@ -297,6 +324,15 @@ pio run --target clean && pio run
 ### USB VCP does not appear on PC
 - Install STM32 VCP driver: https://www.st.com/en/development-tools/stsw-stm32102.html (Windows only)
 - No driver needed on Linux/macOS. Check with `ls /dev/ttyACM*`.
+
+### LED does not blink after flashing
+- **Make sure you have the clock override:** The STM32duino framework with `-DUSBCON` flags (enabled by default in this project) tries to initialize USB CDC **before** `setup()`. If the `SystemClock_Config(void)` function enabling HSI48 is missing at the end of your `main.cpp` file, the firmware hangs silently.
+- Try `examples/fase0_led_heartbeat` (LED only, no dependencies) making sure it builds and uploads fine. If that doesn't blink either → power or wiring issue.
+
+### Serial Monitor shows no data (blank screen)
+- Make sure you're connecting to the correct COM port. The ST-Link generates a separate COM port: that one is always silent. Look for "STM32 Virtual COM Port" in Device Manager.
+- If you just flashed the board, Windows might take a second to recognize the new USB COM. If PlatformIO opened the monitor on the old port, it will hang. Cancel in the terminal with `Ctrl+C` and run `pio device monitor` again.
+- The `monitor_port` in `platformio.ini` must NOT have a hardcoded Linux path (`/dev/ttyACM0`). On Windows, leave it empty for auto-detection.
 
 ### IntelliSense cannot find `Arduino.h` or STM32 headers
 - Wait for PlatformIO to finish its first build (generates includes index).

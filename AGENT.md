@@ -61,8 +61,10 @@ The board is built around an **STM32G474CEU6** microcontroller and implements **
 | PG10 | RST | Reset button / SWD RST |
 | PB8 | BOOT0 | Boot button (DFU mode) |
 
+> ⚠️ **Power Supply Discovery (07/03/2026)**: The MT6701 encoder is powered by the 3.3V rail. It **does not** need the 24V supply to operate; it works perfectly just with the ST-Link 3.3V connected. Only the DRV8316 driver and the motor require the external 24V supply.
+
 > ⚠️ **nFAULT / DRVOFF**: These DRV8316 pins are NOT connected to the STM32. nFAULT has a local pull-up resistor only. DRVOFF is tied to GND (driver always on). Fault detection MUST be done via SPI status register polling, not GPIO interrupt.
-- **LEDs:** 2x power indicator LEDs (PWR)
+- **LEDs:** D2 = PWR (red, always on with 3.3V), D4 = Status LED on PC6 (controllable by firmware)
 
 ---
 
@@ -72,7 +74,7 @@ The board is built around an **STM32G474CEU6** microcontroller and implements **
 - **Build system:** PlatformIO
 - **FOC library:** SimpleFOC v2.x (`askuric/Simple FOC`)
 - **Language:** C++17
-- **Target:** `genericSTM32G474CE`, platform `ststm32`
+- **Target:** `nucleo_g474re` (closest Arduino-compatible board for STM32G474CEU6), platform `ststm32`
 - **Upload protocol:** ST-Link (SWD)
 - **Clock:** 170 MHz (HSI or HSE 16 MHz + PLL)
 
@@ -80,7 +82,7 @@ The board is built around an **STM32G474CEU6** microcontroller and implements **
 ```ini
 [env:SCLF_Gripper]
 platform = ststm32
-board = genericSTM32G474CE
+board = nucleo_g474re
 framework = arduino
 board_build.mcu = stm32g474ceux
 board_build.f_cpu = 170000000L
@@ -88,15 +90,29 @@ upload_protocol = stlink
 debug_tool = stlink
 monitor_speed = 115200
 
+; Build example code instead of src/main.cpp
+build_src_filter = +<../examples/fase1_1_mt6701_test> +<encoder/>
+
 lib_deps =
-    askuric/Simple FOC @ ^2.3.3
+    SimpleFOC=https://github.com/simplefoc/Arduino-FOC.git#v2.3.3
 
 build_flags =
+    -I src
     -DHAL_TIM_MODULE_ENABLED
     -DHAL_SPI_MODULE_ENABLED
     -DHAL_UART_MODULE_ENABLED
     -DHAL_ADC_MODULE_ENABLED
+    -DHAL_DMA_MODULE_ENABLED
+    -DHAL_CORDIC_MODULE_ENABLED
+    -DUSE_FULL_LL_DRIVER
+    ; USB CDC — commented out until HSI48 clock fix is implemented
+    ; -DUSBCON
+    ; -DUSBD_USE_CDC
+    ; -DPIO_FRAMEWORK_ARDUINO_ENABLE_CDC
+    ; -DHAL_PCD_MODULE_ENABLED
 ```
+
+> ⚠️ **USB CDC Status:** The STM32G474's USB peripheral requires the HSI48 oscillator (48MHz internal RC) as its clock source. Without a proper `SystemClock_Config` override enabling HSI48, `Serial.begin()` hangs the firmware before `setup()` runs. USB CDC flags are commented out until this is resolved.
 
 ---
 

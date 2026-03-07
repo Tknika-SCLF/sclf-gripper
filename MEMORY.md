@@ -9,10 +9,13 @@
 
 | Eremua | Balioa |
 |---|---|
-| **Fase aktiboa** | FASE 0 — Ingurunea eta Scaffolding |
-| **Azken eguneraketa** | 2026-02-26 |
+| **Fase aktiboa** | FASE 1.2 / FASE 1.3 (BLOQUEADA) — Zain 24V iturria |
+| **Azken eguneraketa** | 2026-03-07 |
 | **Konpilazioa** | ✅ Egiaztatuta (Ondo konpilatzen du) |
-| **Konektatutako hardwarea** | ⏳ ST-Link bidezko lehen konexioaren zain |
+| **ST-Link Flasheatzea** | ✅ Funtzionatzen du (upload OK) |
+| **LED Heartbeat** | ✅ Egiaztatuta (PC6 / D4 keinuka) |
+| **USB Serial CDC** | ✅ Funtzionatzen du (HSI48 clock fix) |
+| **Encoder MT6701** | ✅ Egiaztatuta (3.3V-rekin ere funtzionatzen du!) |
 | **Motorra probatuta** | ❌ Ez |
 
 ---
@@ -26,7 +29,8 @@
 | cpptools | ✅ Instalatuta |
 | cortex-debug | ✅ Instalatuta |
 | Garatzailearen OS | Windows |
-| ST-Link bertsioa | Ezezaguna — baieztatu |
+| ST-Link bertsioa | ST-Link V2 (klona) ✅ Funtzionatzen du |
+| Board (platformio.ini) | `nucleo_g474re` |
 
 ### `.vsix` deskarga estekak
 - cpptools: https://github.com/microsoft/vscode-cpptools/releases
@@ -176,6 +180,14 @@
 - ✅ Proiektuaren dokumentazioa Euskerara itzulia (garapena Euskeraz jarraitzeko).
 - ✅ README-ak hiru hizkuntzatan egituratuta (EN, EU, ES).
 - ✅ Firmwarea ondo konpilatzen dela egiaztatuta PlatformIO-ren bidez azken mendetasunekin.
+
+### 2026-03-07 — STM32 Flasheatzea eta Debug Saioa
+- ✅ ST-Link V2 klona erabili y upload OpenOCD funcionan OK
+- ✅ LED Heartbeat testa y USB CDC Serial (HSI48 flag) OK
+- ✅ MT6701 SPI kodea kargatua (`fase1_1_mt6701_test`). 💡 **Aurkikuntza:** 3.3V-tik dabil, ez du 24V behar!
+- ✅ SPIClass MOSI fix-a: `NC` ordez `PA7`. Board aldaketa: `nucleo_g474re`.
+- ✅ RS-485 Driver inplementazioa (`fase1_4_rs485_ping`). MAX3485 Half-Duplex funtzionamendua baliozkotua SIMULATZAILE bidez (RX injectatuz USB bidez).
+- ⚠️ **BLOKEATUTA:** Fase 1.2 (SPI driver) eta Fase 1.3/2 (Motor testa) 24V elikadura eta *pogo pins* iritsi arte ezin dira probatu.
 
 ### YYYY-MM-DD — [bete beharrekoa]
 - ...

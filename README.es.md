@@ -122,6 +122,24 @@ Si da error al compilar → consulta [Solución de Problemas](#solución-de-prob
 
 ### Paso 7 — Conectar ST-Link y Flashear
 
+> ⚠️ **NUEVO PC:** Si es la primera vez que usas este ordenador, necesitas instalar los drivers USB del ST-Link para que Windows lo detecte. Tienes dos opciones:
+> 
+> **Opción A (Oficial de ST):** Descárgalos desde [STSW-LINK009](https://www.st.com/en/development-tools/stsw-link009.html) (requiere crear una cuenta gratuita).
+> 
+> **Opción B (El "Truco" Rápido - Zadig):** Si no quieres registrarte, puedes usar Zadig. 
+> 1. Descarga e inicia [Zadig](https://zadig.akeo.ie/) (es portable, no requiere instalación).
+> 2. Conecta tu ST-Link al USB del ordenador.
+> 3. En Zadig, ve a **Options** → **List All Devices** (Listar todos los dispositivos).
+> 4. En el menú desplegable, selecciona **"STM32 STLink"** (o similar).
+> 5. Asegúrate de que el Driver Destino (el recuadro verde de la derecha) sea **"WinUSB"**.
+> 6. Haz clic en **Install Driver / Replace Driver** y espera a que termine. ¡Listo! Ya será detectado por PlatformIO/OpenOCD.
+> 
+> **Opción C (Usuarios de WSL2):** Si estás ejecutando PlatformIO dentro de WSL (Ubuntu/Linux en Windows), *Linux ya tiene los drivers*, PERO Windows no "pasa" el USB a WSL por defecto. 
+> 1. En PowerShell (como Admin) en Windows, instala usbipd: `winget install --interactive --exact dorssel.usbipd-win`
+> 2. Cierra y abre PowerShell. Conecta el ST-Link.
+> 3. Ejecuta `usbipd list` y busca el VID:PID del ST-Link (ej. `0483:3748`).
+> 4. Conéctalo a WSL con `usbipd bind --busid <BUSID>` y luego `usbipd attach --wsl --busid <BUSID>`. (Ahora Linux verá `/dev/ttyUSB` o `/dev/stlinkv2`).
+
 Conecta el ST-Link al puerto SWD del SCLF Gripper:
 
 | Pin ST-Link | Pad Gripper | Señal |
@@ -130,40 +148,81 @@ Conecta el ST-Link al puerto SWD del SCLF Gripper:
 | SWCLK | CLK | PA14 |
 | RST | RST | PG10 |
 | GND | GND | — |
-| 3.3V | — | (alimentar la placa por separado a 24V) |
+| 3.3V | 3V3 | (alimenta solo el STM32, no el encoder ni driver) |
 
-> ⚠️ **No alimentes la placa desde el ST-Link**. Usa una fuente de alimentación externa de 24V (del robot o de laboratorio).
+> ⚠️ **Alimentación:**
+> - El pin 3.3V del ST-Link **SÍ es suficiente** para flashear el STM32 y ejecutar código básico (blink LED).
+> - 💡 **¡NUEVO DESCUBRIMIENTO!**: El encoder MT6701 **también se alimenta con la línea de 3.3V**. Por lo tanto, puedes probar la Fase 1.1 (Encoder) y Fase 1.4 (RS-485) usando EXCLUSIVAMENTE el ST-Link.
+> - **PERO** el driver DRV8316 y los motores requieren que el circuito principal reciba **24V externos** (vía pogo-pins o bornera). Las fases 1.2, 1.3 y 2+ están bloqueadas si no hay 24V.
 
 Flashear:
 ```bash
 pio run --target upload
 ```
 
-**Salida esperada:** El LED (PC6) empezará a parpadear cada 500ms.
+**Salida esperada:** `[SUCCESS]` y el LED D4 (PC6) empezará a parpadear.
+
+#### Pre-test recomendado: LED Heartbeat
+
+Antes de intentar tests complejos, verifica que el STM32 arranca:
+
+1. Cambia `build_src_filter` en `platformio.ini` a:
+   ```ini
+   build_src_filter = +<../examples/fase0_led_heartbeat>
+   ```
+2. Flashea con `pio run --target upload`.
+3. El LED D4 debe parpadear a 5Hz (200ms). Si no parpadea → problema de alimentación o cableado ST-Link.
+4. Restaura el `build_src_filter` original cuando quieras volver a la Fase 1.1.
 
 ---
 
-### Paso 8 — Verificar USB VCP
+### Paso 8 — Verificar Encoder (Fase 1.1)
 
-1. Conecta un cable USB-C entre el Gripper y el PC.
-2. Abre el monitor serie de PlatformIO (icono 🔌 en la barra inferior) o:
+> 💡 **Nota:** ¡El encoder funciona perfectamente solo con los 3.3V del ST-Link! No requiere la fuente de 24V externa.
+
+El firmware actual de `fase1_1_mt6701_test` usa el LED D4 como diagnóstico visual (sin Serial):
+
+1. Asegúrate de que `build_src_filter` está así en `platformio.ini`:
+   ```ini
+   build_src_filter = +<../examples/fase1_1_mt6701_test> +<encoder/>
+   ```
+2. Flashea: `pio run --target upload`
+3. Observa el LED D4:
+
+| Comportamiento LED | Significado |
+|---|---|
+| 3 destellos rápidos al arrancar | `setup()` completado OK |
+| LED lento (700ms, ~0.7Hz) | Motor en primera mitad del giro (0°-180°) |
+| LED rápido (80ms, ~6Hz) | Motor en segunda mitad del giro (180°-360°) |
+| **Cambia al girar el motor** ✅ | **¡Encoder MT6701 funciona!** |
+| Siempre rápido sin cambiar | SPI devuelve 0xFFFF → encoder sin alimentación |
+
+✅ **Si el LED cambia al girar el motor, la Fase 1.1 está superada.**
+
+### Paso 8b — Verificación del Monitor Serie (USB VCP)
+
+> ✅ **ESTADO:** Funciona correctamente. El firmware incluye un bloque `SystemClock_Config` override en `main.cpp` que activa el oscilador interno HSI48 necesario para el periférico USB de los STM32G4.
+
+1. Conecta el cable USB-C entre el Gripper y el PC.
+2. Abre el Monitor Serie de PlatformIO (icono del enchufe 🔌 o paleta de comandos) o ejecuta:
    ```bash
    pio device monitor --baud 115200
    ```
-3. Deberías ver esto:
-   ```
-   ========================================
-     SCLF Gripper v1.0 — Firmware FASE 0
-   ========================================
-     MCU: STM32G474CEU6 @ 170 MHz
-     Estado: SMOKE TEST (Sin FOC, sin motor)
-   ========================================
-     Pines inicializados correctamente.
-   [0s] loops/s≈XXXXX  LED=ON
-   [1s] loops/s≈XXXXX  LED=OFF
-   ```
+3. Deberías ver la salida del test (ej. `MT6701 Raw (con o sin 24V): 0` o el valor que cambie al girar).
 
-✅ **Si ves esto, el entorno está 100% operativo.** Actualiza `MEMORY.md` y marca las tareas de la FASE 0 como completadas en `TASKS.md`.
+### Paso 8c — Verificar Comunicaciones RS-485 (Fase 1.4)
+
+> 💡 **Nota:** Esta fase también funciona perfectamente solo con los 3.3V del ST-Link.
+
+1. Cambia el `build_src_filter` en `platformio.ini` a:
+   ```ini
+   build_src_filter = +<../examples/fase1_4_rs485_ping/> +<comms/>
+   ```
+2. Flashea: `pio run --target upload`
+3. Abre el Monitor Serie de PlatformIO (`pio device monitor --baud 115200`).
+4. Escribe un comando válido para el ID 1, por ejemplo: `1:T:hola` (y pulsa Enter).
+5. El firmware inyectará ese comando en el búfer de recepción RS-485 (Simulador Local), el parser lo procesará como un comando válido y responderá enviando la cadena `1:ACK:T` físicamente por el bus RS-485 (mostrado también en el monitor).
+6. ✅ **Si recibes el ACK, el driver RS-485 y el parser de comunicaciones operan al 100%.**
 
 ---
 
@@ -210,6 +269,14 @@ SCLF_Gripper_v1_0_firmware/
 │
 ├── lib/                            ← Bibliotecas locales (actualmente vacía)
 ├── test/                           ← Tests Unitarios PlatformIO (FASE 8)
+│
+├── examples/
+│   ├── fase0_led_heartbeat/        ← Pre-test: LED blink sin dependencias (verificar MCU)
+│   ├── fase1_1_mt6701_test/        ← Fase 1.1: Test encoder MT6701 vía SPI (debug por LED)
+│   ├── fase1_2_drv_spi/            ← Fase 1.2: Test comunicación SPI con DRV8316
+│   ├── fase1_3_open_loop_v_control/← Fase 1.3: Control open-loop voltaje
+│   ├── fase3_2_gripper_kinematics/ ← Fase 3.2: Cinemática del gripper
+│   └── fase4_2_rs485/              ← Fase 4.2: Comunicación RS-485
 │
 ├── .vscode/
 │   ├── settings.json               ← Config IDE (IntelliSense, formato)
@@ -297,6 +364,15 @@ pio run --target clean && pio run
 ### USB VCP no aparece en el PC
 - Instala el driver STM32 VCP: https://www.st.com/en/development-tools/stsw-stm32102.html (Solo Windows)
 - No se necesita driver en Linux/macOS. Verifica con `ls /dev/ttyACM*`.
+
+### LED no parpadea después de flashear
+- **Asegúrate de tener el override de reloj:** El framework STM32duino con las flags `-DUSBCON` (activadas por defecto en este proyecto) intenta inicializar el USB CDC **antes** del `setup()`. Si falta la función `SystemClock_Config(void)` activando HSI48 al final de tu archivo `main.cpp`, el firmware se cuelga en silencio.
+- Prueba con `examples/fase0_led_heartbeat` (solo LED, sin dependencias) asegurándote de que compila y sube bien. Si tampoco parpadea → problema de alimentación o cableado.
+
+### Serial Monitor no muestra datos (pantalla en blanco)
+- Asegúrate de conectar al puerto COM correcto. El ST-Link genera un COM separado: ese COM siempre estará en silencio. Busca el COM del "STM32 Virtual COM Port" en el Administrador de dispositivos.
+- Si acaba de flashear, Windows puede tardar un segundo en reconocer el nuevo COM del USB. Si PlatformIO abrió el monitor en el puerto antiguo, se quedará "colgado". Cancela en la terminal con `Ctrl+C` y vuelve a ejecutar `pio device monitor`.
+- El `monitor_port` en `platformio.ini` NO debe tener valor fijo de Linux (`/dev/ttyACM0`). En Windows déjalo vacío para autodetección.
 
 ### IntelliSense no encuentra `Arduino.h` o cabeceras STM32
 - Espera a que PlatformIO termine su primera compilación (genera el índice de includes).

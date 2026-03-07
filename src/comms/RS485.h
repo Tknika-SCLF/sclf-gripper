@@ -68,6 +68,14 @@ public:
     void reply(const char* cmd, float value);
 
     /**
+     * Inyecta bytes directamente al buffer RX local. Útil para testear
+     * la lógica de parseo desde un puerto paralelo (ej. USB).
+     * @param str  String a inyectar
+     * @param out  Frame parseado si devuelve true (alcanza un '\n')
+     */
+    bool simulateRx(const char* str, RS485Frame& out);
+
+    /**
      * Procesa bytes recibidos. Llamar en cada iteración del loop.
      * Non-blocking — devuelve true solo cuando hay un frame completo.
      * @param out  Frame parseado si devuelve true

@@ -16,7 +16,7 @@
 #include "encoder/MT6701.h"
 
 MT6701::MT6701()
-    : _spiSettings(5'000'000, MSBFIRST, SPI_MODE0),
+    : _spiSettings(1'000'000, MSBFIRST, SPI_MODE1),
       _spi(&SPI)  // por defecto
       ,
       _ok(false) {}
@@ -62,8 +62,11 @@ uint16_t MT6701::getRawCounts() {
 uint16_t MT6701::_readRaw() {
     _spi->beginTransaction(_spiSettings);
     digitalWrite(PIN_ENC_CS, LOW);
+    
+    // Pequeño delay para que el MT6701 tenga tiempo de poner el primer bit en la línea MISO.
+    // (t_CSn_Clk setup time)
+    delayMicroseconds(1);
 
-    // TODO (FASE 1.1): verificar el frame SPI exacto contra el datasheet MT6701
     // El MT6701 en modo SPI devuelve 16 bits: [15:2]=angle, [1:0]=status
     uint16_t raw = _spi->transfer16(0x0000);
 
