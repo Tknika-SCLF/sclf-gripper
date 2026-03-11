@@ -34,8 +34,10 @@ bool MT6701::begin(SPIClass* spi_ptr) {
     // Dejamos que main.cpp haga SPI_ENC.begin().
 
     // Leer una vez para verificar que no devuelve 0x0000 ni 0xFFFF
-    uint16_t raw = _readRaw();
-    _ok = (raw != 0xFFFF) && (raw != 0x0000);
+    _lastAngleRad = getAngleRad();
+    if (_ok) {
+        initZero();
+    }
 
     return _ok;
 }
@@ -48,6 +50,32 @@ float MT6701::getAngleRad() {
     // Extraer los 14 bits de ángulo (bits [15:2]) y convertir a radianes
     uint16_t counts = (raw >> 2) & 0x3FFF;
     return static_cast<float>(counts) * RAD_PER_COUNT;
+}
+
+void MT6701::update() {
+    float angle = getAngleRad();
+    if (!_ok)
+        return;
+
+    float d_angle = angle - _lastAngleRad;
+    if (abs(d_angle) > PI) {
+        _rotations += (d_angle > 0) ? -1 : 1;
+    }
+    _lastAngleRad = angle;
+}
+
+float MT6701::getCumulativeAngleRad() {
+    return (float)_rotations * TWO_PI + _lastAngleRad - _offsetRad;
+}
+
+float MT6701::getCumulativeAngleDeg() {
+    return getCumulativeAngleRad() * 180.0f / PI;
+}
+
+void MT6701::initZero() {
+    update();  // Asegurar que _lastAngleRad está actualizado
+    _rotations = 0;
+    _offsetRad = _lastAngleRad;
 }
 
 uint16_t MT6701::getRawCounts() {

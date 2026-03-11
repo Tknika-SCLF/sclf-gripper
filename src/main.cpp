@@ -68,8 +68,12 @@ void setup() {
 
 // ─── loop() ───────────────────────────────────────────────────────────────────
 void loop() {
-    // Leer el sensor
-    float current_angle = sensor.getAngleRad();
+    // Actualizar el sensor (procesar vueltas)
+    sensor.update();
+
+    // Leer los datos
+    float current_angle_rad = sensor.getAngleRad();
+    float cumulative_angle_deg = sensor.getCumulativeAngleDeg();
     uint16_t raw_counts = sensor.getRawCounts();
 
     // Imprimir por Serial Plotter cada 50ms para ver la curva suave
@@ -77,7 +81,9 @@ void loop() {
     if (millis() - last_print >= 50) {
         // Enviar formato para Teleplot/Serial Plotter
         Serial.print(">Angle_Rad:");
-        Serial.println(current_angle, 4);
+        Serial.println(current_angle_rad, 4);
+        Serial.print(">Cumulative_Deg:");
+        Serial.println(cumulative_angle_deg, 2);
         Serial.print(">Raw_Counts:");
         Serial.println(raw_counts);
 
