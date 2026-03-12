@@ -66,28 +66,37 @@ void setup() {
 
 // ─── loop() ───────────────────────────────────────────────────────────────────
 void loop() {
+    // 1. Actualizar el sensor (procesar vueltas)
+    // Es crítico llamar a update() frecuentemente para no perder saltos de vuelta.
+    sensor.update();
+
+    float cumulativeAngle = sensor.getCumulativeAngleDeg();
+    float absoluteAngle = sensor.getAngleRad() * 180.0f / PI;
     uint16_t raw = sensor.getRawCounts();
 
-    // Test visual claro:
-    //   0° - 180° (raw 0–8191)    → LED LENTO   (700ms ON / 700ms OFF)
-    //   180° - 360° (raw 8192–16383) → LED RÁPIDO  (80ms ON  / 80ms  OFF)
-    //
-    // Si el encoder funciona: girar media vuelta cambia el patrón radicalmente.
-    // Si el encoder NO funciona: raw=0 siempre → siempre LENTO.
-    uint32_t interval;
-    if (raw > 8191) {
-        interval = 80;   // segunda mitad → LED rápido
-    } else {
-        interval = 700;  // primera mitad → LED lento
+    // 2. Control de LED No-Bloqueante
+    // Pattern cambia según la posición absoluta (como antes)
+    static uint32_t last_led_toggle = 0;
+    uint32_t interval = (raw > 8191) ? 80 : 700;
+
+    if (millis() - last_led_toggle >= interval) {
+        digitalWrite(PIN_LED, !digitalRead(PIN_LED));
+        last_led_toggle = millis();
     }
 
-    Serial.print("MT6701 Raw (con o sin 24V): ");
-    Serial.println(raw);
-
-    digitalWrite(PIN_LED, HIGH); delay(interval);
-
-    digitalWrite(PIN_LED, HIGH); delay(interval);
-    digitalWrite(PIN_LED, LOW);  delay(interval);
+    // 3. Imprimir datos por Serial (Teleplot / Serial Plotter)
+    static uint32_t last_print = 0;
+    if (millis() - last_print >= 500) {
+        Serial.print(">Angle_Abs_Deg:");
+        Serial.println(absoluteAngle, 2);
+        Serial.print(">Angle_Cum_Deg:");
+        Serial.println(cumulativeAngle, 2);
+        Serial.print(">Raw_Counts:");
+        Serial.println(raw);
+        Serial.println("");
+        
+        last_print = millis();
+    }
 }
 
 // ─── Configuración de Reloj Personalizada (Override) ─────────────────────────

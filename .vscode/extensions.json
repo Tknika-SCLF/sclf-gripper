@@ -1,17 +1,10 @@
 {
+    // See http://go.microsoft.com/fwlink/?LinkId=827846
+    // for the documentation about the extensions.json format
     "recommendations": [
-        // ── Obligatorias (instalar via .vsix en Antigravity) ─────────────────
-        "ms-vscode.cpptools",           // C/C++ IntelliSense, debug, format
-        "platformio.platformio-ide",    // Build, upload, monitor, library manager
-
-        // ── Muy recomendadas ─────────────────────────────────────────────────
-        "marus25.cortex-debug",         // Debug con ST-Link/J-Link (GDB)
-        "eamodio.gitlens",              // Git history y blame inline
-
-        // ── Útiles ───────────────────────────────────────────────────────────
-        "gruntfuggly.todo-tree",        // Muestra todos los TODO/FIXME en panel lateral
-        "streetsidesoftware.code-spell-checker", // Corrector ortográfico en comentarios
-        "yzhang.markdown-all-in-one"    // Preview y edición de .md
+        "platformio.platformio-ide"
     ],
-    "unwantedRecommendations": []
+    "unwantedRecommendations": [
+        "ms-vscode.cpptools-extension-pack"
+    ]
 }

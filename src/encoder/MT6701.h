@@ -36,6 +36,26 @@ class MT6701 {
     float getAngleRad();
 
     /**
+     * @brief Actualiza la cuenta de vueltas. Debe llamarse frecuentemente.
+     */
+    void update();
+
+    /**
+     * @brief Obtiene el ángulo acumulado en radianes (incluyendo vueltas)
+     */
+    float getCumulativeAngleRad();
+
+    /**
+     * @brief Obtiene el ángulo acumulado en grados (incluyendo vueltas)
+     */
+    float getCumulativeAngleDeg();
+
+    /**
+     * @brief Establece la posición actual como el cero (0 grados)
+     */
+    void initZero();
+
+    /**
      * @brief Lee los conteos crudos del sensor (0 - 16383)
      */
     uint16_t getRawCounts();
@@ -54,6 +74,11 @@ class MT6701 {
     SPISettings _spiSettings;
     SPIClass* _spi;
     bool _ok = false;
+
+    // Seguimiento de vueltas
+    int32_t _rotations = 0;
+    float _lastAngleRad = 0.0f;
+    float _offsetRad = 0.0f;
 
     uint16_t _readRaw();
 };
