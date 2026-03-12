@@ -33,6 +33,8 @@
 - [x] Test manual: imprimir ángulo/raw por VCP (Funciona con ST-Link 3.3V)
 - [x] Verificar encoder: El LED cambia velocidad y USB muestra raw=0-16383
 - [x] Verificar wrap-around correcto (16383 → 0 sin salto brusco en `getAngleRad`)
+- [x] Implementar seguimiento de vueltas (ángulos acumulados > 360º)
+- [x] Implementar inicialización de cero relativo al encendido
 
 ### 1.2 DRV8316 SPI Driver
 - [ ] Crear `src/motor/DRV8316.h` — API pública:

@@ -8,15 +8,15 @@ Adibide honen helburua MT6701 sentsore magnetikoa (encoder-a) SPI bidez irakurtz
 2. Kopiatu karpeta honetako `main.cpp` fitxategia proiektuaren `src/main.cpp` fitxategira.
 3. Kargatu firmwarea mikrokontrolagailuan (`pio run --target upload`).
 
-## Berrikuntzak (Orain)
+## Programaren funtzionamendua
 
-* **Angelu Metatua (`Cumulative Angle`):** Programak orain birak zenbatzen ditu. Ardatzari buelta bat baino gehiago ematen badiozu, angelua 360º-tik gora igotzen joango da (edo negatiboa bihurtu kontrako noranzkoan).
+* **Angelu Metatua (`Cumulative Angle`):** Programak birak zenbatzen ditu. Ardatzari buelta bat baino gehiago ematen badiozu, angelua 360º-tik gora igotzen joango da (edo negatiboa bihurtu kontrako noranzkoan).
 * **Zero Posizioa:** Programa abiaraztean (edo reset sakatzean), dagoen posizioa "0" bezala hartzen da erreferentzia gisa.
 * **Serie-Portua:** Datuak 500ms-ro inprimatzen dira `Serial` bidez.
 
 ## Nola Probatu
 
-1. Ireki Serie-Monitorea (115200 baud).
+1. Ireki Serie-Monitorea (pio device monitor --baud 115200).
 2. Eskuz mugitu motorraren ardatza.
 3. Pantailan hiru balore agertuko dira:
    - `>Angle_Abs_Deg`: Angelu absolutua (0-360º).
@@ -29,7 +29,7 @@ Adibide honen helburua MT6701 sentsore magnetikoa (encoder-a) SPI bidez irakurtz
 
 El objetivo de este ejemplo es validar la lectura del encoder magnético MT6701 vía SPI, obteniendo tanto el ángulo absoluto como el acumulado (contando vueltas). **El motor y el driver (DRV8316) están desactivados por seguridad.**
 
-## Cómo Funciona el Programa ahora
+## Cómo Funciona el Programa
 
 1.  **Inicialización a Cero**: Al arrancar el programa o presionar el botón de RESET, la posición actual del imán se define como el punto **0 grados**.
 2.  **Seguimiento de Vueltas**: El programa llama a `sensor.update()` en cada ciclo para detectar cuándo el imán completa una vuelta. Esto permite calcular el **Angulo Acumulado**.
@@ -42,5 +42,5 @@ El objetivo de este ejemplo es validar la lectura del encoder magnético MT6701 
 
 1.  Copia el `main.cpp` de esta carpeta a `src/main.cpp` del proyecto.
 2.  Compila y carga el código (`pio run -t upload`).
-3.  Abre el monitor serie a **115200 baudios**.
+3.  Abre el monitor serie a (pio device monitor --baud 115200).
 4.  Gira el eje manualmente y observa cómo `Angle_Cum_Deg` aumenta o disminuye continuamente sin saltos de 360 a 0.
