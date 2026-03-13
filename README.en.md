@@ -84,7 +84,17 @@ On the right side, in the **"Version"** dropdown menu, select the latest stable 
 
 ---
 
-### Step 5 — Open the Project
+### Step 5 — Install Git
+
+To clone the project you need to have Git installed.
+
+**5a.** Go to: https://git-scm.com/downloads
+
+**5b.** Download and install the version for your operating system (you can keep the default options during installation).
+
+---
+
+### Step 6 — Open the Project
 
 ```bash
 # Clone or copy the firmware folder
@@ -101,7 +111,7 @@ PlatformIO will automatically detect `platformio.ini` and download the following
 
 ---
 
-### Step 6 — First Build
+### Step 7 — First Build
 
 In Antigravity's bottom bar, click PlatformIO's ✓ (Build) icon, or from the terminal:
 
@@ -120,7 +130,7 @@ If it fails to build → see [Troubleshooting](#troubleshooting).
 
 ---
 
-### Step 7 — Connect ST-Link and Flash
+### Step 8 — Connect ST-Link and Flash
 
 Connect the ST-Link to the SCLF Gripper's SWD port:
 
@@ -158,7 +168,7 @@ Before attempting complex tests, verify the STM32 boots:
 
 ---
 
-### Step 8 — Verify Encoder (Phase 1.1)
+### Step 9 — Verify Encoder (Phase 1.1)
 
 > ⚠️ **Requirements:** 24V power supply connected (pogo pins or bench supply). Without 24V, the MT6701 encoder has no power and SPI always returns `0xFFFF`.
 
@@ -181,7 +191,7 @@ The current `fase1_1_mt6701_test` firmware uses LED D4 as visual diagnostics (no
 
 ✅ **If the LED changes when you rotate the motor, Phase 1.1 is passed.**
 
-### Step 8b — Verify USB Serial Monitor (VCP)
+### Step 9b — Verify USB Serial Monitor (VCP)
 
 > ✅ **STATUS:** Works correctly. The firmware includes a `SystemClock_Config` override block in `main.cpp` that enables the internal HSI48 oscillator required for the STM32G4 USB peripheral.
 
@@ -194,7 +204,7 @@ The current `fase1_1_mt6701_test` firmware uses LED D4 as visual diagnostics (no
 
 ---
 
-### Step 9 — Configure AI Agent
+### Step 10 — Configure AI Agent
 
 To work with Antigravity's built-in AI assistant:
 
