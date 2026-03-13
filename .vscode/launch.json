@@ -55,11 +55,11 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "C:/SCLF_Gripper_v1.0/.pio/build/SCLF_Gripper/firmware.elf",
+            "executable": "C:/Github/SCLF_Gripper_v1.0/.pio/build/SCLF_Gripper/firmware.elf",
             "projectEnvName": "SCLF_Gripper",
-            "toolchainBinDir": "C:/Users/IoMadmin/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/aimar.lasa/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
-            "svdPath": "C:/Users/IoMadmin/.platformio/platforms/ststm32/misc/svd/STM32G474xx.svd",
+            "svdPath": "C:/Users/aimar.lasa/.platformio/platforms/ststm32/misc/svd/STM32G474xx.svd",
             "preLaunchTask": {
                 "type": "PlatformIO",
                 "task": "Pre-Debug"
@@ -69,21 +69,21 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "C:/SCLF_Gripper_v1.0/.pio/build/SCLF_Gripper/firmware.elf",
+            "executable": "C:/Github/SCLF_Gripper_v1.0/.pio/build/SCLF_Gripper/firmware.elf",
             "projectEnvName": "SCLF_Gripper",
-            "toolchainBinDir": "C:/Users/IoMadmin/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/aimar.lasa/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
-            "svdPath": "C:/Users/IoMadmin/.platformio/platforms/ststm32/misc/svd/STM32G474xx.svd"
+            "svdPath": "C:/Users/aimar.lasa/.platformio/platforms/ststm32/misc/svd/STM32G474xx.svd"
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "C:/SCLF_Gripper_v1.0/.pio/build/SCLF_Gripper/firmware.elf",
+            "executable": "C:/Github/SCLF_Gripper_v1.0/.pio/build/SCLF_Gripper/firmware.elf",
             "projectEnvName": "SCLF_Gripper",
-            "toolchainBinDir": "C:/Users/IoMadmin/.platformio/packages/toolchain-gccarmnoneeabi/bin",
+            "toolchainBinDir": "C:/Users/aimar.lasa/.platformio/packages/toolchain-gccarmnoneeabi/bin",
             "internalConsoleOptions": "openOnSessionStart",
-            "svdPath": "C:/Users/IoMadmin/.platformio/platforms/ststm32/misc/svd/STM32G474xx.svd",
+            "svdPath": "C:/Users/aimar.lasa/.platformio/platforms/ststm32/misc/svd/STM32G474xx.svd",
             "loadMode": "manual"
         }
     ]

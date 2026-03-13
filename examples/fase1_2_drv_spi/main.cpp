@@ -63,7 +63,12 @@ void setup() {
         Serial.println("OK.");
         Serial.println("  -> Comunicacion SPI exitosa.");
     } else {
-        Serial.println("ERROR. ¿DRV8316 alimentado (VM>8V)? ¿SPI conectado?");
+        if (driver.getFaultCode() == DRV8316Fault::SPI_FAULT) {
+            Serial.println("ERROR: SPI_FAULT (STATUS=0x7FF).");
+            Serial.println("  -> MISO flotante: DRV8316 sin VM (>8V) o SPI mal conectado.");
+        } else {
+            Serial.println("ERROR desconocido.");
+        }
     }
 
     Serial.println("========================================");
@@ -81,11 +86,16 @@ void loop() {
         Serial.print(stat1, HEX);
         Serial.print(" | STATUS2: 0x");
         Serial.print(stat2, HEX);
+        Serial.print(" | SPI_RAW: 0x");
+        Serial.print(driver.getLastRawRx(), HEX);
 
         if (driver.hasFault()) {
-            Serial.print("  >>> FALLO ACTIVO DETECTADO <<<");
-            // Limpiar el fallo para ver si es persistente
-            driver.clearFaults();
+            if (driver.getFaultCode() == DRV8316Fault::SPI_FAULT) {
+                Serial.print("  >>> SPI_FAULT: MISO flotante (VM desconectado?) <<<");
+            } else {
+                Serial.print("  >>> FALLO ACTIVO DETECTADO <<<");
+                driver.clearFaults();
+            }
         }
 
         Serial.println();

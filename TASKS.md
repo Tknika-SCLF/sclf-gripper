@@ -37,17 +37,17 @@
 - [x] Implementar inicialización de cero relativo al encendido
 
 ### 1.2 DRV8316 SPI Driver
-- [ ] Crear `src/motor/DRV8316.h` — API pública:
+- [x] Crear `src/motor/DRV8316.h` — API pública:
   - `bool begin()` — inicializa SPI (PC4/PB3/PB4/PB5) y configura registros
   - `uint16_t readRegister(uint8_t addr)`
   - `void writeRegister(uint8_t addr, uint16_t value)`
   - `bool hasFault()` — lee STATUS1/STATUS2 por SPI
   - `uint8_t getFaultCode()` — devuelve código de fallo
   - `void clearFaults()`
-- [ ] Crear `src/motor/DRV8316.cpp`
-- [ ] Leer y verificar registro DEVICE_ID del DRV8316 al arrancar
-- [ ] Imprimir estado de STATUS1 y STATUS2 por VCP
-- [ ] **IMPORTANTE:** No existe pin nFAULT en el STM32. Todos los fallos se detectan por SPI polling.
+- [x] Crear `src/motor/DRV8316.cpp`
+- [x] Leer y verificar registro DEVICE_ID del DRV8316 al arrancar
+- [x] Imprimir estado de STATUS1 y STATUS2 por VCP
+- [x] **IMPORTANTE:** No existe pin nFAULT en el STM32. Todos los fallos se detectan por SPI polling.
 
 ### 1.3 Current Sense
 - [ ] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` de SimpleFOC
@@ -218,3 +218,4 @@
 | 2026-03-07 | ST-Link 3.3V alimenta el MCU y el Encoder | **El MT6701 funciona sin la fuente de 24V**. Solo el driver lo necesita. |
 | 2026-03-07 | **Solución USB CDC:** Añadido `SystemClock_Config` en `main.cpp` | STM32G4 requiere activar `HSI48` para el reloj USB |
 | 2026-03-07 | Solución de testeo Half-Duplex RS-485 | MAX3485 bloquea RX durante TX. Creado `simulateRx()` para bypass y test. |
+| 2026-03-14 | **HARDWARE BUG IDENTIFICADO en v1.0:** Pin 23 de U1 (DRV8316C) conectado a D5 | El nSLEEP estaba apagado a 0.25V. Retirar D5 y puntear a 3.3V para activar SPI. |

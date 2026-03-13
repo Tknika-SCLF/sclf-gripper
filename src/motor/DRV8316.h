@@ -100,11 +100,18 @@ class DRV8316 {
      */
     uint16_t getStatus2Raw() { return readRegister(DRV8316_REG::STATUS2); }
 
+    /**
+     * Devuelve el último valor de 16-bits recibido por SPI sin enmascarar.
+     * Útil para diagnosticar problemas de protocolo a bajo nivel.
+     */
+    uint16_t getLastRawRx() const { return _lastRawRx; }
+
    private:
     SPISettings _spiSettings;
     SPIClass* _spi;
     DRV8316Fault _lastFault = DRV8316Fault::NONE;
     bool _ok = false;
+    uint16_t _lastRawRx = 0;
 
     // Frame SPI: 16 bits, [15]=R/W, [14:11]=addr, [10:0]=data
     static constexpr uint16_t READ_FLAG = 0x8000;
