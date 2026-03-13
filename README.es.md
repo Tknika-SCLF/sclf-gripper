@@ -84,7 +84,17 @@ En el lado derecho, en el menú desplegable **"Version"**, selecciona la última
 
 ---
 
-### Paso 5 — Abrir el Proyecto
+### Paso 5 — Instalar Git
+
+Para poder clonar el proyecto necesitas tener Git instalado.
+
+**5a.** Ve a: https://git-scm.com/downloads
+
+**5b.** Descarga e instala la versión para tu sistema operativo (puedes mantener las opciones por defecto durante la instalación).
+
+---
+
+### Paso 6 — Abrir el Proyecto
 
 ```bash
 # Clona o copia la carpeta del firmware
@@ -101,7 +111,7 @@ PlatformIO detectará automáticamente `platformio.ini` y descargará lo siguien
 
 ---
 
-### Paso 6 — Primera Compilación
+### Paso 7 — Primera Compilación
 
 En la barra inferior de Antigravity, haz clic en el icono ✓ (Compilar) de PlatformIO, o desde el terminal:
 
@@ -120,7 +130,7 @@ Si da error al compilar → consulta [Solución de Problemas](#solución-de-prob
 
 ---
 
-### Paso 7 — Conectar ST-Link y Flashear
+### Paso 8 — Conectar ST-Link y Flashear
 
 > ⚠️ **NUEVO PC:** Si es la primera vez que usas este ordenador, necesitas instalar los drivers USB del ST-Link para que Windows lo detecte. Tienes dos opciones:
 > 
@@ -176,7 +186,7 @@ Antes de intentar tests complejos, verifica que el STM32 arranca:
 
 ---
 
-### Paso 8 — Verificar Encoder (Fase 1.1)
+### Paso 9 — Verificar Encoder (Fase 1.1)
 
 > 💡 **Nota:** ¡El encoder funciona perfectamente solo con los 3.3V del ST-Link! No requiere la fuente de 24V externa.
 
@@ -199,7 +209,7 @@ El firmware actual de `fase1_1_mt6701_test` usa el LED D4 como diagnóstico visu
 
 ✅ **Si el LED cambia al girar el motor, la Fase 1.1 está superada.**
 
-### Paso 8b — Verificación del Monitor Serie (USB VCP)
+### Paso 9b — Verificación del Monitor Serie (USB VCP)
 
 > ✅ **ESTADO:** Funciona correctamente. El firmware incluye un bloque `SystemClock_Config` override en `main.cpp` que activa el oscilador interno HSI48 necesario para el periférico USB de los STM32G4.
 
@@ -210,7 +220,7 @@ El firmware actual de `fase1_1_mt6701_test` usa el LED D4 como diagnóstico visu
    ```
 3. Deberías ver la salida del test (ej. `MT6701 Raw (con o sin 24V): 0` o el valor que cambie al girar).
 
-### Paso 8c — Verificar Comunicaciones RS-485 (Fase 1.4)
+### Paso 9c — Verificar Comunicaciones RS-485 (Fase 1.4)
 
 > 💡 **Nota:** Esta fase también funciona perfectamente solo con los 3.3V del ST-Link.
 
@@ -226,7 +236,7 @@ El firmware actual de `fase1_1_mt6701_test` usa el LED D4 como diagnóstico visu
 
 ---
 
-### Paso 9 — Configurar el Agente de IA
+### Paso 10 — Configurar el Agente de IA
 
 Para trabajar con el asistente de IA integrado en Antigravity:
 

@@ -85,7 +85,17 @@ Eskuin aldean dagoen **"Version"** goitibeherako menuan, hautatu **"Pre-release"
 
 ---
 
-### 5. Urratsa — Proiektua Ireki
+### 5. Urratsa — Git Instalatu
+
+Proiektua klonatzeko Git instalatuta izan behar duzu.
+
+**5a.** Joan hona: https://git-scm.com/downloads
+
+**5b.** Deskargatu eta instalatu zure sistema eragilearen bertsioa (lehenetsitako aukerak mantendu ditzakezu instalazioan).
+
+---
+
+### 6. Urratsa — Proiektua Ireki
 
 ```bash
 # Klonatu edo kopiatu firmwarearen karpeta
@@ -102,7 +112,7 @@ PlatformIOk automatikoki detektatuko du `platformio.ini` eta honako hauek deskar
 
 ---
 
-### 6. Urratsa — Lehenengo Konpilazioa
+### 7. Urratsa — Lehenengo Konpilazioa
 
 Antigravity-ren beheko barran, egin klik PlatformIOren ✓ (Build) ikonoan, edo terminaletik:
 
@@ -121,7 +131,7 @@ Konpilatzen ez badu → ikusi [Arazoen Konponbidea](#arazoen-konponbidea).
 
 ---
 
-### 7. Urratsa — ST-Link Konektatu eta Flasheatu
+### 8. Urratsa — ST-Link Konektatu eta Flasheatu
 
 Konektatu ST-Link SCLF Gripper-aren SWD atakara:
 
@@ -159,7 +169,7 @@ Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
 
 ---
 
-### 8. Urratsa — Encoderra Egiaztatu (Fase 1.1)
+### 9. Urratsa — Encoderra Egiaztatu (Fase 1.1)
 
 > ⚠️ **Baldintzak:** 24V elikadura konektatuta (pogo pinak edo laborategiko iturria). 24V gabe, MT6701 encoderrak ez du energiarik eta SPI-k beti `0xFFFF` bueltatzen du.
 
@@ -182,7 +192,7 @@ Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
 
 ✅ **LEDak motorra biratzean aldatzen badu, Fase 1.1 gaindituta dago.**
 
-### 8b. Urratsa — Serial Monitor Egiaztatu (USB VCP)
+### 9b. Urratsa — Serial Monitor Egiaztatu (USB VCP)
 
 > ✅ **EGOERA:** Ondo funtzionatzen du. Firmwareak `SystemClock_Config` bloke bat dauka `main.cpp`-n STM32G4-ren USB periferikorako behar den HSI48 osziladorea gaitzeko.
 
@@ -195,7 +205,7 @@ Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
 
 ---
 
-### 9. Urratsa — Faseen Probak eta Adibideak (`examples/`)
+### 10. Urratsa — Faseen Probak eta Adibideak (`examples/`)
 
 Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `ROADMAP.md`). Fase bakoitzean idatzitako kode-probak (test standalone-ak) **`examples/`** karpetaren barruan gordetzen dira.
 
@@ -207,7 +217,7 @@ Hardware berria muntatzen baduzu edo sentsore zehatz bat probatu nahi baduzu:
 
 ---
 
-### 10. Urratsa — IA Agentea Konfiguratu
+### 11. Urratsa — IA Agentea Konfiguratu
 
 Antigravity-n barneratuta dagoen IA laguntzailearekin lan egiteko:
 
