@@ -1,6 +1,6 @@
 ---
 name: foc-hardware-setup
-description: Analiza esquemáticos de KiCad para extraer el pinout de un microcontrolador STM32 y un driver de potencia para Simple FOC. Úsalo antes de escribir código de hardware.
+description: Analiza el archivo DRV-uC_connections.md para extraer el pinout de un microcontrolador STM32 y un driver de potencia para Simple FOC. Úsalo antes de escribir código de hardware para ahorrar tiempo y tokens.
 ---
 
 # Configuración de Hardware FOC
@@ -8,8 +8,9 @@ description: Analiza esquemáticos de KiCad para extraer el pinout de un microco
 Cuando se te pida configurar el hardware o mapear los pines, sigue estrictamente estos pasos:
 
 ## Paso 1: Lectura de Planos
-- Lee el archivo `.kicad_sch` en la carpeta `/hardware/`.
-- Rastrea las conexiones (nets) desde el MCU hasta el driver de potencia (ej. DRV8316) y el sensor de posición (ej. MT6701).
+- Lee el archivo `hardware/DRV-uC_connections.md` que contiene una tabla resumida con el mapeo exacto de pines.
+- NO intentes leer los archivos `.kicad_sch` o `.kicad_pcb` de la carpeta `/hardware/` ya que consumen demasiados tokens y no son necesarios si existe este resumen.
+- Rastrea las conexiones indicadas en ese archivo desde el MCU hasta el driver de potencia (ej. DRV8316) y el sensor de posición (ej. MT6701).
 
 ## Paso 2: Creación del Artefacto
 - Genera una tabla en Markdown detallando: Pin del MCU, Función (PWM A/B/C, SPI, I2C, Current Sense) y Periférico/Timer interno del STM32.
