@@ -57,15 +57,11 @@
 - [ ] Imprimir corrientes de las 3 fases por VCP en reposo y con motor bloqueado
 
 ### 1.4 RS-485 Driver
-- [ ] Crear `src/comms/RS485.h` — API pública:
-  - `void begin(uint32_t baudrate)` — UART3 (PC10/PC11) + dirección PB9
-  - `void send(uint8_t deviceId, const char* cmd, const char* value)`
-  - `bool receive(char* buf, size_t maxLen)` — non-blocking, devuelve true si frame completo
-- [ ] Crear `src/comms/RS485.cpp`
-  - Control automático de PB9 (HIGH antes de TX, LOW después de TX)
-  - Usar `HAL_UART_Transmit` con timeout corto, luego bajar PB9 inmediatamente
-- [ ] Test loopback: conectar RS485+ con RS485- directamente y verificar eco
-- [ ] Test con dispositivo externo (PC con adaptador USB-RS485)
+- [x] Crear `src/comms/RS485.h` — API pública
+- [x] Crear `src/comms/RS485.cpp`
+  - [x] Control automático de PB9 (HIGH antes de TX, LOW después de TX)
+- [x] Test de protocolo simplificado (sin dos puntos)
+- [x] Test con dispositivo externo / VCP Simulation ✅
 
 ---
 

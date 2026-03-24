@@ -210,7 +210,7 @@ Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
 Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `ROADMAP.md`). Fase bakoitzean idatzitako kode-probak (test standalone-ak) **`examples/`** karpetaren barruan gordetzen dira.
 
 Hardware berria muntatzen baduzu edo sentsore zehatz bat probatu nahi baduzu:
-1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test`, `fase1_2_drv_spi`, `fase1_3_open_loop_v_control`, `fase3_2_gripper_kinematics` edo `fase4_2_rs485`).
+1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test`, `fase1_2_drv_spi`, `fase1_3_open_loop_v_control`, `fase1_4_rs485_ping`, `fase3_2_gripper_kinematics` edo `fase4_2_rs485`).
 2. **Irakurri karpeta horretan dagoen `README.md` fitxategia** argibide zehatzak ikusteko.
 3. Kopiatu bertako `main.cpp` fitxategia eta ordezkatu zure probako `src/main.cpp` fitxategiarekin. 
 4. Konpilatu eta igo (`pio run --target upload`).

@@ -1,24 +1,26 @@
-# Fase 1.4: RS-485 Ping Test (Half-Duplex Simulado)
+# Phase 1.4: RS485 Ping-Pong Test
 
-Este ejemplo prueba la capa de comunicaciones RS-485 del Gripper usando el chip MAX3485 (half-duplex) conectado al UART3 (PC10/PC11) y el pin de dirección `DIR` (PB9).
+This example demonstrates basic RS485 communication using the MAX3485 transceiver. It implements a simple Ping-Pong logic where the device responds to a "PING" command with "PONG".
 
-## Hardware Requerido
-- **Solo ST-Link**: 3.3V, GND, SWDIO, SWCLK, TX, RX.
-- **NO SE NECESITAN 24V**. El chip RS-485 y el microcontrolador operan completamente con la línea lógica de 3.3V.
+## Key Features
+- **Simplified Protocol**: Supports single-word commands (no colons required). Send `PING` instead of `1:PING:0`.
+- **VCP Simulation**: Allows testing the logic directly via the USB Virtual COM Port (Serial Monitor) without needing an RS485-USB adapter.
+- **Visual Feedback**: LED (PC6) heartbeats at 1Hz during operation.
 
-## Uso y Testeo (Loopback Simulado)
+## How to Test
 
-Debido a que el chip MAX3485 es **half-duplex** (sus pines RE y DE están unidos al mismo pin de control `DIR` del STM32), el chip se queda físicamente "sordo" en su pin RX mientras está transmitiendo por su pin TX. 
-
-Por tanto, no podemos hacer un test de "eco" escuchando lo que nosotros mismos enviamos al bus físico sin tener un segundo dispositivo RS-485 conectado.
-
-Para probar la lógica del protocolo sin hardware adicional, este código incluye un modo **simulador RX**:
-1. Conecta la placa y abre el Serial Monitor por USB (`pio device monitor --baud 115200`).
-2. Escribe una trama RS-485 válida para el `ID 1`. Por ejemplo:
+### 16. Option A: Using only USB (Virtual COM Port)
+1. Flash the firmware using the `test_rs485_ping` environment.
+2. Open the serial monitor at 115200 baud.
+3. Type `PING` and press Enter.
+4. You should see:
    ```text
-   1:T:hola
+   [RS485 Rx] CMD: PING
+     -> Received PING! Sending PONG...
+   [VCP] Reply sent to RS485 bus: 1:PONG:0
    ```
-3. El programa inyectará esa cadena directamente a la memoria del procesador (`simulateRx()`) simulando que entró por el bus RS-485.
-4. El parser detectará la trama válida, parpadeará el LED de la placa, y **responderá** físicamente a través de la red RS-485 (`rs485.send()`) con un mensaje como `1:ACK:T`. También verás la salida de depuración en tu consola USB.
 
-Este test confirma que los tiempos de cambio del pin `DIR`, el vaciado del búfer UART (`flush()`) y el parser de comandos de texto de la librería `RS485.cpp` operan correctamente.
+### 17. Option B: Using RS485-USB adapter (Physical Bus)
+1. Connect the A/B lines of the adapter to the Gripper.
+2. Send the string `1:PING:0\n` or just `PING\n` from the PC through the RS485 adapter.
+3. The Gripper should respond with `1:PONG:0\n`.

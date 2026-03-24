@@ -1,176 +1,96 @@
 /**
- * SCLF Gripper v1.0 — Firmware Hardware Initialization
+ * SCLF Gripper v1.0 — Phase 1.4: RS485 Ping-Pong Test
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
  *
- * ─── FASE 1.4 — RS-485 Driver Test (Ping-Pong) ─────────────────────────────
- * Objetivo: Validar la comunicación half-duplex del integrado RS-485 (MAX3485).
- * 
- * Hardware requerido:
- *   - ST-Link conectado (3.3V, GND, SWDIO, SWCLK, TX, RX).
- *   - NO SE NECESITAN 24V.
- * 
- * Uso:
- *   1. Abre el Serial Monitor (USB CDC o VCP del ST-Link) a 115200 baudios.
- *   2. Envía un comando en el formato `<id>:<cmd>:<value>\n`.
- *      Ejemplo: "1:P:ping\n"
- *   3. El STM32 lo recibirá vía UART3 (PC10/PC11), encenderá el LED, y 
- *      responderá de vuelta por el mismo bus RS-485.
- *   4. Como no tenemos un segundo dispositivo RS-485 conectado, este test
- *      se completará conectando un adaptador USB-RS485 al PC, o haciendo un
- *      loopback físico temporal si se desea.
- * 
- * ⚠️  NOTA IMPORTANTE: 
- *   Para poder leer cómodamente sin adaptador RS-485 en este primer test, 
- *   este programa hará un "eco" de los comandos RS-485 recibidos 
- *   hacia el puerto Serial (USB CDC) para depuración.
- * ───────────────────────────────────────────────────────────────────────────
+ * Objetivo:  Implementar un mecanismo de respuesta (Ping-Pong) por RS485.
+ *            Si recibe "1:PING:0\n", responde "1:PONG:0\n".
  */
 
-#include <Arduino.h>
-#include "config/pins.h"
 #include "comms/RS485.h"
+#include "config/pins.h"
+#include <Arduino.h>
 
-// Instancia global del driver RS485
-RS485 rs485;
-
-// Mi ID de dispositivo en el bus RS-485
-const uint8_t MY_DEVICE_ID = 1;
+// --- Instances ---
+RS485 comms;
 
 void setup() {
-    // Configurar LED de estado
+    // 1. Debug via USB-C (Virtual COM Port)
+    Serial.begin(115200);
+    
+    // Wait for Serial to be ready (timeout 2s)
+    uint32_t t = millis();
+    while (!Serial && (millis() - t) < 2000) {}
+
+    // 2. Security: Disable motor outputs
+    pinMode(PIN_AH, OUTPUT); digitalWrite(PIN_AH, LOW);
+    pinMode(PIN_BH, OUTPUT); digitalWrite(PIN_BH, LOW);
+    pinMode(PIN_CH, OUTPUT); digitalWrite(PIN_CH, LOW);
+    pinMode(PIN_AL, OUTPUT); digitalWrite(PIN_AL, LOW);
+    pinMode(PIN_BL, OUTPUT); digitalWrite(PIN_BL, LOW);
+    pinMode(PIN_CL, OUTPUT); digitalWrite(PIN_CL, LOW);
+
+    // Disable SPI Chip Selects for safety
+    pinMode(PIN_DRV_CS, OUTPUT); digitalWrite(PIN_DRV_CS, HIGH);
+    pinMode(PIN_ENC_CS, OUTPUT); digitalWrite(PIN_ENC_CS, HIGH);
+
+    // LED
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, LOW);
 
-    // Inicializar puerto serie USB (CDC) para debug
-    Serial.begin(115200);
+    // 3. Initialize RS485 (ID 1, 115200 baud)
+    Serial.println("\n\n========================================");
+    Serial.println("  SCLF Gripper v1.0 — Phase 1.4         ");
+    Serial.println("  RS485 Ping-Pong Test                  ");
+    Serial.println("========================================");
     
-    // Inicializar el bus RS-485 a 115200 baudios
-    rs485.begin(MY_DEVICE_ID, 115200);
-
-    // Blink 3 veces para indicar arranque OK
-    for (int i = 0; i < 3; i++) {
-        digitalWrite(PIN_LED, HIGH); delay(100);
-        digitalWrite(PIN_LED, LOW);  delay(100);
-    }
-    
-    Serial.println("=================================================");
-    Serial.println("SCLF Gripper v1.0 - FASE 1.4: RS-485 Ping Test");
-    Serial.println("=================================================");
-    Serial.println("Esperando tramas RS-485...");
-    Serial.println("Formato: <id>:<cmd>:<value>");
-    Serial.println("Ejemplo: 1:T:peticion_torque");
-}
-
-// Función para procesar frames que llegan (ya sea reales o simulados)
-void handleFrame(RS485Frame& frame) {
-    // Destello corto del LED al recibir un frame
-    digitalWrite(PIN_LED, HIGH);
-
-    // Echo debug al USB Serial Monitor
-    Serial.print("\n[RS-485 RX] Target ID: ");
-    Serial.print(frame.deviceId);
-    Serial.print(" | CMD: ");
-    Serial.print(frame.cmd);
-    Serial.print(" | VAL: ");
-    Serial.println(frame.value);
-
-    // Si el frame es válido y es para nosotros (o broadcast ID=0)
-    if (frame.valid && rs485.isForMe(frame)) {
-        Serial.println("-> Frame ACEPTADO. Enviando respuesta (ACK) por RS-485...");
-        
-        // Responder por el bus RS-485
-        char replyBuf[64];
-        snprintf(replyBuf, sizeof(replyBuf), "%d:ACK:%s\n", MY_DEVICE_ID, frame.cmd);
-        rs485.send(replyBuf);
-        
-        Serial.print("-> Enviado: ");
-        Serial.print(replyBuf);
-    } else {
-        if (!frame.valid) {
-             Serial.println("-> Frame IGNORADO (Invalido o corrupto).");
-        } else {
-             Serial.println("-> Frame IGNORADO (Dirigido a otro ID).");
-        }
-    }
-    
-    // Apagar LED
-    delay(10);
-    digitalWrite(PIN_LED, LOW);
+    comms.begin(1, 115200);
+    Serial.println("[RS485] Listening on ID 1...");
+    Serial.println("[DEBUG] Logic test via USB enabled (Type 'PING').");
 }
 
 void loop() {
     RS485Frame frame;
+    bool frameReceived = false;
 
-    // Verificar si ha llegado un frame completo por RS-485
-    if (rs485.update(frame)) {
-        handleFrame(frame);
+    // A. Process incoming RS485 frames (Physical Bus)
+    if (comms.update(frame)) {
+        frameReceived = true;
     }
 
-    // --- MODO "SIMULADOR" DESDE EL PC PARA DEPURACION ---
-    // Si no tienes un adaptador USB-RS485, puedes escribir comandos en el 
-    // Serial Monitor del PC (USB CDC), y el STM32 fingirá que entraron por el RS-485.
-    if (Serial.available()) {
-        String input = Serial.readStringUntil('\n');
-        input.trim();
-        
-        if (input.length() > 0) {
-            Serial.print("\n[USB TX Simulado] -> Inyectando a RS-485: ");
-            Serial.println(input);
-            
-            input += "\n";
-            RS485Frame simFrame;
-            // simulateRx inyectará el string en el buffer y devolverá true si encuentra el '\n' y el frame es válido
-            if (rs485.simulateRx(input.c_str(), simFrame)) {
-                 handleFrame(simFrame);
-            }
-            
-            // Pequeño parpadeo verde para indicar TX
-            digitalWrite(PIN_LED, HIGH);
-            delay(10);
-            digitalWrite(PIN_LED, LOW);
+    // B. Process incoming Serial (VCP) characters (Simulation/Test)
+    while (Serial.available()) {
+        char c = Serial.read();
+        char buf[2] = {c, '\0'};
+        if (comms.simulateRx(buf, frame)) {
+            frameReceived = true;
+            break;
         }
     }
+
+    // Handle frame if received via Bus or VCP
+    if (frameReceived && frame.valid && comms.isForMe(frame)) {
+        Serial.print("[RS485 Rx] CMD: ");
+        Serial.println(frame.cmd);
+
+        // Ping-Pong Logic
+        if (strcmp(frame.cmd, "PING") == 0) {
+            Serial.println("  -> Received PING! Sending PONG...");
+            comms.send("1:PONG:0\n");
+            // Also notify VCP for easier testing
+            Serial.println("[VCP] Reply sent to RS485 bus: 1:PONG:0");
+        } else {
+            // Echo other commands for debug
+            char response[64];
+            snprintf(response, sizeof(response), "1:ACK_%s:%s\n", frame.cmd, frame.value);
+            comms.send(response);
+        }
+    }
+
+    // Heartbeat LED (1Hz)
+    static uint32_t last_led = 0;
+    if (millis() - last_led >= 500) {
+        digitalWrite(PIN_LED, !digitalRead(PIN_LED));
+        last_led = millis();
+    }
 }
-
-// ─── Configuración Crítica de Reloj (Override) ───────────
-// Necesario para que el USB CDC funcione (requiere HSI48 encendido).
-#ifdef __cplusplus
-extern "C" {
-#endif
-void SystemClock_Config(void) {
-    RCC_OscInitTypeDef RCC_OscInitStruct = {};
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = {};
-    RCC_PeriphCLKInitTypeDef PeriphClkInit = {};
-
-    HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
-
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSI48 | RCC_OSCILLATORTYPE_HSE;
-    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;  // <-- CRÍTICO PARA USB
-    
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;
-    RCC_OscInitStruct.PLL.PLLN = 85;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) { Error_Handler(); }
-
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK) { Error_Handler(); }
-
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
-    PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
-    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) { Error_Handler(); }
-}
-#ifdef __cplusplus
-}
-#endif

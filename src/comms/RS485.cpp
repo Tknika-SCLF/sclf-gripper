@@ -95,8 +95,18 @@ bool RS485::simulateRx(const char* str, RS485Frame& out) {
 // ── Privado ──────────────────────────────────────────────────────────────────
 
 bool RS485::_parseFrame(const char* raw, RS485Frame& out) {
-    // Formato esperado: "<id>:<cmd>:<value>"
+    // Formato esperado: "<id>:<cmd>:<value>" o simplemente "<cmd>"
     out.valid = false;
+
+    // Caso simplificado: No hay dos puntos (ej. "PING")
+    if (strchr(raw, ':') == nullptr) {
+        out.deviceId = 0; // Broadcast
+        strncpy(out.cmd, raw, sizeof(out.cmd) - 1);
+        out.cmd[sizeof(out.cmd) - 1] = '\0';
+        out.value[0] = '\0';
+        out.valid = true;
+        return true;
+    }
 
     char tmp[RS485_MAX_FRAME];
     strncpy(tmp, raw, sizeof(tmp) - 1);
@@ -111,10 +121,12 @@ bool RS485::_parseFrame(const char* raw, RS485Frame& out) {
     if (!tok)
         return false;
     strncpy(out.cmd, tok, sizeof(out.cmd) - 1);
+    out.cmd[sizeof(out.cmd) - 1] = '\0';
 
     tok = strtok(nullptr, ":");
     if (tok) {
         strncpy(out.value, tok, sizeof(out.value) - 1);
+        out.value[sizeof(out.value) - 1] = '\0';
     } else {
         out.value[0] = '\0';
     }
