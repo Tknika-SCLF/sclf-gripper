@@ -28,10 +28,10 @@
 #define PIN_AH          PA10    // Phase A High
 #define PIN_BH          PA9     // Phase B High
 #define PIN_CH          PA8     // Phase C High
-// Low-side (INLA=PB13, INLB=PB14, INLC=PB15 on DRV8316)
-#define PIN_AL          PB13    // Phase A Low
+// Low-side (INLA=PB15, INLB=PB14, INLC=PB13 on DRV8316)
+#define PIN_AL          PB15    // Phase A Low
 #define PIN_BL          PB14    // Phase B Low
-#define PIN_CL          PB15    // Phase C Low
+#define PIN_CL          PB13    // Phase C Low
 
 // ─── Inline Current Sense ADC (DRV8316 SOA/SOB/SOC) ─────────
 #define PIN_CURA        PA0     // Phase A current sense (ADC1_IN1)
