@@ -8,6 +8,8 @@
 
 ---
 
+> ⚠️ **IMPORTANT:** Before starting to work on this project, please always read the `TASKS.md` file. There you will find the exact current status of the project and the next steps to be taken between developers.
+
 ## Quick Start
 
 If you already have the environment configured:

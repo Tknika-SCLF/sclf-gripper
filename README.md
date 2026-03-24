@@ -8,6 +8,8 @@
 
 ---
 
+> ⚠️ **GARRANTZITSUA:** Proiektu honekin lanean hasi aurretik, mesedez irakurri beti `TASKS.md` fitxategia. Bertan aurkituko duzu proiektuaren uneko egoera zehatza eta garatzaileen arteko hurrengo urratsak zeintzuk diren.
+
 ## Hasiera Azkarra
 
 Ingurunea konfiguratuta baduzu dagoeneko:

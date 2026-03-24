@@ -8,6 +8,8 @@
 
 ---
 
+> ⚠️ **IMPORTANTE:** Antes de empezar a trabajar con este proyecto, por favor lee siempre el archivo `TASKS.md`. Allí encontrarás el estado actual exacto del proyecto y los siguientes pasos a realizar entre desarrolladores.
+
 ## Inicio Rápido
 
 Si ya tienes el entorno configurado:
