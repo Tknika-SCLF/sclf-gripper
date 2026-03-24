@@ -9,7 +9,7 @@ Fase berri bat behar bezala testatu denean, kode horren adibidea etorkizunerako 
 // turbo
 3. Kopiatu oraingo probako kodea: `cp src/main.cpp examples/<fasearen_izena>/main.cpp`
 4. Erabili `write_to_file` tresna `README.md` bat sortzeko `examples/<fasearen_izena>/README.md` helbidean. Idatzi bertan nola probatu kodea eta azalpide garrantzitsuak.
-5. Erabili `multi_replace_file_content` tresna proiektuaren erroko `README.md`-n "Faseen Probak eta Adibideak" atalean lotura (link) edo aipamen labur bat gehitzeko aurrera eramandako testari buruz. Zihurtatu ere `ROADMAP.md` fitxategian fasea `(EGINA)` bezela markatzen duzula.
+5. Erabili `multi_replace_file_content` tresna proiektuaren erroko `README.md`-n "Faseen Probak eta Adibideak" atalean lotura (link) edo aipamen labur bat gehitzeko aurrera eramandako testari buruz. Zihurtatu ere `TASKS.md` fitxategian fasea `(EGINA)` bezela markatzen duzula.
 // turbo
 6. Gorde aldaketa guztiak Git-en: `git add . && git commit -m "docs: <fasearen_izena> amaituta eta examples karpetan eskuragarri"`
 // turbo

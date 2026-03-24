@@ -3,6 +3,12 @@
 > Estado: `[ ]` pendiente · `[~]` en progreso · `[x]` completado · `[!]` bloqueado
 
 ---
+> 📢 **ESTADO ACTUAL Y SIGUIENTES PASOS (HANDOFF)**
+> **Bloqueado esperando PCB v2.0.**
+> Hemos actualizado todo el pinout al nuevo diseño (`hardware/DRV-uC_connections.md` y `src/config/pins.h`). Cuando llegue la nueva placa, el siguiente paso es **volver a ejecutar y validar las Fases 1.1 (Encoder) y 1.2 (DRV SPI)** usando el entorno de pruebas de `platformio.ini` para confirmar que los nuevos pines funcionan correctamente.
+---
+
+---
 
 ## FASE 0 — Entorno y Scaffolding
 > Objetivo: proyecto compila y hace parpadear un LED. Nada más.

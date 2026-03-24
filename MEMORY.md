@@ -9,7 +9,7 @@
 
 | Eremua | Balioa |
 |---|---|
-| **Fase aktiboa** | FASE 1.2 / FASE 1.3 (BLOQUEADA) — Zain 24V iturria |
+| **Fase aktiboa** | BLOQUEADA — Zain PCB v2.0 berria iritsi arte |
 | **Azken eguneraketa** | 2026-03-07 |
 | **Konpilazioa** | ✅ Egiaztatuta (Ondo konpilatzen du) |
 | **ST-Link Flasheatzea** | ✅ Funtzionatzen du (upload OK) |
@@ -189,8 +189,11 @@
 - ✅ RS-485 Driver inplementazioa (`fase1_4_rs485_ping`). MAX3485 Half-Duplex funtzionamendua baliozkotua SIMULATZAILE bidez (RX injectatuz USB bidez).
 - ⚠️ **BLOKEATUTA:** Fase 1.2 (SPI driver) eta Fase 1.3/2 (Motor testa) 24V elikadura eta *pogo pins* iritsi arte ezin dira probatu.
 
-### YYYY-MM-DD — [bete beharrekoa]
-- ...
+### 2026-03-24 — Hardware V2 Migrazioa eta Garbiketa
+- ✅ Pinout-a eguneratu da Hardware V2-rako (`DRV-uC_connections.md` eta `pins.h`).
+- ✅ Garbiketa orokorra: log zaharrak ezabatuta.
+- ✅ TASKS.md-n "Handoff" blokea sortu da bi garatzaileen arteko sinkronizazioa errazteko.
+- ⏳ Zain: Plaka berria jaso arte ezin da testatzen jarraitu.
 
 ---
 

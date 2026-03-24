@@ -144,9 +144,8 @@ Konektatu ST-Link SCLF Gripper-aren SWD atakara:
 | 3.3V | 3V3 | (STM32 soilik elikatzen du, ez encoderra ez driverra) |
 
 > ⚠️ **Elikadura:**
-> - ST-Link-aren 3.3V pina **nahikoa da** STM32 flasheatzeko eta oinarrizko kodea exekutatzeko (LED blink).
-> - **BAINA** MT6701 encoderrak eta DRV8316 driverrak DRV8316-ren step-down bihurgailutik elikatzen dira, eta horrek **24V kanpokoa** behar du. 24V gabe, encoderrak beti `0xFFFF` bueltatzen du.
-> - Test osoetarako (encoder + motorra), beti konektatu 24V elikadura.
+> - ST-Link-aren 3.3V pina **nahikoa da** STM32 flasheatzeko eta encoderra (MT6701) elikatzeko. Bera bakarrik probatu dezakezu 24V konektatu gabe.
+> - **BAINA** DRV8316 driverrak eta motorrak **24V kanpokoa** behar dute. Test osoetarako (motorra mugitu), beti konektatu 24V elikadura.
 
 Flasheatu:
 ```bash
@@ -171,7 +170,7 @@ Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
 
 ### 9. Urratsa — Encoderra Egiaztatu (Fase 1.1)
 
-> ⚠️ **Baldintzak:** 24V elikadura konektatuta (pogo pinak edo laborategiko iturria). 24V gabe, MT6701 encoderrak ez du energiarik eta SPI-k beti `0xFFFF` bueltatzen du.
+> ⚠️ **Baldintzak:** ST-Link-aren 3.3V konektatuta izatea nahikoa da encoderra elikatzeko. Ez da 24V behar fase honetarako.
 
 `fase1_1_mt6701_test`-eko firmware-ak D4 LEDa diagnostiko bisual modura erabiltzen du (Serial gabe):
 
@@ -207,7 +206,7 @@ Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
 
 ### 10. Urratsa — Faseen Probak eta Adibideak (`examples/`)
 
-Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `ROADMAP.md`). Fase bakoitzean idatzitako kode-probak (test standalone-ak) **`examples/`** karpetaren barruan gordetzen dira.
+Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `TASKS.md`). Fase bakoitzean idatzitako kode-probak (test standalone-ak) **`examples/`** karpetaren barruan gordetzen dira.
 
 Hardware berria muntatzen baduzu edo sentsore zehatz bat probatu nahi baduzu:
 1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test`, `fase1_2_drv_spi`, `fase1_3_open_loop_v_control`, `fase1_4_rs485_ping`, `fase3_2_gripper_kinematics` edo `fase4_2_rs485`).
