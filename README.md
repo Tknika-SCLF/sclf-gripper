@@ -213,6 +213,7 @@ Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `TASKS.m
 Hardware berria muntatzen baduzu edo sentsore zehatz bat probatu nahi baduzu:
 1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test`, `fase1_2_drv_spi`, `fase1_3_open_loop_v_control`, `fase1_4_rs485_ping`, `fase3_2_gripper_kinematics` edo `fase4_2_rs485`).
 2. **Irakurri karpeta horretan dagoen `README.md` fitxategia** argibide zehatzak ikusteko.
+   - **Oharra (Phase 4.2):** RS485-ak 9600 baud erabiltzen ditu eta konfiguratuta dago 16MHz-eko kristalerako (`HSE_VALUE`).
 3. Kopiatu bertako `main.cpp` fitxategia eta ordezkatu zure probako `src/main.cpp` fitxategiarekin. 
 4. Konpilatu eta igo (`pio run --target upload`).
 

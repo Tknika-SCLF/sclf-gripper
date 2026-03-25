@@ -108,11 +108,11 @@
 ## 4 FASEA — RS-485 Protokoloa
 > Helburua: gripper-ak robotaren bus-eko aginduak obeditzen ditu.
 
-- [ ] Komando parser-a diseinatu eta inplementatu `src/comms/RS485.cpp` barruan:
+- [x] Komando parser-a diseinatu eta inplementatu `src/comms/RS485.cpp` barruan:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [ ] Komandoak inplementatu:
+- [x] Komandoak inplementatu:
   - `T` — ipini torque jomuga (A)
   - `V` — ipini velocity jomuga (rad/s)
   - `P` — ipini position jomuga (rad)
@@ -123,8 +123,8 @@
   - `?V` — lortu abiadura (rad/s)
   - `?I` — lortu korrontea (A)
   - `?S` — lortu egoera / error kodea
-- [ ] Gailu-anitzeko helbideratzea inplementatu (ID konfiguragarria)
-- [ ] Roundtrip proba: ordenagailutik komandoa bidali, erantzun zuzena egiaztatu
+- [x] Gailu-anitzeko helbideratzea inplementatu (ID konfiguragarria)
+- [x] Roundtrip proba: ordenagailutik komandoa bidali, erantzun zuzena egiaztatu
 - [ ] Latentzia proba: neurtu latentzia TX→RX RS-485 bus-ean
 
 ---
