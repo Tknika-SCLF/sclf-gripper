@@ -14,16 +14,17 @@ Adibidez: `1:V:5.0\n` → 1 ID-ko gailuari, abiadura (V) komandoa, 5.0 balioarek
 
 ### Nola probatu
 
-1. Konektatu USB-RS485 moldagailu bat PCra.
-2. Konektatu moldagailuaren A/B kableak Gripper-aren RS-485 A/B pinetara.
-3. Ordezkatu `src/main.cpp` karpeta honetako `main.cpp`-rekin.
-4. Konpilatu eta igo:
+1. **Konfigurazioa**: Ziurtatu `platformio.ini`-n `-D HSE_VALUE=16000000U` eta `-Wl,-u,_printf_float` flag-ak aktibatuta daudela (16MHz-eko kristala eta float-ak ondo erabiltzeko).
+2. Konektatu USB-RS485 moldagailu bat PCra.
+3. Konektatu moldagailuaren A/B kableak Gripper-aren RS-485 A/B pinetara.
+4. Ordezkatu `src/main.cpp` karpeta honetako `main.cpp`-rekin.
+5. Konpilatu eta igo:
    ```bash
    pio run --target upload
    ```
-5. Ireki serie terminal bat PCan (Putty, Docklight, etab.) RS-485 serian, 115200 baud-era.
-6. Bidali `1:V:5.0\n` eta egiaztatu Gripperrak `1:V_ACK:5.000\n` erantzuten duela.
-7. Bidali `1:?S\n` eta ikusi `1:STATUS:IDLE\n` erantzuna.
+6. Ireki serie terminal bat PCan (Putty, Docklight, etab.) RS-485 serian, 9600 baud-era.
+7. Bidali `1:PING:0\n` eta egiaztatu Gripperrak `1:PONG:0\n` erantzuten duela.
+8. Bidali `1:?A:0\n` eta ikusi `1:A:1.2300\n` erantzuna (float verified).
 
 ### Pin mapa (MAX3485)
 

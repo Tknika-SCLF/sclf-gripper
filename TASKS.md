@@ -98,11 +98,11 @@
 ## FASE 4 — Protocolo RS-485
 > Objetivo: el gripper obedece comandos del bus del robot.
 
-- [ ] Diseñar e implementar parser de comandos en `src/comms/RS485.cpp`:
+- [x] Diseñar e implementar parser de comandos en `src/comms/RS485.cpp`:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [ ] Implementar comandos:
+- [x] Implementar comandos:
   - `T` — set torque target (A)
   - `V` — set velocity target (rad/s)
   - `P` — set position target (rad)
@@ -113,8 +113,8 @@
   - `?V` — get velocity (rad/s)
   - `?I` — get current (A)
   - `?S` — get status / fault code
-- [ ] Implementar direccionamiento multi-dispositivo (ID configurable)
-- [ ] Test de roundtrip: enviar comando desde PC, verificar respuesta correcta
+- [x] Implementar direccionamiento multi-dispositivo (ID configurable)
+- [x] Test de roundtrip: enviar comando desde PC, verificar respuesta correcta
 - [ ] Test de timing: medir latencia TX→RX en bus RS-485
 
 ---
