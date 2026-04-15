@@ -1,32 +1,34 @@
-﻿Designator,Footprint,Quantity,Value,LCSC Part #
-C1,1210,1,10uF-50V,C53084458
-"C13, C3",0603,2,100nF,C14663
-C2,2220,1,22uF-50V,C784103
-"C23, C25, C26, C37, C40, C41",0402,6,1uF,C52923
-"C27, C30, C34, C36, C38, C42, C43, C47, C48",0402,9,100nF,C307331
-"C28, C29",0402,2,10pF,C32949
-"C31, C32, C33",0402,3,22pF,C1555
-"C35, C54",0603,2,22uF,C59461
-"C44, C45, C46, C52, C56, C57",0805,6,10uF,C440198
-D1,D_SOD-323,1,BZT52B5V1S,C19077434
-D2,0603,1,LED,C2286
-D3,D_SOD-323_HandSoldering,1,1N4148WS,C2128
-D4,0603,1,LED,C72038
-D5,D_SMA,1,SMAJ33CA,C19077549
-D6,D_SMC,1,D_Schottky,C908690
-L1,L_Changjiang_FTC303015D,1,47uH,C96151
-L2,1206,1,BLM31PG330SN1,C74090
-Q1,SOT-23,1,AO3401A,C15127
-R10,0402,1,120,C25079
-"R16, R2, R25, R3",0402,4,"5,1k",C25905
-"R17, R22, R23, R24, R26, R31, R33",0402,7,330,C25104
-"R19, R20",0402,2,100k,C25741
-"R21, R28, R32, R9",0402,4,10k,C25744
-"SW1, SW2",SW-SMD_BZCN_TSA002A35XXX,2,TSA002A3512A02,C2888932
-U1,VQFN-40_L7.0-W5.0-P0.50-BL-EP5.7,1,DRV8316CRRGFR,C5447274
-U10,SOT-23-3,1,XC6206P332MR,C5446
-U4,SOIC-8_3.9x4.9mm_P1.27mm,1,MAX3485,C8963
-U8,QFN-16-1EP_3x3mm_P0.5mm_EP1.7x1.7mm,1,MT6701QT,C2913974
-U9,QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm,1,STM32G474CEU6,C1235412
-USB1,USB-C-SMD_TYPE-C-6PIN-2MD-073,1,TYPE-C 16PIN 2MD(073),C2765186
-X1,Crystal_SMD_Abracon_ABM8AIG-4Pin_3.2x2.5mm,1,Crystal_GND24,C1669787
+"Reference";"Qty";"Value";"DNP";"Exclude from BOM";"Exclude from Board";"Footprint";"Datasheet"
+"C1";"1";"10uF-50V";"";"";"";"Capacitor_SMD:C_1210_3225Metric";"https://www.lcsc.com/datasheet/C53084458.pdf"
+"C2";"1";"22uF-50V";"";"";"";"Capacitor_SMD:C_2220_5750Metric";"https://www.lcsc.com/datasheet/C784103.pdf"
+"C3,C13";"2";"100nF";"";"";"";"Capacitor_SMD:C_0603_1608Metric";"https://www.lcsc.com/datasheet/C14663.pdf,~"
+"C23,C25,C26,C37,C40,C41";"6";"1uF";"";"";"";"Capacitor_SMD:C_0402_1005Metric";"https://www.lcsc.com/datasheet/C52923.pdf,~"
+"C27,C30,C34,C36,C38,C42,C43,C47,C48";"9";"100nF";"";"";"";"Capacitor_SMD:C_0402_1005Metric";"https://www.lcsc.com/datasheet/C307331.pdf,~"
+"C28,C29";"2";"10pF";"";"";"";"Capacitor_SMD:C_0402_1005Metric";"https://www.lcsc.com/datasheet/C32949.pdf,~"
+"C31,C32,C33";"3";"22pF";"";"";"";"Capacitor_SMD:C_0402_1005Metric";"https://www.lcsc.com/datasheet/C1555.pdf,~"
+"C35,C54";"2";"22uF";"";"";"";"Capacitor_SMD:C_0603_1608Metric";"https://www.lcsc.com/datasheet/C59461.pdf,~"
+"C44,C45,C46,C52,C56,C57";"6";"10uF";"";"";"";"Capacitor_SMD:C_0805_2012Metric";"https://www.lcsc.com/datasheet/C440198.pdf,~"
+"D1";"1";"BZT52B5V1S";"";"";"";"Diode_SMD:D_SOD-323";"https://www.lcsc.com/datasheet/C19077434.pdf"
+"D2,D4";"2";"LED";"";"";"";"LED_SMD:LED_0603_1608Metric";"https://www.lcsc.com/datasheet/C2286.pdf,~"
+"D3";"1";"1N4148WS";"";"";"";"Diode_SMD:D_SOD-323_HandSoldering";"https://www.lcsc.com/datasheet/C2128.pdf"
+"D5";"1";"SMAJ33CA";"";"";"";"Diode_SMD:D_SMA";"https://www.lcsc.com/datasheet/C19077549.pdf"
+"D6";"1";"D_Schottky";"";"";"";"Diode_SMD:D_SMC";"https://www.lcsc.com/datasheet/C908690.pdf"
+"J1";"1";"Conn_01x05";"";"Excluido del BOM";"";"Aimar:PogoPinPads_1x05_P2.54mm";"~"
+"J2";"1";"Conn_01x03";"";"Excluido del BOM";"";"Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical";"~"
+"J3";"1";"Coupling_02x05_Odd_Even";"";"Excluido del BOM";"";"Aimar:Coupling_Conn_2x05_P2.54mm";"~"
+"L1";"1";"47uH";"";"";"";"Inductor_SMD:L_Changjiang_FTC303015D";"https://www.lcsc.com/datasheet/C96151.pdf"
+"L2";"1";"BLM31PG330SN1";"";"";"";"Inductor_SMD:L_1206_3216Metric";"https://www.lcsc.com/datasheet/C74090.pdf"
+"Q1";"1";"AO3401A";"";"";"";"Package_TO_SOT_SMD:SOT-23";"https://www.lcsc.com/datasheet/C15127.pdf"
+"R2,R3,R16,R25";"4";"5,1k";"";"";"";"Resistor_SMD:R_0402_1005Metric";"https://www.lcsc.com/datasheet/C25905.pdf,~"
+"R9,R21,R28,R32";"4";"10k";"";"";"";"Resistor_SMD:R_0402_1005Metric";"https://www.lcsc.com/datasheet/C25744.pdf,~"
+"R10";"1";"120";"";"";"";"Resistor_SMD:R_0402_1005Metric";"https://www.lcsc.com/datasheet/C25079.pdf"
+"R17,R22,R23,R24,R26,R31,R33";"7";"330";"";"";"";"Resistor_SMD:R_0402_1005Metric";"https://www.lcsc.com/datasheet/C25104.pdf,~"
+"R19,R20";"2";"100k";"";"";"";"Resistor_SMD:R_0402_1005Metric";"https://www.lcsc.com/datasheet/C25741.pdf,~"
+"SW1,SW2";"2";"TSA002A3512A02";"";"";"";"USB:SW-SMD_BZCN_TSA002A35XXX";"https://www.lcsc.com/datasheet/C2888932.pdf"
+"U1";"1";"DRV8316CRRGFR";"";"";"";"USB:VQFN-40_L7.0-W5.0-P0.50-BL-EP5.7";"https://www.lcsc.com/datasheet/C5447274.pdf"
+"U4";"1";"MAX3485";"";"";"";"Package_SO:SOIC-8_3.9x4.9mm_P1.27mm";"https://www.lcsc.com/datasheet/C8963.pdf"
+"U8";"1";"MT6701QT";"";"";"";"Package_DFN_QFN:QFN-16-1EP_3x3mm_P0.5mm_EP1.7x1.7mm";"https://www.lcsc.com/datasheet/C2913974.pdf"
+"U9";"1";"STM32G474CEU6";"";"";"";"Package_DFN_QFN:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm";"https://www.lcsc.com/datasheet/C1235412.pdf"
+"U10";"1";"XC6206P332MR";"";"";"";"Package_TO_SOT_SMD:SOT-23-3";"https://www.lcsc.com/datasheet/C5446.pdf"
+"USB1";"1";"TYPE-C 16PIN 2MD(073)";"";"";"";"USB:USB-C-SMD_TYPE-C-6PIN-2MD-073";"https://www.lcsc.com/datasheet/C2765186.pdf"
+"X1";"1";"Crystal_GND24";"";"";"";"Crystal:Crystal_SMD_Abracon_ABM8AIG-4Pin_3.2x2.5mm";"https://www.lcsc.com/datasheet/C1669787.pdf"

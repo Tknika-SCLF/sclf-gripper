@@ -2,6 +2,7 @@
 
 | Driver pin | Signal name | Microcontroller pin | Alternate Function (TIM) |
 |---------|-------------|-------------|-------------|
+| 22 nFAULT | DRV_FAULT | 2 PC13 | TIM8_CH4N |
 | 27 INHA | AH | 32 PA10 | TIM1_CH3 |
 | 28 INLA | AL | 28 PB15 | TIM1_CH3N |
 | 29 INHB | BH | 31 PA9 | TIM1_CH2 |
