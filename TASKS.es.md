@@ -4,8 +4,8 @@
 
 ---
 > 📢 **ESTADO ACTUAL Y SIGUIENTES PASOS**
-> **Fase de validación del nuevo prototipo.**
-> Se ha actualizado el pinout (`hardware/DRV-uC_connections.md` y `src/config/pins.h`). El siguiente paso es **volver a ejecutar y validar las Fases 1.1 (Encoder) y 1.2 (DRV SPI)** usando el entorno de pruebas de `platformio.ini` para confirmar que las nuevas conexiones funcionan correctamente.
+> **Prototipo v2.0 Validado (1.1, 1.2, 1.3).**
+> El pinout y el movimiento básico (24V) han sido confirmados. El siguiente paso es **validar la Fase 1.4 (RS485 Ping)** para asegurar la estabilidad del bus de comunicaciones.
 ---
 
 ---
@@ -42,32 +42,18 @@
 - [x] Implementar seguimiento de vueltas (ángulos acumulados > 360º)
 - [x] Implementar inicialización de cero relativo al encendido
 
-### 1.2 DRV8316 SPI Driver [x]
-- [x] Crear `src/motor/DRV8316.h` — API pública:
-  - `bool begin()` — inicializa SPI (PC4/PB3/PB4/PB5) y configura registros
-  - `uint16_t readRegister(uint8_t addr)`
-  - `void writeRegister(uint8_t addr, uint16_t value)`
-  - `bool hasFault()` — lee STATUS1/STATUS2 por SPI
-  - `uint8_t getFaultCode()` — devuelve código de fallo
-  - `void clearFaults()`
-- [x] Crear `src/motor/DRV8316.cpp`
-- [x] Leer y verificar registro DEVICE_ID del DRV8316 al arrancar
-- [x] Imprimir estado de STATUS1 y STATUS2 por VCP
-- [x] **IMPORTANTE:** No existe pin nFAULT en el STM32. Todos los fallos se detectan por SPI polling.
+### 1.3 Lazo Abierto / Open-Loop [x]
+- [x] Crear `examples/fase1_3_open_loop_v_control/main.cpp`
+- [x] Configurar modo 6-PWM (AH, AL, BH, BL, CH, CL)
+- [x] Rotación inicial en lazo abierto (Open-Loop) — **Validado en hardware v2.0 (24V)**
 
-### 1.3 Current Sense
+### 1.4 Test de Ping RS485 / RS485 Ping [~]
+- [ ] Validar `examples/fase1_4_rs485_ping/main.cpp`
+- [ ] Test de Ping-Pong (VCP y bus externo)
+
+### 1.5 Sensor de Corriente (Current Sense) [ ]
 - [ ] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` de SimpleFOC
-  - Shunts: PA0 (CURA), PA1 (CURB), PA2 (CURC)
-  - Determinar ganancia del amplificador del DRV8316 (leer registro CSAGAIN por SPI)
-- [ ] Calibrar offset de corriente en cero (motor parado, sin corriente)
-- [ ] Imprimir corrientes de las 3 fases por VCP en reposo y con motor bloqueado
-
-### 1.4 RS-485 Driver
-- [ ] Crear `src/comms/RS485.h` — API pública
-- [ ] Crear `src/comms/RS485.cpp`
-  - [ ] Control automático de PB9 (HIGH antes de TX, LOW después de TX)
-- [ ] Test de protocolo simplificado (sin dos puntos)
-- [ ] Test con dispositivo externo / VCP Simulation ✅
+- [ ] Calibrar offset de corriente en cero
 
 ---
 

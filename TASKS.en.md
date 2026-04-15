@@ -3,9 +3,9 @@
 > Status: `[ ]` pending · `[~]` in progress · `[ ]` completed · `[!]` blocked
 
 ---
-> 📢 **CURRENT STATUS & NEXT STEPS**
-> **New prototype validation phase.**
-> We have updated all pinouts (`hardware/DRV-uC_connections.md` and `src/config/pins.h`). The next step is to **re-run and validate Phases 1.1 (Encoder) and 1.2 (DRV SPI)** using the `platformio.ini` test environment to confirm the new connections work correctly.
+> 📢 **CURRENT STATUS AND NEXT STEPS**
+> **v2.0 Prototype Validated (1.1, 1.2, 1.3).**
+> Pinout and basic motor movement (24V) have been confirmed. The next step is **validating Phase 1.4 (RS485 Ping)** to ensure communication bus stability.
 ---
 
 ---
@@ -55,23 +55,22 @@
 - [x] Print STATUS1 and STATUS2 via VCP
 - [x] **IMPORTANT:** There is no nFAULT pin on the STM32. All faults are detected via SPI polling.
 
-### 1.3 Current Sense
+### 1.3 Open-Loop Velocity Control [x]
+- [x] Create `examples/fase1_3_open_loop_v_control/main.cpp`
+- [x] Configure 6-PWM mode (AH, AL, BH, BL, CH, CL)
+- [x] Open-loop velocity control rotation — **Validated on v2.0 hardware (24V)**
+
+### 1.4 RS485 Ping-Pong Test [~]
+- [ ] Validate `examples/fase1_4_rs485_ping/main.cpp`
+- [ ] Ping-Pong test (VCP and external bus)
+
+### 1.5 Current Sense [ ]
 - [ ] Create `src/motor/CurrentSense.h/.cpp` — wrapper for SimpleFOC's `InlineCurrentSense`
   - Shunts: PA0 (CURA), PA1 (CURB), PA2 (CURC)
   - Determine DRV8316 amplifier gain (read CSAGAIN register via SPI)
 - [ ] Calibrate current offset at zero (motor stopped, no current)
 - [ ] Print currents from the 3 phases via VCP with stopped/blocked motor
 
-### 1.4 RS-485 Driver
-- [ ] Create `src/comms/RS485.h` — Public API:
-  - `void begin(uint32_t baudrate)` — UART3 (PC10/PC11) + direction PB9
-  - `void send(uint8_t deviceId, const char* cmd, const char* value)`
-  - `bool receive(char* buf, size_t maxLen)` — non-blocking, returns true if full frame
-- [ ] Create `src/comms/RS485.cpp`
-  - Automatic control of PB9 (HIGH before TX, LOW after TX)
-  - Use `HAL_UART_Transmit` with short timeout, then lower PB9 immediately
-- [ ] Loopback test: connect RS485+ physically to RS485- and verify echo
-- [ ] Test with an external device (PC with USb-RS485 adapter)
 
 ---
 
