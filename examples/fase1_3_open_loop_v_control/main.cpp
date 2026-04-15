@@ -6,6 +6,7 @@
  * ─── FASE 1.3 — Open-Loop Velocity Control ──────────────────────────────────
  * Objetivo: Motorra begizta irekian biraraztea, 6-PWM seinaleak probatzeko.
  * Motorra: iPower GM3506 (7 pole pairs). Tentsio muga: 2.0V
+ * Hardware: v2.0 (nFAULT en PC13)
  * ───────────────────────────────────────────────────────────────────────────
  */
 
@@ -18,11 +19,12 @@
 #include <SimpleFOC.h>
 
 // ─── Instancias de Hardware ──────────────────────────────────────────────────
-// Motor de 7 pares de polos (14 polos en total)
-BLDCMotor motor = BLDCMotor(7);
+// Motor de 11 pares de polos (GM3506)
+BLDCMotor motor = BLDCMotor(11);
 
 // Driver en modo 6-PWM
-BLDCDriver6PWM driverFOC = BLDCDriver6PWM(PIN_AH, PIN_AL, PIN_BH, PIN_BL, PIN_CH, PIN_CL);
+// NOTA: Se invierte el orden (C, B, A) para coincidir con los canales del TIM1 (CH1, CH2, CH3)
+BLDCDriver6PWM driverFOC = BLDCDriver6PWM(PIN_CH, PIN_CL, PIN_BH, PIN_BL, PIN_AH, PIN_AL);
 
 // Gestión de errores por SPI del DRV8316
 DRV8316 drv8316;
@@ -53,6 +55,7 @@ void setup() {
     pinMode(PIN_ENC_CS, OUTPUT);
     digitalWrite(PIN_ENC_CS, HIGH);  // Ignorar sensor
 
+    pinMode(PIN_DRV_FAULT, INPUT_PULLUP); // nFAULT (PC13)
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, LOW);
 
@@ -64,11 +67,13 @@ void setup() {
     } else {
         Serial.println("  [DRV8316] ERROR de SPI. Revisa conexiones o voltaje.");
     }
+        Serial.println("  [DRV8316] ERROR de SPI. Revisa conexiones o voltaje.");
+    }
 
     // 3. Configurar SimpleFOC Driver
     driverFOC.pwm_frequency = 20000;
-    driverFOC.voltage_power_supply = 12.0;  // Voltaje de la fuente (11.1V - 12V)
-    driverFOC.voltage_limit = 2.0;          // Límite extra de seguridad para el driver
+    driverFOC.voltage_power_supply = 24.0;
+    driverFOC.voltage_limit = 5.0;          // Aumentado para test de fuerza
     if (!driverFOC.init()) {
         Serial.println("  [FOC Driver] ERROR de inicializacion.");
         return;
@@ -76,7 +81,7 @@ void setup() {
     motor.linkDriver(&driverFOC);
 
     // 4. Configurar SimpleFOC Motor
-    motor.voltage_limit = 2.0;  // <-- CRÍTICO: Límite de hardware 2.0V
+    motor.voltage_limit = 5.0;  // Aumentado para test de fuerza
     motor.velocity_limit = 20;  // rad/s
     motor.controller = MotionControlType::velocity_openloop;
 
@@ -104,11 +109,21 @@ void loop() {
     // Leer comandos del puerto serie
     command.run();
 
-    // Check fallos del driver DRV8316 cada 1 segundo (sin bloquear)
+    // Check fallos del driver DRV8316 cada 1000ms
     static uint32_t last_check = 0;
     if (millis() - last_check >= 1000) {
-        if (drv8316.hasFault()) {
-            Serial.println(">>> [DRV8316] FALLO ACTIVO DETECTADO <<<");
+        bool hardwareFault = (digitalRead(PIN_DRV_FAULT) == LOW);
+        uint16_t s1 = drv8316.getStatus1Raw();
+        uint16_t s2 = drv8316.getStatus2Raw();
+
+        Serial.print("[DRV8316] STATUS1: 0x");
+        Serial.print(s1, HEX);
+        Serial.print(" | STATUS2: 0x");
+        Serial.print(s2, HEX);
+        if (hardwareFault) Serial.print(" | !!! HW FAULT (PC13 LOW) !!!");
+        Serial.println();
+
+        if (hardwareFault || s1 != 0 || s2 != 0) {
             drv8316.clearFaults();
         }
         last_check = millis();

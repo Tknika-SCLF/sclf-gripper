@@ -16,7 +16,7 @@
 | **LED Heartbeat** | ✅ Egiaztatuta (PC6 / D4 keinuka) |
 | **Encoder MT6701** | ✅ Egiaztatuta (Ondo dabil 24V gabe ere) |
 | **DRV8316 SPI** | ✅ Egiaztatuta (STATUS2: 0x60, SPI komunikazioa OK) |
-| **Motorra probatuta** | ❌ Ez |
+| **Motorra probatuta** | ✅ Egiaztatuta (Begizta Irekian / Open loop OK) |
 
 ---
 
@@ -195,7 +195,9 @@
 - ✅ TASKS.md-n testak hasieratu dira balioztapen berrirako.
 - ✅ **Fase 1.1 (MT6701)**: Prototipo berrian balioztatua. Raw Counts (0-16383) eta angelu metatuak ondo.
 - ✅ **Fase 1.2 (DRV8316 SPI)**: Prototipo berrian balioztatua. SPI komunikazioa finkatua. `STATUS2: 0x60` (Buck fault) persistentea, v1.0-n bezala.
-- ⏳ Zain: Motorraren mugimendua (Fase 1.3).
+- ✅ **Fase 1.3 (Motorra)**: Prototipo berrian balioztatua. Motorra begizta irekian (open loop) biratzen du 24V-ekin. 
+- 💡 **Oharra**: Hasierako "pivoteoa" motorreko kable baten deskonexioagatik zen, ez hardware arazoagatik.
+- ⏳ Zain: RS485 komunikazio probak (Fase 1.4).
 
 ---
 
