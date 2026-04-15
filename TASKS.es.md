@@ -10,50 +10,50 @@
 
 ---
 
-## FASE 0 — Entorno y Scaffolding
+## FASE 0 — Entorno y Scaffolding [x]
 > Objetivo: proyecto compila y hace parpadear un LED. Nada más.
 
-- [ ] Crear `platformio.ini` con target `nucleo_g474re`, 170 MHz, ST-Link
-- [ ] Crear `src/config/pins.h` verificado contra el esquemático KiCad
-- [ ] Crear `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
-- [ ] Instalar PlatformIO en Antigravity via `.vsix` (cpptools + platformio-ide)
-- [ ] Instalar extensión `cortex-debug` para debug con ST-Link
-- [ ] Verificar que `pio run` compila sin errores
-- [ ] Hacer `pio run --target upload` y confirmar que el ST-Link detecta la placa
-- [ ] Hacer parpadear `PIN_LED` (PC6/D4) — pre-test `fase0_led_heartbeat` ✅
-- [ ] Confirmar que el monitor serie USB VCP funciona (`Serial.begin()`) ✅
+- [x] Crear `platformio.ini` con target `nucleo_g474re`, 170 MHz, ST-Link
+- [x] Crear `src/config/pins.h` verificado contra el esquemático KiCad
+- [x] Crear `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
+- [x] Instalar PlatformIO en Antigravity via `.vsix` (cpptools + platformio-ide)
+- [x] Instalar extensión `cortex-debug` para debug con ST-Link
+- [x] Verificar que `pio run` compila sin errores
+- [x] Hacer `pio run --target upload` y confirmar que el ST-Link detecta la placa
+- [x] Hacer parpadear `PIN_LED` (PC6/D4) — pre-test `fase0_led_heartbeat` ✅
+- [x] Confirmar que el monitor serie USB VCP funciona (`Serial.begin()`) ✅
 
 ---
 
 ## FASE 1 — Drivers Básicos
 > Objetivo: leer encoder, leer corriente, hablar por RS-485. Sin FOC todavía.
 
-### 1.1 MT6701 Encoder Driver
-- [ ] Crear `src/encoder/MT6701.h` — API pública:
+### 1.1 MT6701 Encoder Driver [x]
+- [x] Crear `src/encoder/MT6701.h` — API pública:
   - `bool begin()` — inicializa SPI (PA5=CLK, PA6=SDO, PA7=MOSI dummy)
   - `float getAngleRad()` — devuelve ángulo en radianes [0, 2π)
   - `uint16_t getRawCounts()` — devuelve valor crudo 14-bit [0–16383]
   - `bool isOk()` — comprueba que la lectura SPI es válida
-- [ ] Crear `src/encoder/MT6701.cpp` — implementación
-- [ ] Crear `examples/fase1_1_mt6701_test/main.cpp` — test manual
-- [ ] Test manual: imprimir ángulo/raw por VCP (Funciona con ST-Link 3.3V)
-- [ ] Verificar encoder: El LED cambia velocidad y USB muestra raw=0-16383
-- [ ] Verificar wrap-around correcto (16383 → 0 sin salto brusco en `getAngleRad`)
-- [ ] Implementar seguimiento de vueltas (ángulos acumulados > 360º)
-- [ ] Implementar inicialización de cero relativo al encendido
+- [x] Crear `src/encoder/MT6701.cpp` — implementación
+- [x] Crear `examples/fase1_1_mt6701_test/main.cpp` — test manual
+- [x] Test manual: imprimir ángulo/raw por VCP (Funciona con ST-Link 3.3V)
+- [x] Verificar encoder: El LED cambia velocidad y USB muestra raw=0-16383
+- [x] Verificar wrap-around correcto (16383 → 0 sin salto brusco en `getAngleRad`)
+- [x] Implementar seguimiento de vueltas (ángulos acumulados > 360º)
+- [x] Implementar inicialización de cero relativo al encendido
 
-### 1.2 DRV8316 SPI Driver
-- [ ] Crear `src/motor/DRV8316.h` — API pública:
+### 1.2 DRV8316 SPI Driver [x]
+- [x] Crear `src/motor/DRV8316.h` — API pública:
   - `bool begin()` — inicializa SPI (PC4/PB3/PB4/PB5) y configura registros
   - `uint16_t readRegister(uint8_t addr)`
   - `void writeRegister(uint8_t addr, uint16_t value)`
   - `bool hasFault()` — lee STATUS1/STATUS2 por SPI
   - `uint8_t getFaultCode()` — devuelve código de fallo
   - `void clearFaults()`
-- [ ] Crear `src/motor/DRV8316.cpp`
-- [ ] Leer y verificar registro DEVICE_ID del DRV8316 al arrancar
-- [ ] Imprimir estado de STATUS1 y STATUS2 por VCP
-- [ ] **IMPORTANTE:** No existe pin nFAULT en el STM32. Todos los fallos se detectan por SPI polling.
+- [x] Crear `src/motor/DRV8316.cpp`
+- [x] Leer y verificar registro DEVICE_ID del DRV8316 al arrancar
+- [x] Imprimir estado de STATUS1 y STATUS2 por VCP
+- [x] **IMPORTANTE:** No existe pin nFAULT en el STM32. Todos los fallos se detectan por SPI polling.
 
 ### 1.3 Current Sense
 - [ ] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` de SimpleFOC

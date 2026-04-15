@@ -14,8 +14,8 @@
 | **Konpilazioa** | ✅ Egiaztatuta (Ondo konpilatzen du) |
 | **ST-Link Flasheatzea** | ✅ Funtzionatzen du (upload OK) |
 | **LED Heartbeat** | ✅ Egiaztatuta (PC6 / D4 keinuka) |
-| **USB Serial CDC** | ✅ Funtzionatzen du (HSI48 clock fix) |
-| **Encoder MT6701** | ✅ Egiaztatuta (3.3V-rekin ere funtzionatzen du!) |
+| **Encoder MT6701** | ✅ Egiaztatuta (Ondo dabil 24V gabe ere) |
+| **DRV8316 SPI** | ✅ Egiaztatuta (STATUS2: 0x60, SPI komunikazioa OK) |
 | **Motorra probatuta** | ❌ Ez |
 
 ---
@@ -193,7 +193,9 @@
 - ✅ Pinout-a eguneratu da prototipo berrirako (`DRV-uC_connections.md` eta `pins.h`).
 - ✅ Garbiketa orokorra: bertsio labelak (v1.0) kenduta.
 - ✅ TASKS.md-n testak hasieratu dira balioztapen berrirako.
-- ⏳ Zain: Prototipoaren testak hastea.
+- ✅ **Fase 1.1 (MT6701)**: Prototipo berrian balioztatua. Raw Counts (0-16383) eta angelu metatuak ondo.
+- ✅ **Fase 1.2 (DRV8316 SPI)**: Prototipo berrian balioztatua. SPI komunikazioa finkatua. `STATUS2: 0x60` (Buck fault) persistentea, v1.0-n bezala.
+- ⏳ Zain: Motorraren mugimendua (Fase 1.3).
 
 ---
 
