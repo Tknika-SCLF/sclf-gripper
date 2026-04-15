@@ -1,9 +1,9 @@
 #pragma once
 // ============================================================
-//  pins.h — SCLF Gripper v1.0 Pin Definitions
-//  VERIFIED directly from SCLF_Gripper_v1_0.kicad_sch
+//  pins.h — SCLF Gripper Pin Definitions
+//  VERIFIED directly from SCLF_Gripper.kicad_sch
 //  Single source of truth. Never use magic numbers elsewhere.
-//  Board: STM32G474CEU6 | Date: 2026-02-25
+//  Board: STM32G474CEU6 | Date: 2026-04-15
 // ============================================================
 
 // ─── SWD / Programming pads (managed by debugger) ───────────
@@ -15,9 +15,8 @@
 #define PIN_RESET       PG10    // Hardware reset button
 
 // ─── DRV8316C Gate Driver (SPI — shared bus with PB3/4/5) ───
-// NOTE: nFAULT and DRVOFF are NOT routed to STM32.
-//       nFAULT has local pull-up only. DRVOFF tied to GND (always enabled).
-//       Fault detection MUST use DRV8316 SPI status register polling.
+// nFAULT is routed to PC13. DRVOFF is tied to GND (always enabled).
+#define PIN_DRV_FAULT   PC13    // DRV8316 nFAULT — Hardware fault indicator (active low)
 #define PIN_DRV_CS      PC4     // DRV8316 nSCS  — SPI Chip Select (active low)
 #define PIN_DRV_CLK     PB3     // DRV8316 SCLK  — SPI Clock  (SPI1)
 #define PIN_DRV_MISO    PB4     // DRV8316 SDO   — SPI MISO   (SPI1)

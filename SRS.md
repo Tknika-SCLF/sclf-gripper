@@ -1,9 +1,8 @@
 # Software Requirements Specification (SRS)
-## SCLF Gripper v1.0 — Brushless Motor Controller Firmware
-**Project:** SCLF_Gripper_v1_0  
-**Author:** Tknika  
-**Version:** 1.0  
-**Date:** 2026-02-25  
+## SCLF Gripper — Brushless Motor Controller Firmware
+**Project:** SCLF_Gripper
+**Version:** Prototype
+**Date:** 2026-04-15
 **License:** CC BY-SA 4.0
 
 ---
@@ -11,7 +10,7 @@
 ## 1. Introduction
 
 ### 1.1 Purpose
-This document specifies the software requirements for the firmware of the SCLF Gripper v1.0, an open-source brushless motor controller designed for robotic gripper applications. The firmware runs on an STM32G474CEU6 microcontroller and implements Field-Oriented Control (FOC) using the SimpleFOC library.
+This document specifies the software requirements for the firmware of the SCLF Gripper, an open-source brushless motor controller designed for robotic gripper applications. The firmware runs on an STM32G474CEU6 microcontroller and implements Field-Oriented Control (FOC) using the SimpleFOC library.
 
 ### 1.2 Project Scope
 The firmware controls a three-phase BLDC/PMSM motor via the DRV8316C gate driver, reads position from a MT6701 hall-based magnetic encoder, and communicates with external systems over RS-485. Configuration and debugging are available via USB-C (virtual COM port) and SWD programming pads.
@@ -198,6 +197,7 @@ build_flags =
 | CLK (SWD) | PA14 | Programming pad |
 | RST | PG10 | Reset / SWD reset |
 | BOOT | PB8 | Boot0 button |
+| DRV_FAULT | PC13 | Hardware fault input |
 | CURR (sense) | PA2 | ADC current sense test point |
 | PWM (test) | PA10 | PWM test point |
 | Motor A/B/C | DRV8316 | Via HRTIM |
@@ -207,7 +207,7 @@ build_flags =
 ## 6. Folder Structure
 
 ```
-SCLF_Gripper_v1_0_firmware/
+SCLF_Gripper_firmware/
 ├── src/
 │   ├── main.cpp               # Entry point, setup/loop
 │   ├── motor/
@@ -235,4 +235,4 @@ SCLF_Gripper_v1_0_firmware/
 
 | Version | Date | Author | Description |
 |---|---|---|---|
-| 1.0 | 2026-02-25 | — | Initial SRS based on SCLF Gripper v1.0 hardware |
+| 2.0 | 2026-04-15 | — | Updated SRS for new prototype with DRV_FAULT routing |

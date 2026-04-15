@@ -1,11 +1,11 @@
-# TASKS.md — SCLF Gripper v1.0 Firmware
+# TASKS.md — Firmware del SCLF Gripper
 > Backlog completo del proyecto, organizado por fases de desarrollo.
-> Estado: `[ ]` pendiente · `[~]` en progreso · `[x]` completado · `[!]` bloqueado
+> Estado: `[ ]` pendiente · `[~]` en progreso · `[ ]` completado · `[!]` bloqueado
 
 ---
-> 📢 **ESTADO ACTUAL Y SIGUIENTES PASOS (HANDOFF)**
-> **Bloqueado esperando PCB v2.0.**
-> Hemos actualizado todo el pinout al nuevo diseño (`hardware/DRV-uC_connections.md` y `src/config/pins.h`). Cuando llegue la nueva placa, el siguiente paso es **volver a ejecutar y validar las Fases 1.1 (Encoder) y 1.2 (DRV SPI)** usando el entorno de pruebas de `platformio.ini` para confirmar que los nuevos pines funcionan correctamente.
+> 📢 **ESTADO ACTUAL Y SIGUIENTES PASOS**
+> **Fase de validación del nuevo prototipo.**
+> Se ha actualizado el pinout (`hardware/DRV-uC_connections.md` y `src/config/pins.h`). El siguiente paso es **volver a ejecutar y validar las Fases 1.1 (Encoder) y 1.2 (DRV SPI)** usando el entorno de pruebas de `platformio.ini` para confirmar que las nuevas conexiones funcionan correctamente.
 ---
 
 ---
@@ -13,15 +13,15 @@
 ## FASE 0 — Entorno y Scaffolding
 > Objetivo: proyecto compila y hace parpadear un LED. Nada más.
 
-- [x] Crear `platformio.ini` con target `nucleo_g474re`, 170 MHz, ST-Link
-- [x] Crear `src/config/pins.h` verificado contra el esquemático KiCad
-- [x] Crear `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
-- [x] Instalar PlatformIO en Antigravity via `.vsix` (cpptools + platformio-ide)
-- [x] Instalar extensión `cortex-debug` para debug con ST-Link
-- [x] Verificar que `pio run` compila sin errores
-- [x] Hacer `pio run --target upload` y confirmar que el ST-Link detecta la placa
-- [x] Hacer parpadear `PIN_LED` (PC6/D4) — pre-test `fase0_led_heartbeat` ✅
-- [x] Confirmar que el monitor serie USB VCP funciona (`Serial.begin()`) ✅
+- [ ] Crear `platformio.ini` con target `nucleo_g474re`, 170 MHz, ST-Link
+- [ ] Crear `src/config/pins.h` verificado contra el esquemático KiCad
+- [ ] Crear `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
+- [ ] Instalar PlatformIO en Antigravity via `.vsix` (cpptools + platformio-ide)
+- [ ] Instalar extensión `cortex-debug` para debug con ST-Link
+- [ ] Verificar que `pio run` compila sin errores
+- [ ] Hacer `pio run --target upload` y confirmar que el ST-Link detecta la placa
+- [ ] Hacer parpadear `PIN_LED` (PC6/D4) — pre-test `fase0_led_heartbeat` ✅
+- [ ] Confirmar que el monitor serie USB VCP funciona (`Serial.begin()`) ✅
 
 ---
 
@@ -29,31 +29,31 @@
 > Objetivo: leer encoder, leer corriente, hablar por RS-485. Sin FOC todavía.
 
 ### 1.1 MT6701 Encoder Driver
-- [x] Crear `src/encoder/MT6701.h` — API pública:
+- [ ] Crear `src/encoder/MT6701.h` — API pública:
   - `bool begin()` — inicializa SPI (PA5=CLK, PA6=SDO, PA7=MOSI dummy)
   - `float getAngleRad()` — devuelve ángulo en radianes [0, 2π)
   - `uint16_t getRawCounts()` — devuelve valor crudo 14-bit [0–16383]
   - `bool isOk()` — comprueba que la lectura SPI es válida
-- [x] Crear `src/encoder/MT6701.cpp` — implementación
-- [x] Crear `examples/fase1_1_mt6701_test/main.cpp` — test manual
-- [x] Test manual: imprimir ángulo/raw por VCP (Funciona con ST-Link 3.3V)
-- [x] Verificar encoder: El LED cambia velocidad y USB muestra raw=0-16383
-- [x] Verificar wrap-around correcto (16383 → 0 sin salto brusco en `getAngleRad`)
-- [x] Implementar seguimiento de vueltas (ángulos acumulados > 360º)
-- [x] Implementar inicialización de cero relativo al encendido
+- [ ] Crear `src/encoder/MT6701.cpp` — implementación
+- [ ] Crear `examples/fase1_1_mt6701_test/main.cpp` — test manual
+- [ ] Test manual: imprimir ángulo/raw por VCP (Funciona con ST-Link 3.3V)
+- [ ] Verificar encoder: El LED cambia velocidad y USB muestra raw=0-16383
+- [ ] Verificar wrap-around correcto (16383 → 0 sin salto brusco en `getAngleRad`)
+- [ ] Implementar seguimiento de vueltas (ángulos acumulados > 360º)
+- [ ] Implementar inicialización de cero relativo al encendido
 
 ### 1.2 DRV8316 SPI Driver
-- [x] Crear `src/motor/DRV8316.h` — API pública:
+- [ ] Crear `src/motor/DRV8316.h` — API pública:
   - `bool begin()` — inicializa SPI (PC4/PB3/PB4/PB5) y configura registros
   - `uint16_t readRegister(uint8_t addr)`
   - `void writeRegister(uint8_t addr, uint16_t value)`
   - `bool hasFault()` — lee STATUS1/STATUS2 por SPI
   - `uint8_t getFaultCode()` — devuelve código de fallo
   - `void clearFaults()`
-- [x] Crear `src/motor/DRV8316.cpp`
-- [x] Leer y verificar registro DEVICE_ID del DRV8316 al arrancar
-- [x] Imprimir estado de STATUS1 y STATUS2 por VCP
-- [x] **IMPORTANTE:** No existe pin nFAULT en el STM32. Todos los fallos se detectan por SPI polling.
+- [ ] Crear `src/motor/DRV8316.cpp`
+- [ ] Leer y verificar registro DEVICE_ID del DRV8316 al arrancar
+- [ ] Imprimir estado de STATUS1 y STATUS2 por VCP
+- [ ] **IMPORTANTE:** No existe pin nFAULT en el STM32. Todos los fallos se detectan por SPI polling.
 
 ### 1.3 Current Sense
 - [ ] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` de SimpleFOC
@@ -63,11 +63,11 @@
 - [ ] Imprimir corrientes de las 3 fases por VCP en reposo y con motor bloqueado
 
 ### 1.4 RS-485 Driver
-- [x] Crear `src/comms/RS485.h` — API pública
-- [x] Crear `src/comms/RS485.cpp`
-  - [x] Control automático de PB9 (HIGH antes de TX, LOW después de TX)
-- [x] Test de protocolo simplificado (sin dos puntos)
-- [x] Test con dispositivo externo / VCP Simulation ✅
+- [ ] Crear `src/comms/RS485.h` — API pública
+- [ ] Crear `src/comms/RS485.cpp`
+  - [ ] Control automático de PB9 (HIGH antes de TX, LOW después de TX)
+- [ ] Test de protocolo simplificado (sin dos puntos)
+- [ ] Test con dispositivo externo / VCP Simulation ✅
 
 ---
 
@@ -104,11 +104,11 @@
 ## FASE 4 — Protocolo RS-485
 > Objetivo: el gripper obedece comandos del bus del robot.
 
-- [x] Diseñar e implementar parser de comandos en `src/comms/RS485.cpp`:
+- [ ] Diseñar e implementar parser de comandos en `src/comms/RS485.cpp`:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [x] Implementar comandos:
+- [ ] Implementar comandos:
   - `T` — set torque target (A)
   - `V` — set velocity target (rad/s)
   - `P` — set position target (rad)
@@ -119,8 +119,8 @@
   - `?V` — get velocity (rad/s)
   - `?I` — get current (A)
   - `?S` — get status / fault code
-- [x] Implementar direccionamiento multi-dispositivo (ID configurable)
-- [x] Test de roundtrip: enviar comando desde PC, verificar respuesta correcta
+- [ ] Implementar direccionamiento multi-dispositivo (ID configurable)
+- [ ] Test de roundtrip: enviar comando desde PC, verificar respuesta correcta
 - [ ] Test de timing: medir latencia TX→RX en bus RS-485
 
 ---
