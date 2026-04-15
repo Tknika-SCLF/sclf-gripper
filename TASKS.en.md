@@ -1,11 +1,11 @@
-# TASKS.en.md — SCLF Gripper v1.0 Firmware
+# TASKS.md — SCLF Gripper Firmware
 > Complete project backlog, organized by development phases.
-> Status: `[ ]` pending · `[~]` in progress · `[x]` completed · `[!]` blocked
+> Status: `[ ]` pending · `[~]` in progress · `[ ]` completed · `[!]` blocked
 
 ---
-> 📢 **CURRENT STATUS & NEXT STEPS (HANDOFF)**
-> **Blocked waiting for PCB v2.0.**
-> We have updated all pinouts to the new design (`hardware/DRV-uC_connections.md` and `src/config/pins.h`). When the new board arrives, the next step is to **re-run and validate Phases 1.1 (Encoder) and 1.2 (DRV SPI)** using the `platformio.ini` test environment to confirm the new pins work correctly.
+> 📢 **CURRENT STATUS & NEXT STEPS**
+> **New prototype validation phase.**
+> We have updated all pinouts (`hardware/DRV-uC_connections.md` and `src/config/pins.h`). The next step is to **re-run and validate Phases 1.1 (Encoder) and 1.2 (DRV SPI)** using the `platformio.ini` test environment to confirm the new connections work correctly.
 ---
 
 ---
@@ -13,15 +13,15 @@
 ## PHASE 0 — Environment and Scaffolding
 > Goal: project compiles and blinks an LED. Nothing else.
 
-- [x] Create `platformio.ini` with target `nucleo_g474re`, 170 MHz, ST-Link
-- [x] Create `src/config/pins.h` verified against the KiCad schematic
-- [x] Create `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
-- [x] Install PlatformIO in Antigravity via `.vsix` (cpptools + platformio-ide)
-- [x] Install `cortex-debug` extension for ST-Link debugging
-- [x] Verify `pio run` compiles without errors
-- [x] Run `pio run --target upload` and confirm the ST-Link detects the board
-- [x] Blink `PIN_LED` (PC6/D4) — pre-test `fase0_led_heartbeat` ✅
-- [x] Confirm the USB VCP Serial Monitor works (`Serial.begin()`) ✅
+- [ ] Create `platformio.ini` with target `nucleo_g474re`, 170 MHz, ST-Link
+- [ ] Create `src/config/pins.h` verified against the KiCad schematic
+- [ ] Create `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
+- [ ] Install PlatformIO in Antigravity via `.vsix` (cpptools + platformio-ide)
+- [ ] Install `cortex-debug` extension for ST-Link debugging
+- [ ] Verify `pio run` compiles without errors
+- [ ] Run `pio run --target upload` and confirm the ST-Link detects the board
+- [ ] Blink `PIN_LED` (PC6/D4) — pre-test `fase0_led_heartbeat` ✅
+- [ ] Confirm the USB VCP Serial Monitor works (`Serial.begin()`) ✅
 
 ---
 
@@ -29,31 +29,31 @@
 > Goal: read the encoder, read current, communicate via RS-485. No FOC yet.
 
 ### 1.1 MT6701 Encoder Driver
-- [x] Create `src/encoder/MT6701.h` — Public API:
+- [ ] Create `src/encoder/MT6701.h` — Public API:
   - `bool begin()` — initializes SPI (PA5=CLK, PA6=SDO, PA7=MOSI dummy)
   - `float getAngleRad()` — returns angle in radians [0, 2π)
   - `uint16_t getRawCounts()` — returns raw 14-bit value [0–16383]
   - `bool isOk()` — verifies SPI read is valid
-- [x] Create `src/encoder/MT6701.cpp` — implementation
-- [x] Create `examples/fase1_1_mt6701_test/main.cpp` — manual test
-- [x] Manual test: print angle/raw via VCP (Works with ST-Link 3.3V)
-- [x] Verify encoder: The LED changes speed and USB shows raw=0-16383
-- [x] Verify correct wrap-around (16383 → 0 without abrupt jump in `getAngleRad`)
-- [x] Implement multi-turn tracking (accumulated angles > 360º)
-- [x] Implement relative zero initialization on startup
+- [ ] Create `src/encoder/MT6701.cpp` — implementation
+- [ ] Create `examples/fase1_1_mt6701_test/main.cpp` — manual test
+- [ ] Manual test: print angle/raw via VCP (Works with ST-Link 3.3V)
+- [ ] Verify encoder: The LED changes speed and USB shows raw=0-16383
+- [ ] Verify correct wrap-around (16383 → 0 without abrupt jump in `getAngleRad`)
+- [ ] Implement multi-turn tracking (accumulated angles > 360º)
+- [ ] Implement relative zero initialization on startup
 
 ### 1.2 DRV8316 SPI Driver
-- [x] Create `src/motor/DRV8316.h` — Public API:
+- [ ] Create `src/motor/DRV8316.h` — Public API:
   - `bool begin()` — initializes SPI (PC4/PB3/PB4/PB5) and configures registers
   - `uint16_t readRegister(uint8_t addr)`
   - `void writeRegister(uint8_t addr, uint16_t value)`
   - `bool hasFault()` — reads STATUS1/STATUS2 via SPI
   - `uint8_t getFaultCode()` — returns error code
   - `void clearFaults()`
-- [x] Create `src/motor/DRV8316.cpp`
-- [x] Read and verify DRV8316 DEVICE_ID register on startup
-- [x] Print STATUS1 and STATUS2 via VCP
-- [x] **IMPORTANT:** There is no nFAULT pin on the STM32. All faults are detected via SPI polling.
+- [ ] Create `src/motor/DRV8316.cpp`
+- [ ] Read and verify DRV8316 DEVICE_ID register on startup
+- [ ] Print STATUS1 and STATUS2 via VCP
+- [ ] **IMPORTANT:** There is no nFAULT pin on the STM32. All faults are detected via SPI polling.
 
 ### 1.3 Current Sense
 - [ ] Create `src/motor/CurrentSense.h/.cpp` — wrapper for SimpleFOC's `InlineCurrentSense`
@@ -108,11 +108,11 @@
 ## PHASE 4 — RS-485 Protocol
 > Goal: the gripper obeys bus commands from the robot.
 
-- [x] Design and implement command parser in `src/comms/RS485.cpp`:
+- [ ] Design and implement command parser in `src/comms/RS485.cpp`:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [x] Implement commands:
+- [ ] Implement commands:
   - `T` — set torque target (A)
   - `V` — set velocity target (rad/s)
   - `P` — set position target (rad)
@@ -123,8 +123,8 @@
   - `?V` — get velocity (rad/s)
   - `?I` — get current (A)
   - `?S` — get status / fault code
-- [x] Implement multi-device addressing (configurable ID)
-- [x] Roundtrip test: send command from PC, verify valid response
+- [ ] Implement multi-device addressing (configurable ID)
+- [ ] Roundtrip test: send command from PC, verify valid response
 - [ ] Timing test: measure TX→RX latency on RS-485 bus
 
 ---

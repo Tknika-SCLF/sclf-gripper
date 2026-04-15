@@ -1,4 +1,4 @@
-# RULES.md — SCLF Gripper v1.0 Firmware
+# RULES.md — SCLF Gripper Firmware
 > Reglas del proyecto. Se aplican siempre: al escribir código, al revisar código, y al pedir ayuda a un agente de IA.
 
 ---

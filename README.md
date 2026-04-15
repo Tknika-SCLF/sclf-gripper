@@ -1,8 +1,8 @@
-# SCLF Gripper v1.0 — Firmwarea
+# SCLF Gripper — Firmwarea
 
 [ Euskara ](README.md) | [ English ](README.en.md) | [ Español ](README.es.md)
 
-> Tknikaren SCLF Gripper v1.0-rako motor kontrolagailuaren firmwarea.
+> Tknikaren SCLF Gripper-erako motor kontrolagailuaren firmwarea.
 > STM32G474CEU6 · SimpleFOC · PlatformIO · Antigravity IDE
 > Lizentzia: CC BY-SA 4.0
 
@@ -104,7 +104,7 @@ Proiektua klonatzeko Git instalatuta izan behar duzu.
 # Ireki Antigravity erro karpetan (platformio.ini dagoen lekuan)
 ```
 
-Antigravity-n: `File → Open Folder` → hautatu `SCLF_Gripper_v1_0_firmware/` karpeta.
+Antigravity-n: `File → Open Folder` → hautatu `SCLF_Gripper_firmware/` karpeta.
 
 PlatformIOk automatikoki detektatuko du `platformio.ini` eta honako hauek deskargatuko ditu:
 - Platform `ststm32`
@@ -241,7 +241,7 @@ Irakurri testuinguru-fitxategi hauek lagundu aurretik:
 ## Proiektuaren Egitura
 
 ```
-SCLF_Gripper_v1_0_firmware/
+SCLF_Gripper_firmware/
 │
 ├── src/
 │   ├── main.cpp                    ← Sarrera puntua. 0 FASEA: smoke test

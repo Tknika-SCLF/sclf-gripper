@@ -8,11 +8,11 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/SCLF_Gripper/.pio/libdeps/test_led_heartbeat/SimpleFOC/src",
+                "C:/sclf-gripper/.pio/libdeps/test_led_heartbeat/SimpleFOC/src",
                 "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/libraries/SPI/src",
                 "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/libraries/Wire/src",
-                "C:/SCLF_Gripper/src",
-                "C:/SCLF_Gripper/.pio/libdeps/SCLF_Gripper/SimpleFOC/src",
+                "C:/sclf-gripper/src",
+                "C:/sclf-gripper/.pio/libdeps/SCLF_Gripper/SimpleFOC/src",
                 "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/cores/arduino/avr",
                 "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32",
                 "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/libraries/SrcWrapper/inc",
@@ -52,11 +52,11 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/SCLF_Gripper/.pio/libdeps/test_led_heartbeat/SimpleFOC/src",
+                    "C:/sclf-gripper/.pio/libdeps/test_led_heartbeat/SimpleFOC/src",
                     "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/libraries/SPI/src",
                     "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/libraries/Wire/src",
-                    "C:/SCLF_Gripper/src",
-                    "C:/SCLF_Gripper/.pio/libdeps/SCLF_Gripper/SimpleFOC/src",
+                    "C:/sclf-gripper/src",
+                    "C:/sclf-gripper/.pio/libdeps/SCLF_Gripper/SimpleFOC/src",
                     "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/cores/arduino/avr",
                     "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32",
                     "C:/Users/IoMadmin/.platformio/packages/framework-arduinoststm32/libraries/SrcWrapper/inc",

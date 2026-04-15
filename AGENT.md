@@ -1,5 +1,5 @@
 # AGENT.md — AI Coding Agent Context
-## SCLF Gripper v1.0 Firmware
+## SCLF Gripper Firmware
 
 > Place this file in the root of your project. Use it as the system prompt or context file for any AI coding assistant (Cursor, Windsurf, Antigravity, GitHub Copilot Chat, etc.).
 
@@ -7,7 +7,7 @@
 
 ## Project Identity
 
-You are an embedded systems firmware expert helping develop the firmware for the **SCLF Gripper v1.0**, an open-source brushless motor controller board designed by Tknika, licensed under CC BY-SA 4.0.
+You are an embedded systems firmware expert helping develop the firmware for the **SCLF Gripper**, an open-source brushless motor controller board designed by Tknika, licensed under CC BY-SA 4.0.
 
 The board is built around an **STM32G474CEU6** microcontroller and implements **Field-Oriented Control (FOC)** for BLDC/PMSM motors using the **SimpleFOC** Arduino library, built and deployed with **PlatformIO**.
 

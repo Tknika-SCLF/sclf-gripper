@@ -1,11 +1,11 @@
-# TASKS.md — SCLF Gripper v1.0 Firmware
+# TASKS.md — SCLF Gripper Firmware
 > Proiektuaren backlog osoa, garapen-faseka antolatuta.
-> Egoera: `[ ]` egiteke · `[~]` martxan · `[x]` amaituta · `[!]` blokeatuta
+> Egoera: `[ ]` egiteke · `[~]` martxan · `[ ]` amaituta · `[!]` blokeatuta
 
 ---
-> 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK (HANDOFF)**
-> **Blokeatuta PCB v2.0 berriaren zain.**
-> Pinout osoa diseinu berrira eguneratu dugu (`hardware/DRV-uC_connections.md` eta `src/config/pins.h`). Plaka berria iristean, hurrengo urratsa **1.1 (Encoder) eta 1.2 (DRV SPI) faseak berriro exekutatu eta balioztatzea da**, `platformio.ini`-ko proba ingurunea erabiliz, pin berriak ondo dabiltzala egiaztatzeko.
+> 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
+> **Prototipo berriaren balioztapen fasean.**
+> Pinout-a eguneratu da (`hardware/DRV-uC_connections.md` eta `src/config/pins.h`). Hurrengo urratsa **1.1 (Encoder) eta 1.2 (DRV SPI) faseak berriro exekutatu eta balioztatzea da**, `platformio.ini`-ko proba ingurunea erabiliz, konexio berriak ondo dabiltzala egiaztatzeko.
 ---
 
 ---
@@ -13,15 +13,15 @@
 ## 0 FASEA — Ingurunea eta Scaffolding
 > Helburua: proiektuak konpilatzea eta LED bat keinuka jartzea. Besterik ez.
 
-- [x] `platformio.ini` sortu, `nucleo_g474re` target, 170 MHz, ST-Link
-- [x] `src/config/pins.h` sortu, KiCad eskematikoarekin egiaztatuta
-- [x] Sortu `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
-- [x] PlatformIO instalatu Antigravity-n `.vsix` bidez (cpptools + platformio-ide)
-- [x] `cortex-debug` hedapena instalatu ST-Link bidez debug egiteko
-- [x] `pio run` errore gabe konpilatzen duela egiaztatu
-- [x] `pio run --target upload` exekutatu eta ST-Link plaka detektatzen duela baieztatu
-- [x] `PIN_LED` (PC6/D4) keinuka jarri — pre-test `fase0_led_heartbeat` ✅
-- [x] USB VCP serie-monitoreak funtzionatzen duela baieztatu (`Serial.begin()`) ✅
+- [ ] `platformio.ini` sortu, `nucleo_g474re` target, 170 MHz, ST-Link
+- [ ] `src/config/pins.h` sortu, KiCad eskematikoarekin egiaztatuta
+- [ ] Sortu `SRS.md`, `AGENT.md`, `RULES.md`, `TASKS.md`, `MEMORY.md`
+- [ ] PlatformIO instalatu Antigravity-n `.vsix` bidez (cpptools + platformio-ide)
+- [ ] `cortex-debug` hedapena instalatu ST-Link bidez debug egiteko
+- [ ] `pio run` errore gabe konpilatzen duela egiaztatu
+- [ ] `pio run --target upload` exekutatu eta ST-Link plaka detektatzen duela baieztatu
+- [ ] `PIN_LED` (PC6/D4) keinuka jarri — pre-test `fase0_led_heartbeat` ✅
+- [ ] USB VCP serie-monitoreak funtzionatzen duela baieztatu (`Serial.begin()`) ✅
 
 ---
 
@@ -29,31 +29,31 @@
 > Helburua: encoder-a irakurri, korrontea irakurri, RS-485 bidez hitz egin. FOC gabe oraindik.
 
 ### 1.1 MT6701 Encoder Gidaria
-- [x] `src/encoder/MT6701.h` sortu — API publikoa:
+- [ ] `src/encoder/MT6701.h` sortu — API publikoa:
   - `bool begin()` — SPI hasieratzen du (PA5=CLK, PA6=SDO, PA7=MOSI dummy)
   - `float getAngleRad()` — angelua itzultzen du radianetan [0, 2π)
   - `uint16_t getRawCounts()` — balio gordina itzultzen du 14-bit [0–16383]
   - `bool isOk()` — SPI irakurketa baliozkoa dela egiaztatzen du
-- [x] `src/encoder/MT6701.cpp` sortu — inplementazioa
-- [x] `examples/fase1_1_mt6701_test/main.cpp` sortu — eskuzko proba
-- [x] Eskuzko proba: inprimatu angelua/raw VCP bidez (ST-Link 3.3V bidez funtzionatzen du)
-- [x] Egiaztatu encoder-a: LEDak abiadura aldatzen du eta USB monitoreak raw=0-16383 erakusten du
-- [x] Wrap-around zuzena egiaztatu (16383 → 0 inolako jauzi bortitz gabe `getAngleRad`-en)
-- [x] Bira kopuruaren neurketa inplementatu (angelu metatuak > 360º)
-- [x] Abiaraztearekiko zero erlatiboaren hasieraketa inplementatu
+- [ ] `src/encoder/MT6701.cpp` sortu — inplementazioa
+- [ ] `examples/fase1_1_mt6701_test/main.cpp` sortu — eskuzko proba
+- [ ] Eskuzko proba: inprimatu angelua/raw VCP bidez (ST-Link 3.3V bidez funtzionatzen du)
+- [ ] Egiaztatu encoder-a: LEDak abiadura aldatzen du eta USB monitoreak raw=0-16383 erakusten du
+- [ ] Wrap-around zuzena egiaztatu (16383 → 0 inolako jauzi bortitz gabe `getAngleRad`-en)
+- [ ] Bira kopuruaren neurketa inplementatu (angelu metatuak > 360º)
+- [ ] Abiaraztearekiko zero erlatiboaren hasieraketa inplementatu
 
 ### 1.2 DRV8316 SPI Gidaria
-- [x] `src/motor/DRV8316.h` sortu — API publikoa:
+- [ ] `src/motor/DRV8316.h` sortu — API publikoa:
   - `bool begin()` — SPI (PC4/PB3/PB4/PB5) hasieratzen du eta erregistroak konfiguratzen ditu
   - `uint16_t readRegister(uint8_t addr)`
   - `void writeRegister(uint8_t addr, uint16_t value)`
   - `bool hasFault()` — STATUS1/STATUS2 irakurtzen du SPI bidez
   - `uint8_t getFaultCode()` — errore kodea itzultzen du
   - `void clearFaults()`
-- [x] `src/motor/DRV8316.cpp` sortu
-- [x] DRV8316-ren DEVICE_ID erregistroa irakurri eta egiaztatu abiaraztean
-- [x] STATUS1 eta STATUS2 egoerak VCP bidez inprimatu
-- [x] **GARRANTZITSUA:** Ez dago nFAULT pinik STM32-an. Akats guztiak SPI polling bidez detektatzen dira.
+- [ ] `src/motor/DRV8316.cpp` sortu
+- [ ] DRV8316-ren DEVICE_ID erregistroa irakurri eta egiaztatu abiaraztean
+- [ ] STATUS1 eta STATUS2 egoerak VCP bidez inprimatu
+- [ ] **GARRANTZITSUA:** Ez dago nFAULT pinik STM32-an. Akats guztiak SPI polling bidez detektatzen dira.
 
 ### 1.3 Korronte Sentsorea (Current Sense)
 - [ ] `src/motor/CurrentSense.h/.cpp` sortu — `InlineCurrentSense` SimpleFOC-entzat wrapper-a
@@ -108,11 +108,11 @@
 ## 4 FASEA — RS-485 Protokoloa
 > Helburua: gripper-ak robotaren bus-eko aginduak obeditzen ditu.
 
-- [x] Komando parser-a diseinatu eta inplementatu `src/comms/RS485.cpp` barruan:
+- [ ] Komando parser-a diseinatu eta inplementatu `src/comms/RS485.cpp` barruan:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [x] Komandoak inplementatu:
+- [ ] Komandoak inplementatu:
   - `T` — ipini torque jomuga (A)
   - `V` — ipini velocity jomuga (rad/s)
   - `P` — ipini position jomuga (rad)
@@ -123,8 +123,8 @@
   - `?V` — lortu abiadura (rad/s)
   - `?I` — lortu korrontea (A)
   - `?S` — lortu egoera / error kodea
-- [x] Gailu-anitzeko helbideratzea inplementatu (ID konfiguragarria)
-- [x] Roundtrip proba: ordenagailutik komandoa bidali, erantzun zuzena egiaztatu
+- [ ] Gailu-anitzeko helbideratzea inplementatu (ID konfiguragarria)
+- [ ] Roundtrip proba: ordenagailutik komandoa bidali, erantzun zuzena egiaztatu
 - [ ] Latentzia proba: neurtu latentzia TX→RX RS-485 bus-ean
 
 ---

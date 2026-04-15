@@ -1,8 +1,8 @@
-# SCLF Gripper v1.0 — Firmware
+# SCLF Gripper — Firmware
 
 [ Euskara ](README.md) | [ English ](README.en.md) | [ Español ](README.es.md)
 
-> Firmware del controlador de motor para el SCLF Gripper v1.0 de Tknika.
+> Firmware del controlador de motor para el SCLF Gripper de Tknika.
 > STM32G474CEU6 · SimpleFOC · PlatformIO · IDE Antigravity
 > Licencia: CC BY-SA 4.0
 
@@ -103,7 +103,7 @@ Para poder clonar el proyecto necesitas tener Git instalado.
 # Abre Antigravity en la carpeta raíz (donde se encuentra platformio.ini)
 ```
 
-En Antigravity: `Archivo → Abrir Carpeta` → selecciona la carpeta `SCLF_Gripper_v1_0_firmware/`.
+En Antigravity: `Archivo → Abrir Carpeta` → selecciona la carpeta `SCLF_Gripper_firmware/`.
 
 PlatformIO detectará automáticamente `platformio.ini` y descargará lo siguiente:
 - Plataforma `ststm32`
@@ -260,7 +260,7 @@ Lee estos archivos de contexto antes de ayudarme:
 ## Estructura del Proyecto
 
 ```
-SCLF_Gripper_v1_0_firmware/
+SCLF_Gripper_firmware/
 │
 ├── src/
 │   ├── main.cpp                    ← Punto de entrada. FASE 0: smoke test

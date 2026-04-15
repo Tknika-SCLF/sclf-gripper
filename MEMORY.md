@@ -1,4 +1,4 @@
-# MEMORY.md — SCLF Gripper v1.0 Firmware
+# MEMORY.md — SCLF Gripper Firmware
 > Proiektuaren egoera iraunkorra garapen saioen artean.
 > **Fitxategi hau eguneratu saio produktibo bakoitzaren amaieran.**
 > IA agenteak fitxategi hau irakurri behar du saio bakoitzaren hasieran.
@@ -9,8 +9,8 @@
 
 | Eremua | Balioa |
 |---|---|
-| **Fase aktiboa** | BLOQUEADA — Zain PCB v2.0 berria iritsi arte |
-| **Azken eguneraketa** | 2026-03-07 |
+| **Fase aktiboa** | Prototipo berriaren balioztapena |
+| **Azken eguneraketa** | 2026-04-15 |
 | **Konpilazioa** | ✅ Egiaztatuta (Ondo konpilatzen du) |
 | **ST-Link Flasheatzea** | ✅ Funtzionatzen du (upload OK) |
 | **LED Heartbeat** | ✅ Egiaztatuta (PC6 / D4 keinuka) |
@@ -41,9 +41,9 @@
 ## Egiaztatutako Hardwarea
 
 ### Eskematikoa
-- **Fitxategia:** `SCLF_Gripper_v1_0.kicad_sch` ✅ Analizatuta
-- **PCB:** `SCLF_Gripper_v1_0.kicad_pcb` ✅ Eskuragarri
-- **BOM:** `SCLF_Gripper_v1_0_bom.csv` ✅ Analizatuta
+- **Fitxategia:** `SCLF_Gripper.kicad_sch` ✅ Analizatuta
+- **PCB:** `SCLF_Gripper.kicad_pcb` ✅ Eskuragarri
+- **BOM:** `SCLF_Gripper_bom.csv` ✅ Analizatuta
 
 ### Eskematikoko aurkikuntza kritikoak
 1. DRV8316-ren `nFAULT` **EZ DAGO KONEKTATUTA** STM32-ra — soilik tokiko pull-up
@@ -189,11 +189,11 @@
 - ✅ RS-485 Driver inplementazioa (`fase1_4_rs485_ping`). MAX3485 Half-Duplex funtzionamendua baliozkotua SIMULATZAILE bidez (RX injectatuz USB bidez).
 - ⚠️ **BLOKEATUTA:** Fase 1.2 (SPI driver) eta Fase 1.3/2 (Motor testa) 24V elikadura eta *pogo pins* iritsi arte ezin dira probatu.
 
-### 2026-03-24 — Hardware V2 Migrazioa eta Garbiketa
-- ✅ Pinout-a eguneratu da Hardware V2-rako (`DRV-uC_connections.md` eta `pins.h`).
-- ✅ Garbiketa orokorra: log zaharrak ezabatuta.
-- ✅ TASKS.md-n "Handoff" blokea sortu da bi garatzaileen arteko sinkronizazioa errazteko.
-- ⏳ Zain: Plaka berria jaso arte ezin da testatzen jarraitu.
+### 2026-04-15 — Prototipo berriaren Migrazioa eta Garbiketa
+- ✅ Pinout-a eguneratu da prototipo berrirako (`DRV-uC_connections.md` eta `pins.h`).
+- ✅ Garbiketa orokorra: bertsio labelak (v1.0) kenduta.
+- ✅ TASKS.md-n testak hasieratu dira balioztapen berrirako.
+- ⏳ Zain: Prototipoaren testak hastea.
 
 ---
 
