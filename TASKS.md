@@ -4,8 +4,8 @@
 
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
-> **Prototipo berriaren balioztapen fasean.**
-> Pinout-a eguneratu da (`hardware/DRV-uC_connections.md` eta `src/config/pins.h`). Hurrengo urratsa **1.1 (Encoder) eta 1.2 (DRV SPI) faseak berriro exekutatu eta balioztatzea da**, `platformio.ini`-ko proba ingurunea erabiliz, konexio berriak ondo dabiltzala egiaztatzeko.
+> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3).**
+> Pinout-a eta oinarrizko mugimendua (24V) egiaztatuta daude. Hurrengo urratsa **1.4 (RS485 Ping)** balioztatzea da, bus-eko komunikazioa egonkorra dela ziurtatzeko.
 ---
 
 ---
@@ -55,23 +55,21 @@
 - [x] STATUS1 eta STATUS2 egoerak VCP bidez inprimatu
 - [x] **GARRANTZITSUA:** Ez dago nFAULT pinik STM32-an. Akats guztiak SPI polling bidez detektatzen dira.
 
-### 1.3 Korronte Sentsorea (Current Sense)
+### 1.3 Lazo irekia / Open-Loop [x]
+- [x] `examples/fase1_3_open_loop_v_control/main.cpp` sortu
+- [x] 6-PWM konfiguratu (AH, AL, BH, BL, CH, CL)
+- [x] Begizta irekian biratu (Open-Loop) — **v2.0 hardwarean egiaztatuta (24V)**
+
+### 1.4 RS485 Ping-a / RS485 Ping [~]
+- [ ] `examples/fase1_4_rs485_ping/main.cpp` balioztatu
+- [ ] Ping-Pong proba (VCP eta Kanpoko bus-a)
+
+### 1.5 Korronte Sentsorea (Current Sense) [ ]
 - [ ] `src/motor/CurrentSense.h/.cpp` sortu — `InlineCurrentSense` SimpleFOC-entzat wrapper-a
   - Shunt-ak: PA0 (CURA), PA1 (CURB), PA2 (CURC)
   - DRV8316-ren anplifikadorearen irabazia zehaztu (CSAGAIN erregistroa irakurri SPI bidez)
 - [ ] Korrontearen offset-a zeroan kalibratu (motorra geldirik, korronterik gabe)
 - [ ] 3 faseetako korronteak inprimatu VCP bidez motorra geldirik eta blokeatuta dagoenean
-
-### 1.4 RS-485 Gidaria
-- [ ] `src/comms/RS485.h` sortu — API publikoa:
-  - `void begin(uint32_t baudrate)` — UART3 (PC10/PC11) + PB9 helbide norabidea
-  - `void send(uint8_t deviceId, const char* cmd, const char* value)`
-  - `bool receive(char* buf, size_t maxLen)` — non-blocking, true itzultzen du frame-a osoa bada
-- [ ] `src/comms/RS485.cpp` sortu
-  - PB9-ren kontrol automatikoa (HIGH TX aurretik, LOW TX ondoren)
-  - `HAL_UART_Transmit` erabili timeout laburrez, gero PB9 berehala jaitsi
-- [ ] Loopback test: konektatu RS485+ RS485--rekin zuzenean eta jaso oihartzuna
-- [ ] Test kanpoko gailu batekin (PC USB-RS485 egokigailu batekin)
 
 ---
 
