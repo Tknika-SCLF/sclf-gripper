@@ -1,25 +1,27 @@
-# Fase 1.2: DRV8316 SPI Testa (Standalone)
+# FASE 1.2 — DRV8316 SPI Config Test
 
-Adibide honen helburua DRV8316 motor driverraren kontrol-zirkuitueriarekin SPI bidez ondo komunikatzen garela ziurtatzea da (STATUS eta CONTROL errejistroak irakurriz). **Test honetan PWM seinaleak GND-ra (LOW) lotuta daude segurtasunagatik, beraz motorrak ez luke biratu behar.**
+Este entorno de prueba (test) inicializa la comunicación SPI con el driver de motor DRV8316 y ejecuta un sondeo regular (polling) de sus registros de estado (STATUS1 y STATUS2).
 
-## Prestaketa
+## Hardware Requerido
+- Placa SCLF Gripper conectada.
+- **Alimentación de 24V conectada** (El DRV8316 necesita la tensión de bus principal VM para habilitar la lógica interna y responder por SPI).
+- Conexión USB al puerto VCP para el monitor serie.
 
-1. Ziurtatu Gripper plaka elikatuta dagoela. **GARRANTZITSUA:** DRV8316 txipak bere SPI logikarako barne-erreguladore bat dauka, eta erreguladore hori soilik pizten da plakari tentsio nagusia (VM > 8V, adib. 24V) sartzen zaionean. USB kable hutsekin konektatzean DRV ez da esnatuko eta SPI-ak huts egingo du (0xFFFF).
-2. Kopiatu karpeta honetako `main.cpp` fitxategia proiektuaren `src/main.cpp` fitxategira.
-3. Kargatu firmwarea mikrokontrolagailuan (`pio run --target upload` edo DFU erabiliz).
+## Instrucciones de Uso
 
-## Nola Probatu
-
-1. Ireki PlatformIOren Serie-Monitorea (`pio device monitor`, 115200 baud).
-2. Pantailak honako hau erakutsi beharko luke:
-   ```text
-   ========================================
-     SCLF Gripper v1.0 — Fase 1.2
-     Iniciando Test DRV8316 (Driver SPI)
-   ========================================
-     [DRV8316] Iniciando SPI... OK.
-       -> Comunicacion SPI exitosa.
-   ========================================
+1. **Compilar y flashear:**
+   Ejecuta el siguiente comando en la raíz del proyecto para subir este entorno específico:
+   ```bash
+   pio run -e test_drv_spi --target upload
    ```
-3. Begizta nagusian, segundoero DRV8316-aren STATUS1 eta STATUS2 errejistroen balore hexadezimala irakurriko duzu. Akatsik ez badago, `0x0` izan ohi dira.
-4. Edozein kable kentzen baduzu edo elikadura mozten baduzu, "FALLO ACTIVO DETECTADO" mezua agertuko da, errejistroek `0xFFFF` emango dutelako.
+
+2. **Monitor Serie:**
+   Abre el monitor serie con un baud rate de 115200:
+   ```bash
+   pio device monitor --baud 115200
+   ```
+
+3. **Verificación:**
+   - La comunicación SPI es exitosa si el monitor no reporta error de MISO flotante (`(STATUS=0x7FF)`).
+   - El test mostrará continuamente el valor raw de STATUS1 y STATUS2.
+   - **Nota de diseño:** En hardware sin modificar (con L1 conectada), es perfectamente normal leer `STATUS2: 0x60` (Fallo de UV/OCP en el regulador Buck) debido al conflicto eléctrico con el LDO de 3.3V. Obtener esta lectura confirma que el bus SPI y la librería están funcionando al 100%.

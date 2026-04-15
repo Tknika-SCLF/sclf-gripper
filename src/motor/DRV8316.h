@@ -36,6 +36,19 @@ constexpr uint8_t CONTROL9 = 0x0A;
 constexpr uint8_t CONTROL10 = 0x0B;
 }  // namespace DRV8316_REG
 
+// ── Máscaras de bits para Registros de Control ──────────────────────────────
+namespace DRV8316_BIT {
+    // CONTROL1
+    constexpr uint16_t CLR_FLT = (1 << 0);
+    // CONTROL2
+    constexpr uint16_t PWM_MODE_6 = (0 << 0);
+    constexpr uint16_t PWM_MODE_3 = (1 << 0);
+    // CONTROL4
+    constexpr uint16_t BUCK_DIS = (1 << 8);
+    constexpr uint16_t BUCK_SEL_3V3 = (0 << 9);
+    constexpr uint16_t BUCK_SEL_5V0 = (1 << 9);
+}
+
 // ── Códigos de fallo ─────────────────────────────────────────────────────────
 enum class DRV8316Fault : uint8_t {
     NONE = 0,
