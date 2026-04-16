@@ -4,8 +4,8 @@
 
 ---
 > 📢 **ESTADO ACTUAL Y SIGUIENTES PASOS**
-> **Prototipo v2.0 Validado (1.1, 1.2, 1.3).**
-> El pinout y el movimiento básico (24V) han sido confirmados. El siguiente paso es **validar la Fase 1.4 (RS485 Ping)** para asegurar la estabilidad del bus de comunicaciones.
+> **Prototipo v2.0 Validado (1.1, 1.2, 1.3, 1.4).**
+> La comunicación RS485 (Ping) ha sido confirmada. El siguiente paso es **validar la Fase 1.5 (Current Sense)**.
 ---
 
 ---
@@ -47,9 +47,9 @@
 - [x] Configurar modo 6-PWM (AH, AL, BH, BL, CH, CL)
 - [x] Rotación inicial en lazo abierto (Open-Loop) — **Validado en hardware v2.0 (24V)**
 
-### 1.4 Test de Ping RS485 / RS485 Ping [~]
-- [ ] Validar `examples/fase1_4_rs485_ping/main.cpp`
-- [ ] Test de Ping-Pong (VCP y bus externo)
+### 1.4 Test de Ping RS485 / RS485 Ping [x]
+- [x] Validar `examples/fase1_4_rs485_ping/main.cpp`
+- [x] Test de Ping-Pong (VCP y bus externo)
 
 ### 1.5 Sensor de Corriente (Current Sense) [ ]
 - [ ] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` de SimpleFOC

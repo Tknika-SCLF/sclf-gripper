@@ -4,8 +4,8 @@
 
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
-> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3).**
-> Pinout-a eta oinarrizko mugimendua (24V) egiaztatuta daude. Hurrengo urratsa **1.4 (RS485 Ping)** balioztatzea da, bus-eko komunikazioa egonkorra dela ziurtatzeko.
+> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4).**
+> RS485 komunikazioa (Ping) egiaztatuta dago. Hurrengo urratsa **1.5 (Current Sense)** balioztatzea da.
 ---
 
 ---
@@ -60,9 +60,9 @@
 - [x] 6-PWM konfiguratu (AH, AL, BH, BL, CH, CL)
 - [x] Begizta irekian biratu (Open-Loop) — **v2.0 hardwarean egiaztatuta (24V)**
 
-### 1.4 RS485 Ping-a / RS485 Ping [~]
-- [ ] `examples/fase1_4_rs485_ping/main.cpp` balioztatu
-- [ ] Ping-Pong proba (VCP eta Kanpoko bus-a)
+### 1.4 RS485 Ping-a / RS485 Ping [x]
+- [x] `examples/fase1_4_rs485_ping/main.cpp` balioztatu
+- [x] Ping-Pong proba (VCP eta Kanpoko bus-a)
 
 ### 1.5 Korronte Sentsorea (Current Sense) [ ]
 - [ ] `src/motor/CurrentSense.h/.cpp` sortu — `InlineCurrentSense` SimpleFOC-entzat wrapper-a
