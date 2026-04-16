@@ -64,7 +64,7 @@
 - [x] `examples/fase1_4_rs485_ping/main.cpp` balioztatu
 - [x] Ping-Pong proba (VCP eta Kanpoko bus-a)
 
-### 1.5 Korronte Sentsorea (Current Sense) [ ]
+### 1.5 Korronte Sentsorea (Current Sense) [~]
 - [ ] `src/motor/CurrentSense.h/.cpp` sortu — `InlineCurrentSense` SimpleFOC-entzat wrapper-a
   - Shunt-ak: PA0 (CURA), PA1 (CURB), PA2 (CURC)
   - DRV8316-ren anplifikadorearen irabazia zehaztu (CSAGAIN erregistroa irakurri SPI bidez)
