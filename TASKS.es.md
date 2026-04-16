@@ -3,9 +3,9 @@
 > Estado: `[ ]` pendiente · `[~]` en progreso · `[ ]` completado · `[!]` bloqueado
 
 ---
-> 📢 **ESTADO ACTUAL Y SIGUIENTES PASOS**
-> **Prototipo v2.0 Validado (1.1, 1.2, 1.3, 1.4).**
-> La comunicación RS485 (Ping) ha sido confirmada. El siguiente paso es **validar la Fase 1.5 (Current Sense)**.
+> 📢 **ESTADO ACTUAL Y PRÓXIMOS PASOS**
+> **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5).**
+> Sensores de corriente validados. El siguiente paso es la **FASE 2 (FOC Básico)**.
 ---
 
 ---
@@ -51,9 +51,9 @@
 - [x] Validar `examples/fase1_4_rs485_ping/main.cpp`
 - [x] Test de Ping-Pong (VCP y bus externo)
 
-### 1.5 Sensor de Corriente (Current Sense) [ ]
-- [ ] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` de SimpleFOC
-- [ ] Calibrar offset de corriente en cero
+### 1.5 Sensor de Corriente (Current Sense) [x]
+- [x] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` para SimpleFOC
+- [x] Calibrar offset de corriente en cero
 
 ---
 
