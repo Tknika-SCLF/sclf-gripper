@@ -4,8 +4,8 @@
 
 ---
 > 📢 **CURRENT STATUS AND NEXT STEPS**
-> **v2.0 Prototype Validated (1.1, 1.2, 1.3, 1.4).**
-> RS485 communication (Ping) has been confirmed. The next step is **validating Phase 1.5 (Current Sense)**.
+> **v2.0 Prototype Validated (1.1, 1.2, 1.3, 1.4, 1.5).**
+> Current sensors validated. The next step is **PHASE 2 (Basic FOC)**.
 ---
 
 ---
