@@ -4,8 +4,8 @@
 
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
-> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4).**
-> RS485 komunikazioa (Ping) egiaztatuta dago. Hurrengo urratsa **1.5 (Current Sense)** balioztatzea da.
+> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5).**
+> Korronte sentsoreak balioztatuta. Hurrengo urratsa **2. FASEA (Oinarrizko FOC)** da.
 ---
 
 ---
@@ -64,12 +64,12 @@
 - [x] `examples/fase1_4_rs485_ping/main.cpp` balioztatu
 - [x] Ping-Pong proba (VCP eta Kanpoko bus-a)
 
-### 1.5 Korronte Sentsorea (Current Sense) [~]
-- [ ] `src/motor/CurrentSense.h/.cpp` sortu — `InlineCurrentSense` SimpleFOC-entzat wrapper-a
+### 1.5 Korronte Sentsorea (Current Sense) [x]
+- [x] `src/motor/CurrentSense.h/.cpp` sortu — `InlineCurrentSense` SimpleFOC-entzat wrapper-a
   - Shunt-ak: PA0 (CURA), PA1 (CURB), PA2 (CURC)
   - DRV8316-ren anplifikadorearen irabazia zehaztu (CSAGAIN erregistroa irakurri SPI bidez)
-- [ ] Korrontearen offset-a zeroan kalibratu (motorra geldirik, korronterik gabe)
-- [ ] 3 faseetako korronteak inprimatu VCP bidez motorra geldirik eta blokeatuta dagoenean
+- [x] Korrontearen offset-a zeroan kalibratu (motorra geldirik, korronterik gabe)
+- [x] 3 faseetako korronteak inprimatu VCP bidez motorra geldirik eta blokeatuta dagoenean
 
 ---
 

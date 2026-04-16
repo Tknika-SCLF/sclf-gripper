@@ -22,18 +22,18 @@
 
 // ── Mapa de registros DRV8316 (datasheet Table 7-x) ─────────────────────────
 namespace DRV8316_REG {
-constexpr uint8_t STATUS1 = 0x00;
-constexpr uint8_t STATUS2 = 0x01;
-constexpr uint8_t CONTROL1 = 0x02;
-constexpr uint8_t CONTROL2 = 0x03;
-constexpr uint8_t CONTROL3 = 0x04;
-constexpr uint8_t CONTROL4 = 0x05;
-constexpr uint8_t CONTROL5 = 0x06;
-constexpr uint8_t CONTROL6 = 0x07;
-constexpr uint8_t CONTROL7 = 0x08;
-constexpr uint8_t CONTROL8 = 0x09;
-constexpr uint8_t CONTROL9 = 0x0A;
-constexpr uint8_t CONTROL10 = 0x0B;
+constexpr uint8_t REG_STATUS1 = 0x00;
+constexpr uint8_t REG_STATUS2 = 0x01;
+constexpr uint8_t REG_CONTROL1 = 0x02;
+constexpr uint8_t REG_CONTROL2 = 0x03;
+constexpr uint8_t REG_CONTROL3 = 0x04;
+constexpr uint8_t REG_CONTROL4 = 0x05;
+constexpr uint8_t REG_CONTROL5 = 0x06;
+constexpr uint8_t REG_CONTROL6 = 0x07;
+constexpr uint8_t REG_CONTROL7 = 0x08;
+constexpr uint8_t REG_CONTROL8 = 0x09;
+constexpr uint8_t REG_CONTROL9 = 0x0A;
+constexpr uint8_t REG_CONTROL10 = 0x0B;
 }  // namespace DRV8316_REG
 
 // ── Máscaras de bits para Registros de Control ──────────────────────────────
@@ -41,12 +41,20 @@ namespace DRV8316_BIT {
     // CONTROL1
     constexpr uint16_t CLR_FLT = (1 << 0);
     // CONTROL2
-    constexpr uint16_t PWM_MODE_6 = (0 << 0);
-    constexpr uint16_t PWM_MODE_3 = (1 << 0);
+    constexpr uint16_t REG_LOCK_MASK = (7 << 0); // Bits 2:0
+    constexpr uint16_t UNLOCK_ALL    = (3 << 0); // 011b
+    constexpr uint16_t LOCK_ALL      = (6 << 0); // 110b
+    
     // CONTROL4
     constexpr uint16_t BUCK_DIS = (1 << 8);
     constexpr uint16_t BUCK_SEL_3V3 = (0 << 9);
     constexpr uint16_t BUCK_SEL_5V0 = (1 << 9);
+    // CONTROL5 (CSA)
+    constexpr uint16_t CSA_GAIN_0V15 = (0 << 0);
+    constexpr uint16_t CSA_GAIN_0V3  = (1 << 0);
+    constexpr uint16_t CSA_GAIN_0V6  = (2 << 0);
+    constexpr uint16_t CSA_GAIN_1V2  = (3 << 0);
+    constexpr uint16_t CSA_GAIN_MASK = (3 << 0);
 }
 
 // ── Códigos de fallo ─────────────────────────────────────────────────────────
@@ -71,6 +79,18 @@ class DRV8316 {
      * @return true si la comunicación es correcta.
      */
     bool begin(SPIClass* spi_ptr);
+
+    /**
+     * Configura la ganancia del amplificador de corriente (CSA).
+     * @param gain_mask Máscara de DRV8316_BIT::CSA_GAIN_*
+     */
+    void setCSAGain(uint16_t gain_mask);
+
+    /**
+     * Devuelve la sensibilidad actual en Voltios por Amperio (V/A).
+     * Útil para configurar el objeto CurrentSense de SimpleFOC.
+     */
+    float getCSAGainV_A();
 
     /**
      * Lee un registro de 11 bits del DRV8316.
@@ -106,12 +126,12 @@ class DRV8316 {
     /**
      * Devuelve el valor crudo de STATUS1 (para diagnóstico/debug).
      */
-    uint16_t getStatus1Raw() { return readRegister(DRV8316_REG::STATUS1); }
+    uint16_t getStatus1Raw();
 
     /**
      * Devuelve el valor crudo de STATUS2 (para diagnóstico/debug).
      */
-    uint16_t getStatus2Raw() { return readRegister(DRV8316_REG::STATUS2); }
+    uint16_t getStatus2Raw();
 
     /**
      * Devuelve el último valor de 16-bits recibido por SPI sin enmascarar.
