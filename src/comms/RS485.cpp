@@ -28,17 +28,18 @@ void RS485::begin(uint8_t deviceId, uint32_t baudrate) {
     // Configurar pines explícitamente y luego inicializar
     Serial3.setRx(PIN_RS485_RX);
     Serial3.setTx(PIN_RS485_TX);
-    Serial3.begin(baudrate);
+    Serial3.begin(baudrate, SERIAL_8N1);
 }
 
 void RS485::send(const char* frame) {
     _setTxMode();
 
     Serial3.print(frame);
-    Serial3.flush();  // espera a que el último byte salga del shift register
+    Serial3.flush();  // espera a que el último byte salgo del buffer TX
 
-    // Pequeña espera para que el último bit llegue al bus antes de cambiar DIR
-    delayMicroseconds(50);
+    // En STM32duino, flush() espera a que el registro de desplazamiento esté vacío,
+    // pero un pequeño delay asegura que el stop bit ha salido completamente.
+    delayMicroseconds(20); 
 
     _setRxMode();
 }

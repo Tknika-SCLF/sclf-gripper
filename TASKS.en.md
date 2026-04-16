@@ -4,8 +4,8 @@
 
 ---
 > 📢 **CURRENT STATUS AND NEXT STEPS**
-> **v2.0 Prototype Validated (1.1, 1.2, 1.3).**
-> Pinout and basic motor movement (24V) have been confirmed. The next step is **validating Phase 1.4 (RS485 Ping)** to ensure communication bus stability.
+> **v2.0 Prototype Validated (1.1, 1.2, 1.3, 1.4).**
+> RS485 communication (Ping) has been confirmed. The next step is **validating Phase 1.5 (Current Sense)**.
 ---
 
 ---
@@ -60,9 +60,9 @@
 - [x] Configure 6-PWM mode (AH, AL, BH, BL, CH, CL)
 - [x] Open-loop velocity control rotation — **Validated on v2.0 hardware (24V)**
 
-### 1.4 RS485 Ping-Pong Test [~]
-- [ ] Validate `examples/fase1_4_rs485_ping/main.cpp`
-- [ ] Ping-Pong test (VCP and external bus)
+### 1.4 RS485 Ping-Pong Test [x]
+- [x] Validate `examples/fase1_4_rs485_ping/main.cpp`
+- [x] Ping-Pong test (VCP and external bus)
 
 ### 1.5 Current Sense [ ]
 - [ ] Create `src/motor/CurrentSense.h/.cpp` — wrapper for SimpleFOC's `InlineCurrentSense`
