@@ -67,8 +67,6 @@ void setup() {
     } else {
         Serial.println("  [DRV8316] ERROR de SPI. Revisa conexiones o voltaje.");
     }
-        Serial.println("  [DRV8316] ERROR de SPI. Revisa conexiones o voltaje.");
-    }
 
     // 3. Configurar SimpleFOC Driver
     driverFOC.pwm_frequency = 20000;
