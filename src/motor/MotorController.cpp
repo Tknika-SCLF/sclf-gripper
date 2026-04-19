@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "motor/MotorController.h"
 
 MotorController::MotorController()
@@ -21,6 +22,12 @@ bool MotorController::begin() {
         return false;
     }
     _drv.setCSAGain(DRV8316_BIT::CSA_GAIN_0V3);
+    
+    // Asegurar modo 6-PWM y driver habilitado (Control 3: PWM_MODE=00, DRV_OFF=0)
+    uint16_t ctrl3 = _drv.readRegister(DRV8316_REG::REG_CONTROL3);
+    ctrl3 &= ~0x07; // Limpiar bits 2:0 (DRV_OFF y PWM_MODE)
+    _drv.writeRegister(DRV8316_REG::REG_CONTROL3, ctrl3);
+    
     _drv.clearFaults();
 
     // 2. Inicializar encoder (bit-banging)
@@ -38,9 +45,16 @@ bool MotorController::begin() {
     _motor.linkSensor(&_encoder);
     _motor.init();
 
-    // 5. Alineación FOC (solo si no es open-loop, pero lo llamamos siempre para estar listos)
-    // Nota: Si el modo inicial es open-loop, initFOC no hará mucho o fallará suavemente.
+    // 5. Alineación FOC (Forzamos detección de dirección)
+    SimpleFOCDebug::println("MC: Force calibrating FOC...");
+    _motor.sensor_direction = Direction::UNKNOWN;
     _motor.initFOC();
+
+    if (_motor.motor_status == FOCMotorStatus::motor_ready) {
+        SimpleFOCDebug::println("MC: FOC Ready!");
+    } else {
+        SimpleFOCDebug::println("MC: FOC Alignment FAILED");
+    }
 
     return true;
 }
@@ -63,6 +77,30 @@ void MotorController::enable(bool en) {
     else _motor.disable();
 }
 
+void MotorController::dumpRegisters() {
+    SimpleFOCDebug::println("--- DRV8316 Register Dump ---");
+    for (uint8_t i = 0; i <= 0x0B; i++) {
+        uint16_t val = _drv.readRegister(i);
+        Serial.print("Reg 0x");
+        if (i < 0x10) Serial.print("0");
+        Serial.print(i, HEX);
+        Serial.print(": 0x");
+        if (val < 0x100) Serial.print("0");
+        if (val < 0x10) Serial.print("0");
+        Serial.println(val, HEX);
+    }
+    
+    Serial.print("Motor Status: "); Serial.println((int)_motor.motor_status);
+    Serial.print("Sensor Direction: "); Serial.println((int)_motor.sensor_direction);
+    Serial.print("Zero Elec Angle: "); Serial.println(_motor.zero_electric_angle, 4);
+    SimpleFOCDebug::println("-----------------------------");
+}
+
+void MotorController::forceCalibration() {
+    _motor.sensor_direction = Direction::UNKNOWN;
+    _motor.initFOC();
+}
+
 void MotorController::_initHardware() {
     // LED de diagnóstico o pines extra si fuera necesario
     pinMode(PIN_LED, OUTPUT);
@@ -74,8 +112,8 @@ void MotorController::_configureMotor() {
     _driver.voltage_limit = 8.0f;
     _motor.velocity_limit = 20.0f;
     
-    // Voltaje de alineación para superar fricción
-    _motor.voltage_sensor_align = 5.0f;
+    // Voltaje de alineación para superar fricción - Aumentado un poco para asegurar giro
+    _motor.voltage_sensor_align = 6.0f;
 
     // Ganancias PID para velocidad (por defecto)
     _motor.PID_velocity.P = 0.5f;

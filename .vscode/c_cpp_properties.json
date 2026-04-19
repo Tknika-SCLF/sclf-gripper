@@ -113,6 +113,7 @@
                 "USBD_USE_CDC",
                 "PIO_FRAMEWORK_ARDUINO_ENABLE_CDC",
                 "HAL_PCD_MODULE_ENABLED",
+                "SIMPLEFOC_DEBUG_ENABLE",
                 "STM32G4xx",
                 "ARDUINO=10808",
                 "ARDUINO_ARCH_STM32",
