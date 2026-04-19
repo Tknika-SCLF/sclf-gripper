@@ -73,18 +73,19 @@
 
 ---
 
-## 2 FASEA — Oinarrizko FOC (Begi-irekia / Open-Loop)
-> Helburua: motorrak open-loop-ean biratzen du SimpleFOC erabiliz. Hardwareak funtzionatzen duela balioztatu.
+## 2 FASEA — Oinarrizko FOC
+> Helburua: motorrak open-loop eta gero closed-loop-ean biratzen du SimpleFOC erabiliz.
 
-- [ ] Gehitu `askuric/Simple FOC @ ^2.3.3` `lib_deps`-en `platformio.ini` barruan
-- [ ] `src/motor/MotorController.h/.cpp` sortu — SimpleFOC-en wrapper-a:
-  - `BLDCMotor motor` jomuga motorraren polo kopuruarekin
-  - `BLDCDriver6PWM driver` AH/BH/CH/AL/BL/CL pinekin
-  - `void begin()` — gidaria, motorra, encoderra eta current sense hasieratzen ditu
-  - `void update()` — `motor.loopFOC()` eta `motor.move(target)` deitzen ditu (`loop()`-en deitzeko)
-- [ ] Abiadura irekian probatu (Open-loop velocity): `motor.controller = MotionControlType::velocity_openloop`
-- [ ] Egiaztatu motorrak soinu handirik gabe biratzen duela (tentsio-muga doituz)
-- [ ] Posizio irekian probatu (Open-loop position): `motor.controller = MotionControlType::angle_openloop`
+### 2.1 FOC Open-Loop [x]
+- [x] Gehitu `askuric/Simple FOC @ ^2.3.3` `lib_deps`-en `platformio.ini` barruan
+- [x] `src/motor/MotorController.h/.cpp` sortu — SimpleFOC-en wrapper-a
+- [x] Biraketa balioztatu `examples/fase2_1_foc_open_loop/main.cpp`-n
+- [x] Egiaztatu motorrak soinu handirik gabe biratzen duela (tentsio-muga doituz)
+
+### 2.2 FOC Closed-Loop [ ]
+- [ ] Lerrokatzea eta abiadura kontrola inplementatu `examples/fase2_2_foc_closed_loop/main.cpp`-n
+- [ ] Torke modua probatu: `motor.controller = MotionControlType::torque`
+- [ ] PID hasierako irabaziak doitu (KP, KI, KD) loop bakoitzerako
 
 ---
 

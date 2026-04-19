@@ -14,10 +14,11 @@
 
 #include "config/pins.h"
 
+#include <SimpleFOC.h>
 #include <Arduino.h>
 #include <SPI.h>
 
-class MT6701 {
+class MT6701 : public Sensor {
    public:
     // Constructor — usa los pines definidos en pins.h
     MT6701();
@@ -28,6 +29,10 @@ class MT6701 {
      * @return true si la comunicación inicial es válida
      */
     bool begin(SPIClass* spi_ptr = &SPI);
+
+    // SimpleFOC Sensor API implementation
+    float getSensorAngle() override;
+    int needsSearch() override { return 0; }
 
     /**
      * @brief Lee el ángulo actual en radianes

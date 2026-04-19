@@ -27,7 +27,12 @@ bool MT6701::begin(SPIClass* spi_ptr) {
     }
 
     pinMode(PIN_ENC_CS, OUTPUT);
-    digitalWrite(PIN_ENC_CS, HIGH);  // CS inactivo = HIGH
+    digitalWrite(PIN_ENC_CS, HIGH);  
+
+    pinMode(PIN_ENC_CLK, OUTPUT);
+    digitalWrite(PIN_ENC_CLK, LOW);
+
+    pinMode(PIN_ENC_SDO, INPUT);
 
     // Asumimos que el SPI ya fue inicializado (begin) en main.cpp,
     // pero por si acaso podríamos hacer _spi->begin() si quisiéramos.
@@ -50,6 +55,10 @@ float MT6701::getAngleRad() {
     // Extraer los 14 bits de ángulo (bits [15:2]) y convertir a radianes
     uint16_t counts = (raw >> 2) & 0x3FFF;
     return static_cast<float>(counts) * RAD_PER_COUNT;
+}
+
+float MT6701::getSensorAngle() {
+    return getAngleRad();
 }
 
 void MT6701::update() {
@@ -88,20 +97,32 @@ uint16_t MT6701::getRawCounts() {
 // ── Privado ──────────────────────────────────────────────────────────────────
 
 uint16_t MT6701::_readRaw() {
-    _spi->beginTransaction(_spiSettings);
+    uint16_t raw = 0;
+
+    // CS activo (LOW)
     digitalWrite(PIN_ENC_CS, LOW);
-    
-    // Pequeño delay para que el MT6701 tenga tiempo de poner el primer bit en la línea MISO.
-    // (t_CSn_Clk setup time)
-    delayMicroseconds(1);
+    delayMicroseconds(1); // t_CSn_Clk setup
 
-    // El MT6701 en modo SPI devuelve 16 bits: [15:2]=angle, [1:0]=status
-    uint16_t raw = _spi->transfer16(0x0000);
+    // Bit-banging de 16 bits (Lectura manual)
+    // El MT6701 envía datos en el flanco descendente del reloj (SPI Mode 1)
+    // o simplemente leemos después de poner el reloj en HIGH.
+    for (int i = 0; i < 16; i++) {
+        digitalWrite(PIN_ENC_CLK, HIGH);
+        delayMicroseconds(1);
+        
+        raw <<= 1;
+        if (digitalRead(PIN_ENC_SDO)) {
+            raw |= 0x0001;
+        }
 
+        digitalWrite(PIN_ENC_CLK, LOW);
+        delayMicroseconds(1);
+    }
+
+    // CS inactivo (HIGH)
     digitalWrite(PIN_ENC_CS, HIGH);
-    _spi->endTransaction();
 
-    // Validación básica: si todos los bits son iguales, probablemente hay error de bus
+    // Validación básica: si no hay cambios o todo son 1s/0s, marcamos error
     _ok = (raw != 0x0000) && (raw != 0xFFFF);
 
     return raw;

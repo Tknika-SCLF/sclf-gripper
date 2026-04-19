@@ -57,18 +57,19 @@
 
 ---
 
-## FASE 2 — FOC Básico (Open-Loop)
-> Objetivo: motor gira en open-loop con SimpleFOC. Validar que el hardware funciona.
+## FASE 2 — FOC Básico
+> Objetivo: motor gira en open-loop y luego en closed-loop básico con SimpleFOC.
 
-- [ ] Añadir `askuric/Simple FOC @ ^2.3.3` a `lib_deps` en `platformio.ini`
-- [ ] Crear `src/motor/MotorController.h/.cpp` — wrapper de SimpleFOC:
-  - `BLDCMotor motor` con número de polos del motor objetivo
-  - `BLDCDriver6PWM driver` con pines AH/BH/CH/AL/BL/CL
-  - `void begin()` — inicializa driver, motor, encoder, current sense
-  - `void update()` — llama `motor.loopFOC()` y `motor.move(target)` (llamar en `loop()`)
-- [ ] Probar open-loop velocity: `motor.controller = MotionControlType::velocity_openloop`
-- [ ] Verificar que el motor gira sin ruido excesivo (ajustar voltage limit)
-- [ ] Probar open-loop position: `motor.controller = MotionControlType::angle_openloop`
+### 2.1 FOC Open-Loop [x]
+- [x] Añadir `askuric/Simple FOC @ ^2.3.3` a `lib_deps` en `platformio.ini`
+- [x] Crear `src/motor/MotorController.h/.cpp` — wrapper de SimpleFOC
+- [x] Validar rotación en `examples/fase2_1_foc_open_loop/main.cpp`
+- [x] Verificar que el motor gira sin ruido excesivo (ajustar voltage limit)
+
+### 2.2 FOC Closed-Loop [ ]
+- [ ] Implementar alineación y control de velocidad en `examples/fase2_2_foc_closed_loop/main.cpp`
+- [ ] Probar torque mode: `motor.controller = MotionControlType::torque`
+- [ ] Ajustar PID gains iniciales (KP, KI, KD) para cada loop
 
 ---
 
