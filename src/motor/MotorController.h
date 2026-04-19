@@ -36,6 +36,16 @@ public:
     void setMode(MotionControlType mode);
 
     /**
+     * @brief Vuelca el estado de todos los registros del DRV8316 por puerto serie.
+     */
+    void dumpRegisters();
+
+    /**
+     * @brief Fuerza la recalibración del sensor (alineación FOC).
+     */
+    void forceCalibration();
+
+    /**
      * @brief Habilita o deshabilita el motor.
      */
     void enable(bool en);
