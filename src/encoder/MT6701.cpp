@@ -62,19 +62,19 @@ float MT6701::getSensorAngle() {
 }
 
 void MT6701::update() {
-    float angle = getAngleRad();
-    if (!_ok)
-        return;
+    // CRÍTICO: Llamar a la clase base para que SimpleFOC actualice angle_prev,
+    // full_rotations y shaft_velocity. Esta llamada internamente invoca getSensorAngle().
+    Sensor::update();
 
-    float d_angle = angle - _lastAngleRad;
-    if (abs(d_angle) > PI) {
-        _rotations += (d_angle > 0) ? -1 : 1;
-    }
-    _lastAngleRad = angle;
+    // Sincronizar nuestro estado interno con el de la clase base para que
+    // getCumulativeAngleRad() y el tracking de vueltas propio sigan funcionando.
+    _lastAngleRad = angle_prev;
 }
 
 float MT6701::getCumulativeAngleRad() {
-    return (float)_rotations * TWO_PI + _lastAngleRad - _offsetRad;
+    // Usar el estado de la clase base de SimpleFOC (full_rotations + angle_prev)
+    // que siempre está actualizado desde update().
+    return (float)full_rotations * TWO_PI + angle_prev - _offsetRad;
 }
 
 float MT6701::getCumulativeAngleDeg() {
