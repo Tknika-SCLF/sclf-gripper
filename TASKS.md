@@ -5,7 +5,7 @@
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
 > **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> Hurrengo urratsa **3. FASEA (FOC Begi-itxia)** da.
+> Hurrengo urratsa **3. FASEA (RS-485 Protokoloa)** da.
 ---
 
 ---
@@ -89,22 +89,7 @@
 
 ---
 
-## 3 FASEA — FOC Begi-itxia (Closed-Loop)
-> Helburua: FOC osoa encoder eta current sense erabiliz. Motorrak aginduei erantzuten die.
-
-- [ ] Konektatu MT6701 encoderra SimpleFOC-era: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
-- [ ] `motor.initFOC()` exekutatu — lerrokatze elektriko automatikoa
-  - `motor.zero_electric_angle` eta `motor.sensor_direction` flash-ean gorde
-- [ ] Torke modua probatu: `motor.controller = MotionControlType::torque`
-- [ ] Abiadura begi-itxia probatu encoderrarekin
-- [ ] Posizio begi-itxia probatu encoderrarekin
-- [ ] PID hasierako irabaziak doitu (KP, KI, KD) loop bakoitzerako
-- [ ] Konektatu `InlineCurrentSense` eta aktibatu FOC korronte errealarekin
-- [ ] Egiaztatu `motor.loopFOC()` ≥ 10 kHz ibiltzen dela trabarik gabe
-
----
-
-## 4 FASEA — RS-485 Protokoloa
+## 3 FASEA — RS-485 Protokoloa
 > Helburua: gripper-ak robotaren bus-eko aginduak obeditzen ditu.
 
 - [ ] Komando parser-a diseinatu eta inplementatu `src/comms/RS485.cpp` barruan:
@@ -128,7 +113,7 @@
 
 ---
 
-## 5 FASEA — USB VCP eta Commander
+## 4 FASEA — USB VCP eta Commander
 > Helburua: zuzeneko doikuntza (tuning) PCtik USB bidez.
 
 - [ ] Aktibatu `SimpleFOCDebug::enable(&Serial)` — telemetria USB VCP bidez
@@ -140,7 +125,7 @@
 
 ---
 
-## 6 FASEA — Akats Kudeatzailea (Fault Manager)
+## 5 FASEA — Akats Kudeatzailea (Fault Manager)
 > Helburua: gripper-ak ez du inoiz bere burua suntsitzen.
 
 - [ ] Sortu `src/faults/FaultManager.h/.cpp`:
@@ -156,7 +141,7 @@
 
 ---
 
-## 7 FASEA — Iraunkortasuna eta Konfigurazioa (Persistence)
+## 6 FASEA — Iraunkortasuna eta Konfigurazioa (Persistence)
 > Helburua: parametroek berrezarpen edo itzaltze bat irauten dute bizirik.
 
 - [ ] Definatu `Config` egitura flash-ean (STM32G474-ko sektor espezifikoa):
@@ -172,6 +157,22 @@
   - `void resetDefaults()` — balio lehenetsiak ezarri
 - [ ] Abiaraztean: flash-eko informazioa zuzena bada, saihestu lerrokatze automatikoa
 - [ ] Konfigurazioa irakurtzeko/idazteko eta fabrikako ezarpenetara itzultzeko RS-485 komandoak
+
+---
+
+## 7 FASEA — FOC Begi-itxia (Advanced Tuning)
+> Helburua: FOC osoa encoder eta current sense erabiliz. Motorrak aginduei erantzuten die.
+> **Oharra:** Fase hau pinzak muntatuta daudenean egitea gomendatzen da, torkea eta posizioa kargarekin doitzeko.
+
+- [ ] Konektatu MT6701 encoderra SimpleFOC-era: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
+- [ ] `motor.initFOC()` exekutatu — lerrokatze elektriko automatikoa
+  - `motor.zero_electric_angle` eta `motor.sensor_direction` flash-ean gorde
+- [ ] Torke modua probatu: `motor.controller = MotionControlType::torque`
+- [ ] Abiadura begi-itxia probatu encoderrarekin
+- [ ] Posizio begi-itxia probatu encoderrarekin
+- [ ] PID hasierako irabaziak doitu (KP, KI, KD) loop bakoitzerako
+- [ ] Konektatu `InlineCurrentSense` eta aktibatu FOC korronte errealarekin
+- [ ] Egiaztatu `motor.loopFOC()` ≥ 10 kHz ibiltzen dela trabarik gabe
 
 ---
 
@@ -216,12 +217,13 @@
 | 2026-02-25 | DRV8316-ren nFAULT STM32ra konektatu gabe | KiCad eskematikoan egiaztatuta |
 | 2026-02-25 | DRV8316-ren DRVOFF beti GND-ra | Gidaria hardwarez beti gaituta |
 | 2026-02-25 | Akats detekzioa SPI polling bidez ez GPIO IRQ | nFAULT pinerako ez dago erreserbarik |
-| 2026-02-25 | SPI partekatua DRV8316 (PC4 CS) eta MT6701 (PA4 CS) artean | PB3/PB4/PB5 SPI1 busa dira |
+| 2026-02-25 | SPI partekatua DRV8316 (PC4 CS) eta MT6701 (PA4 CS) artean | PB3/PB4/PB5 son el bus SPI1 |
 | 2026-02-25 | RS-485 half-duplex PB9 erabiliz DE/RE gisa | Eskematikoan egiaztatuta |
 | 2026-03-07 | Board `genericSTM32G474CE` -> `nucleo_g474re` aldaketa | `generic` ez du Arduino framework jasaten |
 | 2026-03-07 | SPIClass MOSI: `PA7` erabili `NC` erabili ordez | `NC`-k blokeatzen du SPI periferikoaren abiaraztea |
 | 2026-03-07 | ST-Link 3.3V-k MCUa eta Encoderra mantentzen ditu | **MT6701-a funtzionatzen du 24V gabe**. |
-| 2026-03-07 | **USB CDC Konponbidea:** `SystemClock_Config` gehitu `main.cpp`-n | STM32G4-k HSI48 behar du USB erlojurako |
-| 2026-03-07 | Testeatzeko erronka RS-485 Half-Duplex | MAX3485-ek RX blokeatzen du TX bitartean. `simulateRx()` sortu genuen testatzeko. |
-| 2026-03-14 | **HARDWARE BUG V1: U1 Pin 23 D5-era** | Diseinu akatsa. v2-an konponduta egongo da. |
-| 2026-03-24 | **HARWARE V2 MIGRAZIOA ESPEROAN** | Pinak eta diagramak V2ra itzulita daude zain. |
+| 2026-03-07 | **USB CDC Konponbidea:** `SystemClock_Config` gehitu `main.cpp`-n | STM32G4 requiere activar `HSI48` para el reloj USB |
+| 2026-03-07 | Solución de testeo Half-Duplex RS-485 | MAX3485 bloquea RX durante TX. Creado `simulateRx()` para bypass y test. |
+| 2026-03-14 | **HARDWARE BUG IDENTIFICADO en v1.0:** Pin 23 de U1 (DRV8316C) conectado a D5 | El nSLEEP estaba apagado a 0.25V. Retirar D5 y puntear a 3.3V para activar SPI. |
+| 2026-03-24 | **MIGRACIÓN A HARDWARE V2 EN ESPERA** | Pins y diagramas actualizados a V2 esperando la nueva PCB. |
+| 2026-04-21 | **BIRANTOLAKETA: FOC Begi-itxia (Advanced) atzeratua** | Pinzak muntatuta egon arte itxoitea erabaki da. Comm eta safety faseak aurreratu dira. |

@@ -1,11 +1,11 @@
 # TASKS.md — Firmware del SCLF Gripper
 > Backlog completo del proyecto, organizado por fases de desarrollo.
-> Estado: `[ ]` pendiente · `[~]` en progreso · `[ ]` completado · `[!]` bloqueado
+> Estado: `[ ]` pendiente · `[~]` en progreso · `[x]` completado · `[!]` bloqueado
 
 ---
 > 📢 **ESTADO ACTUAL Y PRÓXIMOS PASOS**
 > **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> El siguiente paso es la **FASE 3 (FOC Closed-Loop)**.
+> El siguiente paso es la **FASE 3 (Protocolo RS-485)**.
 ---
 
 ---
@@ -25,7 +25,7 @@
 
 ---
 
-## FASE 1 — Drivers Básicos
+## FASE 1 — Drivers Básicos [x]
 > Objetivo: leer encoder, leer corriente, hablar por RS-485. Sin FOC todavía.
 
 ### 1.1 MT6701 Encoder Driver [x]
@@ -42,6 +42,19 @@
 - [x] Implementar seguimiento de vueltas (ángulos acumulados > 360º)
 - [x] Implementar inicialización de cero relativo al encendido
 
+### 1.2 DRV8316 SPI Driver [x]
+- [x] Crear `src/motor/DRV8316.h` — API pública:
+  - `bool begin()` — inicializa SPI (PC4/PB3/PB4/PB5) y configura registros
+  - `uint16_t readRegister(uint8_t addr)`
+  - `void writeRegister(uint8_t addr, uint16_t value)`
+  - `bool hasFault()` — lee STATUS1/STATUS2 via SPI
+  - `uint8_t getFaultCode()` — devuelve error código
+  - `void clearFaults()`
+- [x] Crear `src/motor/DRV8316.cpp`
+- [x] Leer y verificar DRV8316 DEVICE_ID al arrancar
+- [x] Imprimir STATUS1 y STATUS2 por VCP
+- [x] **IMPORTANTE:** No hay pin nFAULT en el STM32. Los fallos se detectan por polling SPI.
+
 ### 1.3 Lazo Abierto / Open-Loop [x]
 - [x] Crear `examples/fase1_3_open_loop_v_control/main.cpp`
 - [x] Configurar modo 6-PWM (AH, AL, BH, BL, CH, CL)
@@ -54,10 +67,11 @@
 ### 1.5 Sensor de Corriente (Current Sense) [x]
 - [x] Crear `src/motor/CurrentSense.h/.cpp` — wrapper para `InlineCurrentSense` para SimpleFOC
 - [x] Calibrar offset de corriente en cero
+- [x] Imprimir corrientes de las 3 fases por VCP con motor parado/bloqueado
 
 ---
 
-## FASE 2 — FOC Básico
+## FASE 2 — FOC Básico [x]
 > Objetivo: motor gira en open-loop y luego en closed-loop básico con SimpleFOC.
 
 ### 2.1 FOC Open-Loop [x]
@@ -73,22 +87,7 @@
 
 ---
 
-## FASE 3 — FOC Closed-Loop
-> Objetivo: FOC completo con encoder y current sense. El motor responde a comandos.
-
-- [ ] Conectar encoder MT6701 a SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
-- [ ] Ejecutar `motor.initFOC()` — alineación eléctrica automática
-  - Capturar y guardar `motor.zero_electric_angle` y `motor.sensor_direction` en flash
-- [ ] Probar torque mode: `motor.controller = MotionControlType::torque`
-- [ ] Probar velocity closed-loop con encoder
-- [ ] Probar position closed-loop con encoder
-- [ ] Ajustar PID gains iniciales (KP, KI, KD) para cada loop
-- [ ] Conectar `InlineCurrentSense` y activar FOC con corriente real
-- [ ] Verificar que `motor.loopFOC()` corre a ≥ 10 kHz sin bloqueos
-
----
-
-## FASE 4 — Protocolo RS-485
+## FASE 3 — Protocolo RS-485
 > Objetivo: el gripper obedece comandos del bus del robot.
 
 - [ ] Diseñar e implementar parser de comandos en `src/comms/RS485.cpp`:
@@ -112,7 +111,7 @@
 
 ---
 
-## FASE 5 — USB VCP y Commander
+## FASE 4 — USB VCP y Commander
 > Objetivo: tuning en vivo desde el PC por USB.
 
 - [ ] Activar `SimpleFOCDebug::enable(&Serial)` — telemetría por USB VCP
@@ -124,7 +123,7 @@
 
 ---
 
-## FASE 6 — Fault Manager
+## FASE 5 — Fault Manager
 > Objetivo: el gripper nunca se destruye a sí mismo.
 
 - [ ] Crear `src/faults/FaultManager.h/.cpp`:
@@ -140,7 +139,7 @@
 
 ---
 
-## FASE 7 — Persistencia y Configuración
+## FASE 6 — Persistencia y Configuración
 > Objetivo: los parámetros sobreviven a un reset.
 
 - [ ] Definir estructura `Config` en flash (sector dedicado STM32G474):
@@ -156,6 +155,22 @@
   - `void resetDefaults()` — valores por defecto
 - [ ] Al arrancar: si la config en flash es válida, saltar la alineación automática
 - [ ] Comandos RS-485 para leer/escribir configuración y hacer reset de fábrica
+
+---
+
+## FASE 7 — FOC Closed-Loop (Ajuste Avanzado)
+> Objetivo: FOC completo con encoder y current sense. El motor responde a comandos.
+> **Nota:** Se recomienda realizar esta fase una vez montadas las pinzas para ajustar torque y posición con carga real.
+
+- [ ] Conectar encoder MT6701 a SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
+- [ ] Ejecutar `motor.initFOC()` — alineación eléctrica automática
+  - Capturar y guardar `motor.zero_electric_angle` y `motor.sensor_direction` en flash
+- [ ] Probar torque mode: `motor.controller = MotionControlType::torque`
+- [ ] Probar velocity closed-loop con encoder
+- [ ] Probar position closed-loop con encoder
+- [ ] Ajustar PID gains iniciales (KP, KI, KD) para cada loop
+- [ ] Conectar `InlineCurrentSense` y activar FOC con corriente real
+- [ ] Verificar que `motor.loopFOC()` corre a ≥ 10 kHz sin bloqueos
 
 ---
 
@@ -209,3 +224,4 @@
 | 2026-03-07 | Solución de testeo Half-Duplex RS-485 | MAX3485 bloquea RX durante TX. Creado `simulateRx()` para bypass y test. |
 | 2026-03-14 | **HARDWARE BUG IDENTIFICADO en v1.0:** Pin 23 de U1 (DRV8316C) conectado a D5 | El nSLEEP estaba apagado a 0.25V. Retirar D5 y puntear a 3.3V para activar SPI. |
 | 2026-03-24 | **MIGRACIÓN A HARDWARE V2 EN ESPERA** | Pins y diagramas actualizados a V2 esperando la nueva PCB. |
+| 2026-04-21 | **REORGANIZACIÓN: FOC Avanzado pospuesto** | Se decide esperar a montar las pinzas. Se adelantan fases de comm y safety. |

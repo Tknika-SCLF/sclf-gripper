@@ -1,16 +1,16 @@
 # TASKS.md — SCLF Gripper Firmware
 > Complete project backlog, organized by development phases.
-> Status: `[ ]` pending · `[~]` in progress · `[ ]` completed · `[!]` blocked
+> Status: `[ ]` pending · `[~]` in progress · `[x]` completed · `[!]` blocked
 
 ---
 > 📢 **CURRENT STATUS AND NEXT STEPS**
 > **v2.0 Prototype Validated (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> The next step is **PHASE 3 (Closed-Loop FOC)**.
+> The next step is **PHASE 3 (RS-485 Protocol)**.
 ---
 
 ---
 
-## PHASE 0 — Environment and Scaffolding
+## PHASE 0 — Environment and Scaffolding [x]
 > Goal: project compiles and blinks an LED. Nothing else.
 
 - [x] Create `platformio.ini` with target `nucleo_g474re`, 170 MHz, ST-Link
@@ -25,7 +25,7 @@
 
 ---
 
-## PHASE 1 — Basic Drivers
+## PHASE 1 — Basic Drivers [x]
 > Goal: read the encoder, read current, communicate via RS-485. No FOC yet.
 
 ### 1.1 MT6701 Encoder Driver [x]
@@ -64,17 +64,14 @@
 - [x] Validate `examples/fase1_4_rs485_ping/main.cpp`
 - [x] Ping-Pong test (VCP and external bus)
 
-### 1.5 Current Sense [ ]
-- [ ] Create `src/motor/CurrentSense.h/.cpp` — wrapper for SimpleFOC's `InlineCurrentSense`
-  - Shunts: PA0 (CURA), PA1 (CURB), PA2 (CURC)
-  - Determine DRV8316 amplifier gain (read CSAGAIN register via SPI)
-- [ ] Calibrate current offset at zero (motor stopped, no current)
-- [ ] Print currents from the 3 phases via VCP with stopped/blocked motor
-
+### 1.5 Current Sense [x]
+- [x] Create `src/motor/CurrentSense.h/.cpp` — wrapper for SimpleFOC's `InlineCurrentSense`
+- [x] Calibrate current offset at zero (motor stopped, no current)
+- [x] Print currents from the 3 phases via VCP with stopped/blocked motor
 
 ---
 
-## PHASE 2 — Basic FOC
+## PHASE 2 — Basic FOC [x]
 > Goal: motor spins in open-loop and then basic closed-loop using SimpleFOC.
 
 ### 2.1 FOC Open-Loop [x]
@@ -90,22 +87,7 @@
 
 ---
 
-## PHASE 3 — Closed-Loop FOC
-> Goal: Full FOC with encoder and current sense. Motor responds to targets.
-
-- [ ] Connect MT6701 encoder to SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
-- [ ] Run `motor.initFOC()` — automatic electrical alignment
-  - Capture and save `motor.zero_electric_angle` and `motor.sensor_direction` to flash
-- [ ] Test torque mode: `motor.controller = MotionControlType::torque`
-- [ ] Test closed-loop velocity with encoder
-- [ ] Test closed-loop position with encoder
-- [ ] Tune initial PID gains (KP, KI, KD) for each loop
-- [ ] Connect `InlineCurrentSense` and activate FOC with real currents
-- [ ] Verify `motor.loopFOC()` runs at ≥ 10 kHz without blocking
-
----
-
-## PHASE 4 — RS-485 Protocol
+## PHASE 3 — RS-485 Protocol
 > Goal: the gripper obeys bus commands from the robot.
 
 - [ ] Design and implement command parser in `src/comms/RS485.cpp`:
@@ -129,7 +111,7 @@
 
 ---
 
-## PHASE 5 — USB VCP & Commander
+## PHASE 4 — USB VCP & Commander
 > Goal: live tuning from PC over USB.
 
 - [ ] Activate `SimpleFOCDebug::enable(&Serial)` — telemetry via USB VCP
@@ -141,7 +123,7 @@
 
 ---
 
-## PHASE 6 — Fault Manager
+## PHASE 5 — Fault Manager
 > Goal: the gripper never self-destructs.
 
 - [ ] Create `src/faults/FaultManager.h/.cpp`:
@@ -157,7 +139,7 @@
 
 ---
 
-## PHASE 7 — Persistence & Configuration
+## PHASE 6 — Persistence & Configuration
 > Goal: parameters survive power cycles and resets.
 
 - [ ] Define `Config` struct in flash (dedicated STM32G474 sector):
@@ -173,6 +155,22 @@
   - `void resetDefaults()` — applies default values
 - [ ] On startup: if flash config is valid, skip automatic alignment
 - [ ] RS-485 commands to read/write config and perform factory reset
+
+---
+
+## PHASE 7 — Advanced FOC Tuning
+> Goal: Full FOC with encoder and current sense. Motor responds to targets.
+> **Note:** This phase is recommended to be done once gripper claws are mounted to tune torque and position with real load.
+
+- [ ] Connect MT6701 encoder to SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
+- [ ] Run `motor.initFOC()` — automatic electrical alignment
+  - Capture and save `motor.zero_electric_angle` and `motor.sensor_direction` to flash
+- [ ] Test torque mode: `motor.controller = MotionControlType::torque`
+- [ ] Test closed-loop velocity with encoder
+- [ ] Test closed-loop position with encoder
+- [ ] Tune initial PID gains (KP, KI, KD) for each loop
+- [ ] Connect `InlineCurrentSense` and activate FOC with real currents
+- [ ] Verify `motor.loopFOC()` runs at ≥ 10 kHz without blocking
 
 ---
 
@@ -226,3 +224,4 @@
 | 2026-03-07 | RS-485 Half-Duplex testing challenge | MAX3485 blocks RX during TX. Created `simulateRx()` test branch to bypass. |
 | 2026-03-14 | **HARDWARE BUG v1: U1 Pin 23 to D5** | Driver nSLEEP was powered down. Will be fixed in v2. |
 | 2026-03-24 | **WAITING FOR HARDWARE V2** | We have updated pins and are blocked waiting for PCB. |
+| 2026-04-21 | **REORGANIZATION: Advanced FOC postponed** | Decided to wait for gripper assembly. Moved comm and safety phases forward. |
