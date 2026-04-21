@@ -5,7 +5,8 @@
 ---
 > 📢 **CURRENT STATUS AND NEXT STEPS**
 > **v2.0 Prototype Validated (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> The next step is **PHASE 3 (RS-485 Protocol)**.
+> **Phase 4.1 (Basic Protocol) COMPLETED.** ✅
+> The next step is **PHASE 4.2 (RS-485 Control Commands)** [~].
 ---
 
 ---
@@ -90,23 +91,29 @@
 ## PHASE 3 — RS-485 Protocol
 > Goal: the gripper obeys bus commands from the robot.
 
-- [ ] Design and implement command parser in `src/comms/RS485.cpp`:
+### 3.1 Basic Protocol (Ping / ID / Info) [x]
+- [x] Design and implement command parser in `src/comms/RS485.cpp`:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [ ] Implement commands:
+- [x] Implement basic commands:
+  - [x] `PING` — Verify bus connection (`PONG` response)
+  - [x] `?A` — get angle (rad) [Placeholder value in test]
+- [x] Implement multi-device addressing (configurable ID)
+- [x] Roundtrip test: send command from PC, verify valid response ✅
+- [x] Added `delayMicroseconds(200)` in `RS485.cpp` to prevent "clipping" error ✅
+
+### 3.2 Control Commands [~]
+- [ ] Implement advanced commands:
   - `T` — set torque target (A)
   - `V` — set velocity target (rad/s)
   - `P` — set position target (rad)
   - `M` — set control mode (0=torque, 1=vel, 2=pos)
   - `EN` / `DIS` — enable/disable motor
   - `KP`, `KI`, `KD` — set PID gains
-  - `?A` — get angle (rad)
   - `?V` — get velocity (rad/s)
   - `?I` — get current (A)
   - `?S` — get status / fault code
-- [ ] Implement multi-device addressing (configurable ID)
-- [ ] Roundtrip test: send command from PC, verify valid response
 - [ ] Timing test: measure TX→RX latency on RS-485 bus
 
 ---

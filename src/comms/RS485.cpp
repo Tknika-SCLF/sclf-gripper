@@ -138,7 +138,9 @@ bool RS485::_parseFrame(const char* raw, RS485Frame& out) {
 
 void RS485::_setTxMode() {
     digitalWrite(PIN_RS485_DIR, HIGH);
-    delayMicroseconds(2);  // propagation delay del MAX3485
+    // Aumentamos el delay a 200us para evitar "clipping" del primer byte.
+    // A 9600 baudios, 1 bit dura ~104us. 200us asegura que el bus esté estable.
+    delayMicroseconds(200); 
 }
 
 void RS485::_setRxMode() {

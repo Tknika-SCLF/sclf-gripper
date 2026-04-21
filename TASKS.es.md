@@ -5,7 +5,8 @@
 ---
 > 📢 **ESTADO ACTUAL Y PRÓXIMOS PASOS**
 > **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> El siguiente paso es la **FASE 3 (Protocolo RS-485)**.
+> **Fase 4.1 (Protocolo Básico) COMPLETADA.** ✅
+> El siguiente paso es la **FASE 4.2 (Comandos de Control RS-485)** [~].
 ---
 
 ---
@@ -90,23 +91,29 @@
 ## FASE 3 — Protocolo RS-485
 > Objetivo: el gripper obedece comandos del bus del robot.
 
-- [ ] Diseñar e implementar parser de comandos en `src/comms/RS485.cpp`:
+### 3.1 Protocolo Básico (Ping / ID / Info) [x]
+- [x] Diseñar e implementar parser de comandos en `src/comms/RS485.cpp`:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [ ] Implementar comandos:
+- [x] Implementar comandos básicos:
+  - [x] `PING` — Verificar conexión del bus (respuesta `PONG`)
+  - [x] `?A` — obtener ángulo (rad) [Valor de marcador en test]
+- [x] Implementar direccionamiento multi-dispositivo (ID configurable)
+- [x] Test de roundtrip: enviar comando desde PC, verificar respuesta correcta ✅
+- [x] Añadido `delayMicroseconds(200)` en `RS485.cpp` para evitar error de "clipping" ✅
+
+### 3.2 Comandos de Control [~]
+- [ ] Implementar comandos avanzados:
   - `T` — set torque target (A)
   - `V` — set velocity target (rad/s)
   - `P` — set position target (rad)
   - `M` — set control mode (0=torque, 1=vel, 2=pos)
   - `EN` / `DIS` — enable/disable motor
   - `KP`, `KI`, `KD` — set PID gains
-  - `?A` — get angle (rad)
   - `?V` — get velocity (rad/s)
   - `?I` — get current (A)
   - `?S` — get status / fault code
-- [ ] Implementar direccionamiento multi-dispositivo (ID configurable)
-- [ ] Test de roundtrip: enviar comando desde PC, verificar respuesta correcta
 - [ ] Test de timing: medir latencia TX→RX en bus RS-485
 
 ---

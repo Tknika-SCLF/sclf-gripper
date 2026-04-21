@@ -5,7 +5,8 @@
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
 > **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> Hurrengo urratsa **3. FASEA (RS-485 Protokoloa)** da.
+> **4.1 Fasea (Protocolo Básico) AMAITUTA.** ✅
+> Hurrengo urratsa **4.2 FASEA (RS-485 Kontrol Komandoak)** [~] da.
 ---
 
 ---
@@ -92,23 +93,29 @@
 ## 3 FASEA — RS-485 Protokoloa
 > Helburua: gripper-ak robotaren bus-eko aginduak obeditzen ditu.
 
-- [ ] Komando parser-a diseinatu eta inplementatu `src/comms/RS485.cpp` barruan:
+### 3.1 Protokolo Básico (Ping / ID / Info) [x]
+- [x] Komando parser-a diseinatu eta inplementatu `src/comms/RS485.cpp`:
   ```
   <id>:<cmd>:<value>\n
   ```
-- [ ] Komandoak inplementatu:
+- [x] Oinarrizko komandoak inplementatu:
+  - [x] `PING` — Busaren konexioa egiaztatu (`PONG` erantzuna)
+  - [x] `?A` — lortu angelua (rad) [Leku-markako balioa testean]
+- [x] Gailu-anitzeko helbideratzea inplementatu (ID konfiguragarria)
+- [x] Roundtrip proba: ordenagailutik komandoa bidali, erantzun zuzena egiaztatu ✅
+- [x] `delayMicroseconds(200)` gehitu `RS485.cpp`-n "clipping" errorea saihesteko ✅
+
+### 3.2 Kontrol Komandoak [~]
+- [ ] Komando aurreratuak inplementatu:
   - `T` — ipini torque jomuga (A)
   - `V` — ipini velocity jomuga (rad/s)
   - `P` — ipini position jomuga (rad)
   - `M` — ipini kontrol modua (0=torque, 1=vel, 2=pos)
   - `EN` / `DIS` — gaitu/desgaitu motorra
   - `KP`, `KI`, `KD` — ipini PID irabaziak
-  - `?A` — lortu angelua (rad)
   - `?V` — lortu abiadura (rad/s)
   - `?I` — lortu korrontea (A)
   - `?S` — lortu egoera / error kodea
-- [ ] Gailu-anitzeko helbideratzea inplementatu (ID konfiguragarria)
-- [ ] Roundtrip proba: ordenagailutik komandoa bidali, erantzun zuzena egiaztatu
 - [ ] Latentzia proba: neurtu latentzia TX→RX RS-485 bus-ean
 
 ---

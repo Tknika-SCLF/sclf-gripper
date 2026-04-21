@@ -20,11 +20,19 @@ Adibidez: `1:V:5.0\n` → 1 ID-ko gailuari, abiadura (V) komandoa, 5.0 balioarek
 4. Ordezkatu `src/main.cpp` karpeta honetako `main.cpp`-rekin.
 5. Konpilatu eta igo:
    ```bash
-   pio run --target upload
+   pio run -e test_rs485_protocol --target upload
    ```
 6. Ireki serie terminal bat PCan (Putty, Docklight, etab.) RS-485 serian, 9600 baud-era.
 7. Bidali `1:PING:0\n` eta egiaztatu Gripperrak `1:PONG:0\n` erantzuten duela.
 8. Bidali `1:?A:0\n` eta ikusi `1:A:1.2300\n` erantzuna (float verified).
+
+### USB-RS485 moldagailuaren konexioa
+
+| Kablearen Kolorea | Seinalea | Gripper Pina |
+|-------------------|----------|--------------|
+| Laranja (D+)      | RS485 A+ | A            |
+| Horia (D-)        | RS485 B- | B            |
+| Beltza (GND)      | GND      | GND          |
 
 ### Pin mapa (MAX3485)
 
