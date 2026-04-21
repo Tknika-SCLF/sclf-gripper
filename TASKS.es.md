@@ -4,8 +4,8 @@
 
 ---
 > 📢 **ESTADO ACTUAL Y PRÓXIMOS PASOS**
-> **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5).**
-> Sensores de corriente validados. El siguiente paso es la **FASE 2 (FOC Básico)**.
+> **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
+> El siguiente paso es la **FASE 3 (FOC Closed-Loop)**.
 ---
 
 ---
@@ -66,10 +66,10 @@
 - [x] Validar rotación en `examples/fase2_1_foc_open_loop/main.cpp`
 - [x] Verificar que el motor gira sin ruido excesivo (ajustar voltage limit)
 
-### 2.2 FOC Closed-Loop [ ]
-- [ ] Implementar alineación y control de velocidad en `examples/fase2_2_foc_closed_loop/main.cpp`
-- [ ] Probar torque mode: `motor.controller = MotionControlType::torque`
-- [ ] Ajustar PID gains iniciales (KP, KI, KD) para cada loop
+### 2.2 FOC Closed-Loop [x]
+- [x] Implementar alineación y control de velocidad en `examples/fase2_2_foc_closed_loop/main.cpp`
+- [x] Probar torque mode: `motor.controller = MotionControlType::torque`
+- [x] Ajustar PID gains iniciales (KP, KI, KD) para cada loop
 
 ---
 
