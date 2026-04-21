@@ -5,8 +5,8 @@
 ---
 > 📢 **ESTADO ACTUAL Y PRÓXIMOS PASOS**
 > **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> **Fase 4.1 (Protocolo Básico) COMPLETADA.** ✅
-> El siguiente paso es la **FASE 4.2 (Comandos de Control RS-485)** [~].
+> **Fase 4 completa (Protocolo RS-485) COMPLETADA.** ✅
+> El siguiente paso es la **FASE 5 (Fault Manager)** [~].
 ---
 
 ---
@@ -103,17 +103,10 @@
 - [x] Test de roundtrip: enviar comando desde PC, verificar respuesta correcta ✅
 - [x] Añadido `delayMicroseconds(200)` en `RS485.cpp` para evitar error de "clipping" ✅
 
-### 3.2 Comandos de Control [~]
-- [ ] Implementar comandos avanzados:
-  - `T` — set torque target (A)
-  - `V` — set velocity target (rad/s)
-  - `P` — set position target (rad)
-  - `M` — set control mode (0=torque, 1=vel, 2=pos)
-  - `EN` / `DIS` — enable/disable motor
-  - `KP`, `KI`, `KD` — set PID gains
-  - `?V` — get velocity (rad/s)
-  - `?I` — get current (A)
-  - `?S` — get status / fault code
+### 3.2 Comandos de Control [x]
+- [x] Implementar comandos avanzados (T, V, P, M, EN, DIS, KP, KI, KD, ?V, ?I, ?S) ✅
+- [x] Añadir comandos abreviados (Shorthands: V5, P1, A, E, D) ✅
+- [x] Test de roundtrip y visual feedback mejorado (VCP Mirror) ✅
 - [ ] Test de timing: medir latencia TX→RX en bus RS-485
 
 ---

@@ -21,28 +21,31 @@
 // Tamaño máximo de un frame RS-485
 static constexpr size_t RS485_MAX_FRAME = 64;
 
-// Comandos soportados (ver TASKS.md Fase 4)
-namespace RS485Cmd {
-    constexpr char SET_TORQUE    = 'T';
-    constexpr char SET_VELOCITY  = 'V';
-    constexpr char SET_POSITION  = 'P';
-    constexpr char SET_MODE      = 'M';
-    constexpr char ENABLE        = 'E';   // "EN"
-    constexpr char DISABLE       = 'D';   // "DIS"
-    constexpr char GET_ANGLE     = 'A';   // "?A"
-    constexpr char GET_VELOCITY  = 'v';   // "?V"
-    constexpr char GET_CURRENT   = 'I';   // "?I"
-    constexpr char GET_STATUS    = 'S';   // "?S"
-    constexpr char SET_KP        = 'p';   // "KP"
-    constexpr char SET_KI        = 'i';   // "KI"
-    constexpr char SET_KD        = 'd';   // "KD"
-}
+// Comandos soportados (Mapeo a enum CommandType para facilitar switch)
+enum class CommandType {
+    UNKNOWN,
+    PING,
+    SET_TORQUE,    // 'T'
+    SET_VELOCITY,  // 'V'
+    SET_POSITION,  // 'P'
+    SET_MODE,      // 'M'
+    ENABLE,        // 'EN'
+    DISABLE,       // 'DIS'
+    GET_ANGLE,     // '?A'
+    GET_VELOCITY,  // '?v'
+    GET_CURRENT,   // '?I'
+    GET_STATUS,    // '?S'
+    SET_KP,        // 'KP'
+    SET_KI,        // 'KI'
+    SET_KD,        // 'KD'
+    ACK            // Respuesta genérica o confirmación
+};
 
 struct RS485Frame {
-    uint8_t deviceId;
-    char    cmd[8];
-    char    value[32];
-    bool    valid;
+    uint8_t     deviceId;
+    CommandType type;
+    float       value;
+    bool        valid;
 };
 
 class RS485 {
