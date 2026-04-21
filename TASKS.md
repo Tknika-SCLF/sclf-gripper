@@ -4,8 +4,8 @@
 
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
-> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5).**
-> Korronte sentsoreak balioztatuta. Hurrengo urratsa **2. FASEA (Oinarrizko FOC)** da.
+> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
+> Hurrengo urratsa **3. FASEA (FOC Begi-itxia)** da.
 ---
 
 ---
@@ -82,10 +82,10 @@
 - [x] Biraketa balioztatu `examples/fase2_1_foc_open_loop/main.cpp`-n
 - [x] Egiaztatu motorrak soinu handirik gabe biratzen duela (tentsio-muga doituz)
 
-### 2.2 FOC Closed-Loop [ ]
-- [ ] Lerrokatzea eta abiadura kontrola inplementatu `examples/fase2_2_foc_closed_loop/main.cpp`-n
-- [ ] Torke modua probatu: `motor.controller = MotionControlType::torque`
-- [ ] PID hasierako irabaziak doitu (KP, KI, KD) loop bakoitzerako
+### 2.2 FOC Closed-Loop [x]
+- [x] Lerrokatzea eta abiadura kontrola inplementatu `examples/fase2_2_foc_closed_loop/main.cpp`-n
+- [x] Torke modua probatu: `motor.controller = MotionControlType::torque`
+- [x] PID hasierako irabaziak doitu (KP, KI, KD) loop bakoitzerako
 
 ---
 
