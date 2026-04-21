@@ -1,6 +1,6 @@
-# 4.2 Fasea - RS-485 Komunikazio Testa (MAX3485)
+# 3.1 Fasea - RS485 Protokolo Básicoa (STABLE)
 
-Karpeta honetan 4.2 Fasearen (`fase4_2_rs485`) kode egiaztatua dago. Fase honen helburua RS-485 half-duplex bus-a probatzea da, motorra aktibatu gabe.
+Karpeta honetan 3.1 Fasearen (`fase3_1_rs485`) kode egiaztatua dago. Fase honen helburua RS-485 half-duplex bus-a probatzea da, motorra aktibatu gabe.
 
 ### Nola funtzionatzen du?
 

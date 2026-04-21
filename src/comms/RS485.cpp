@@ -96,44 +96,68 @@ bool RS485::simulateRx(const char* str, RS485Frame& out) {
 // ── Privado ──────────────────────────────────────────────────────────────────
 
 bool RS485::_parseFrame(const char* raw, RS485Frame& out) {
-    // Formato esperado: "<id>:<cmd>:<value>" o simplemente "<cmd>"
     out.valid = false;
+    out.type = CommandType::UNKNOWN;
+    out.value = 0.0f;
 
-    // Caso simplificado: No hay dos puntos (ej. "PING")
+    // Caso simplificado (Shorthand): Solo el comando o comando+valor sin ":"
     if (strchr(raw, ':') == nullptr) {
-        out.deviceId = 0; // Broadcast
-        strncpy(out.cmd, raw, sizeof(out.cmd) - 1);
-        out.cmd[sizeof(out.cmd) - 1] = '\0';
-        out.value[0] = '\0';
-        out.valid = true;
-        return true;
+        out.deviceId = 1; // Por defecto ID 1 para atajos
+        char cmd = raw[0];
+        const char* valPart = raw + 1;
+
+        if (cmd == 'V' || cmd == 'v') out.type = CommandType::SET_VELOCITY;
+        else if (cmd == 'P' || cmd == 'p') out.type = CommandType::SET_POSITION;
+        else if (cmd == 'T' || cmd == 't') out.type = CommandType::SET_TORQUE;
+        else if (cmd == 'M' || cmd == 'm') out.type = CommandType::SET_MODE;
+        else if (cmd == 'E' || cmd == 'e') out.type = CommandType::ENABLE;
+        else if (cmd == 'D' || cmd == 'd') out.type = CommandType::DISABLE;
+        else if (cmd == 'A' || cmd == 'a') { out.type = CommandType::GET_ANGLE; valPart = nullptr; }
+        else if (strcasecmp(raw, "PING") == 0) out.type = CommandType::PING;
+        
+        if (out.type != CommandType::UNKNOWN) {
+            if (valPart && *valPart != '\0') out.value = atof(valPart);
+            out.valid = true;
+            return true;
+        }
+        return false;
     }
 
     char tmp[RS485_MAX_FRAME];
     strncpy(tmp, raw, sizeof(tmp) - 1);
     tmp[sizeof(tmp) - 1] = '\0';
 
-    char* tok = strtok(tmp, ":");
-    if (!tok)
-        return false;
-    out.deviceId = static_cast<uint8_t>(atoi(tok));
+    char* tokId = strtok(tmp, ":");
+    char* tokCmd = strtok(nullptr, ":");
+    char* tokVal = strtok(nullptr, ":");
 
-    tok = strtok(nullptr, ":");
-    if (!tok)
-        return false;
-    strncpy(out.cmd, tok, sizeof(out.cmd) - 1);
-    out.cmd[sizeof(out.cmd) - 1] = '\0';
+    if (!tokId || !tokCmd) return false;
 
-    tok = strtok(nullptr, ":");
-    if (tok) {
-        strncpy(out.value, tok, sizeof(out.value) - 1);
-        out.value[sizeof(out.value) - 1] = '\0';
-    } else {
-        out.value[0] = '\0';
+    out.deviceId = static_cast<uint8_t>(atoi(tokId));
+    
+    // Mapeo de Comandos
+    if (strcasecmp(tokCmd, "T") == 0) out.type = CommandType::SET_TORQUE;
+    else if (strcasecmp(tokCmd, "V") == 0) out.type = CommandType::SET_VELOCITY;
+    else if (strcasecmp(tokCmd, "P") == 0) out.type = CommandType::SET_POSITION;
+    else if (strcasecmp(tokCmd, "M") == 0) out.type = CommandType::SET_MODE;
+    else if (strcasecmp(tokCmd, "EN") == 0) out.type = CommandType::ENABLE;
+    else if (strcasecmp(tokCmd, "DIS") == 0) out.type = CommandType::DISABLE;
+    else if (strcasecmp(tokCmd, "KP") == 0) out.type = CommandType::SET_KP;
+    else if (strcasecmp(tokCmd, "KI") == 0) out.type = CommandType::SET_KI;
+    else if (strcasecmp(tokCmd, "KD") == 0) out.type = CommandType::SET_KD;
+    else if (strcasecmp(tokCmd, "?A") == 0) out.type = CommandType::GET_ANGLE;
+    else if (strcasecmp(tokCmd, "?V") == 0) out.type = CommandType::GET_VELOCITY;
+    else if (strcasecmp(tokCmd, "?I") == 0) out.type = CommandType::GET_CURRENT;
+    else if (strcasecmp(tokCmd, "?S") == 0) out.type = CommandType::GET_STATUS;
+    else if (strcasecmp(tokCmd, "PING") == 0) out.type = CommandType::PING;
+    else if (strcasecmp(tokCmd, "ACK") == 0) out.type = CommandType::ACK;
+
+    if (tokVal) {
+        out.value = atof(tokVal);
     }
 
-    out.valid = true;
-    return true;
+    out.valid = (out.type != CommandType::UNKNOWN);
+    return out.valid;
 }
 
 void RS485::_setTxMode() {

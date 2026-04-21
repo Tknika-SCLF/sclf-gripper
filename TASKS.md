@@ -5,8 +5,8 @@
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
 > **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> **4.1 Fasea (Protocolo Básico) AMAITUTA.** ✅
-> Hurrengo urratsa **4.2 FASEA (RS-485 Kontrol Komandoak)** [~] da.
+> **3. Fase osoa (RS-485 Protokoloa) AMAITUTA.** ✅
+> Hurrengo urratsa **4. FASEA (USB VCP eta Commander)** [~] da.
 ---
 
 ---
@@ -105,17 +105,10 @@
 - [x] Roundtrip proba: ordenagailutik komandoa bidali, erantzun zuzena egiaztatu ✅
 - [x] `delayMicroseconds(200)` gehitu `RS485.cpp`-n "clipping" errorea saihesteko ✅
 
-### 3.2 Kontrol Komandoak [~]
-- [ ] Komando aurreratuak inplementatu:
-  - `T` — ipini torque jomuga (A)
-  - `V` — ipini velocity jomuga (rad/s)
-  - `P` — ipini position jomuga (rad)
-  - `M` — ipini kontrol modua (0=torque, 1=vel, 2=pos)
-  - `EN` / `DIS` — gaitu/desgaitu motorra
-  - `KP`, `KI`, `KD` — ipini PID irabaziak
-  - `?V` — lortu abiadura (rad/s)
-  - `?I` — lortu korrontea (A)
-  - `?S` — lortu egoera / error kodea
+### 3.2 Kontrol Komandoak [x]
+- [x] Komando aurreratuak inplementatu (T, V, P, M, EN, DIS, KP, KI, KD, ?V, ?I, ?S) ✅
+- [x] Komando abreviatuak (Shorthands) gehitu (V5, P1, A, E, D) ✅
+- [x] Roundtrip proba eta visual feedback hobetua (VCP Mirror) ✅
 - [ ] Latentzia proba: neurtu latentzia TX→RX RS-485 bus-ean
 
 ---
