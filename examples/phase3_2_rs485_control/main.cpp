@@ -1,5 +1,4 @@
-/**
- * SCLF Gripper v1.0 — Phase 4.2: Full RS485 Control Commands
+* SCLF Gripper v1.0 — Phase 3.2: Full RS485 Control Commands
  * Board:     STM32G474CEU6
  *
  * Objetivo:  Implementar el parser completo de comandos (T, V, P, M, EN, ?A, etc.)
@@ -118,7 +117,7 @@ void setup() {
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, HIGH);
 
-    Serial.println("SCLF Gripper Phase 4.2 — Control Command Test Ready");
+    Serial.println("SCLF Gripper Phase 3.2 — Control Command Test Ready");
 }
 
 void loop() {

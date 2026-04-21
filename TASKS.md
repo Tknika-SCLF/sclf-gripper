@@ -5,8 +5,8 @@
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
 > **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> **4. Fase osoa (RS-485 Protokoloa) AMAITUTA.** ✅
-> Hurrengo urratsa **5. FASEA (Fault Manager)** [~] da.
+> **3. Fase osoa (RS-485 Protokoloa) AMAITUTA.** ✅
+> Hurrengo urratsa **4. FASEA (USB VCP eta Commander)** [~] da.
 ---
 
 ---

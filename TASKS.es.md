@@ -5,8 +5,8 @@
 ---
 > 📢 **ESTADO ACTUAL Y PRÓXIMOS PASOS**
 > **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> **Fase 4 completa (Protocolo RS-485) COMPLETADA.** ✅
-> El siguiente paso es la **FASE 5 (Fault Manager)** [~].
+> **Fase 3 completa (Protocolo RS-485) COMPLETADA.** ✅
+> El siguiente paso es la **FASE 4 (USB VCP y Commander)** [~].
 ---
 
 ---

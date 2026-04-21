@@ -1,6 +1,6 @@
-# 4.2 Fasea - RS-485 Kontrol Komandoak
+# 3.2 Fasea - RS-485 Kontrol Komandoak
 
-Karpeta honetan 4.2 Fasearen (`phase4_2_rs485_control`) inplementazioa dago. Fase honen helburua oinarrizko PING/PONG-etik haratago joatea da, motorraren kontrolerako komando ASCII guztiak inplementatuz.
+Karpeta honetan 3.2 Fasearen (`phase3_2_rs485_control`) inplementazioa dago. Fase honen helburua oinarrizko PING/PONG-etik haratago joatea da, motorraren kontrolerako komando ASCII guztiak inplementatuz.
 
 ### Protokolo Hobetua
 `RS485Frame` egitura refakturatu da `CommandType` enum-a erabiltzeko. Horrela, `main.cpp`-ko logikak ez ditu string-ak konparatu behar, integer-en bidezko `switch` bat baizik.
