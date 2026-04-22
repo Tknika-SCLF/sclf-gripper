@@ -35,6 +35,13 @@ public:
      */
     void setTelemetry(bool enabled) { _telemetryEnabled = enabled; }
 
+    /**
+     * @brief Permite añadir comandos personalizados al Commander interno.
+     */
+    void addCommand(char id, CommandCallback onCommand, const char* label) {
+        _commander.add(id, onCommand, label);
+    }
+
 private:
     Stream& _serial;
     Commander _commander;

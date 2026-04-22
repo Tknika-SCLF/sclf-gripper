@@ -223,6 +223,15 @@
 - ✅ `platformio.ini` eguneratua `test_usb_vcp` ingurunearekin.
 - 💡 **Oharra**: USB CDC-a (VCP) doikuntzak denbora errealean egiteko (tuning) bideratuta dago batez ere.
 
+### 2026-04-22 — Fase 5 (Fault Manager) Implementazioa
+- ✅ `FaultManager` osagaia guztiz operatiboa:
+    - MT6701 encoder erroreak detektatzen ditu (zarata-iragazkiarekin).
+    - DRV8316 driver akatsak monitorizatzen ditu.
+    - **Stall detekzioa**: 1s-ko blokeo mekanikoaren ondoren motorra desgaitzen du.
+- ✅ `VCPManager` eguneratua komando pertsonalizatuak onartzeko.
+- ✅ `F` komandoa gehitu da akatsak garbitzeko eta sistema rearmatzeko.
+- ✅ Prototipoan balioztatua: motorra desgaitzen da blokeatzean eta monitoretik errorea bidaltzen du.
+
 ---
 
 ## Oharrak eta Erabakiak (Zain)
