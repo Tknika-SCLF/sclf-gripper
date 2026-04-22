@@ -142,19 +142,19 @@
 ## PHASE 6 — Persistence & Configuration
 > Goal: parameters survive power cycles and resets.
 
-- [ ] Define `Config` struct in flash (dedicated STM32G474 sector):
-  - `zero_electric_angle` (float)
-  - `sensor_direction` (int)
-  - `device_id` (uint8_t)
-  - `pid_gains[3][3]` (float[loop][kp/ki/kd])
-  - `control_mode` (uint8_t)
-  - CRC32 validation
-- [ ] Implement `src/config/FlashConfig.h/.cpp`:
-  - `bool load()` — reads config from flash, validates CRC
-  - `void save()` — writes config to flash
-  - `void resetDefaults()` — applies default values
-- [ ] On startup: if flash config is valid, skip automatic alignment
-- [ ] RS-485 commands to read/write config and perform factory reset
+- [x] Define `Config` struct in flash (dedicated STM32G474 sector): ✅
+  - [x] `zero_electric_angle` (float) ✅
+  - [x] `sensor_direction` (int) ✅
+  - [x] `device_id` (uint8_t) ✅
+  - [x] `pid_gains[3][3]` (float[loop][kp/ki/kd]) ✅
+  - [x] `control_mode` (uint8_t) ✅
+  - [x] CRC32 validation (XOR Checksum implemented) ✅
+- [x] Implement `src/config/FlashConfig.h/.cpp`: ✅
+  - [x] `bool load()` — reads config from flash, validates CRC ✅
+  - [x] `void save()` — writes config to flash using HAL_FLASH_Program ✅
+  - [x] `void resetDefaults()` — applies default values ✅
+- [x] On startup: if flash config is valid, load parameters and skip recalibration ✅
+- [x] RS-485 commands to read/write config and perform factory reset (integrated via Commander 'S' and 'R') ✅
 
 ---
 
