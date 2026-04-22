@@ -116,12 +116,12 @@
 ## 4 FASEA — USB VCP eta Commander
 > Helburua: zuzeneko doikuntza (tuning) PCtik USB bidez.
 
-- [ ] Aktibatu `SimpleFOCDebug::enable(&Serial)` — telemetria USB VCP bidez
-- [ ] Sortu `src/comms/VCP.cpp` — SimpleFOC-en Commander-a:
-  - Erregistratu motorra, PID irabaziak, kontrol modua
-  - Denbora errealeko telemetria isuria: angelua, abiadura, korrontea, jomuga
-- [ ] Egiaztatu VCP-ak ez duela FOC loop-a blokeatzen (buffer zirkularra edo DMA erabili)
-- [ ] Eskuragarri dauden Commander komandoak `MEMORY.md` barruan dokumentatu
+- [x] Aktibatu `SimpleFOCDebug::enable(&Serial)` — telemetria USB VCP bidez ✅
+- [x] Sortu `src/comms/VCP.cpp` — SimpleFOC-en Commander-a: ✅
+  - [x] Erregistratu motorra, PID irabaziak, kontrol modua
+  - [x] Denbora errealeko telemetria isuria: angelua, abiadura, korrontea, jomuga
+- [x] Egiaztatu VCP-ak ez duela FOC loop-a blokeatzen (buffer zirkularra edo DMA erabili) ✅
+- [x] Eskuragarri dauden Commander komandoak `MEMORY.md` barruan dokumentatu ✅
 
 ---
 
@@ -227,3 +227,4 @@
 | 2026-03-14 | **HARDWARE BUG IDENTIFICADO en v1.0:** Pin 23 de U1 (DRV8316C) conectado a D5 | El nSLEEP estaba apagado a 0.25V. Retirar D5 y puntear a 3.3V para activar SPI. |
 | 2026-03-24 | **MIGRACIÓN A HARDWARE V2 EN ESPERA** | Pins y diagramas actualizados a V2 esperando la nueva PCB. |
 | 2026-04-21 | **BIRANTOLAKETA: FOC Begi-itxia (Advanced) atzeratua** | Pinzak muntatuta egon arte itxoitea erabaki da. Comm eta safety faseak aurreratu dira. |
+| 2026-04-22 | **Phase 4: USB VCP implementado** | Creado `VCPManager` para gestionar Commander y telemetría de forma no bloqueante. |

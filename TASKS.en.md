@@ -114,12 +114,12 @@
 ## PHASE 4 — USB VCP & Commander
 > Goal: live tuning from PC over USB.
 
-- [ ] Activate `SimpleFOCDebug::enable(&Serial)` — telemetry via USB VCP
-- [ ] Create `src/comms/VCP.cpp` — SimpleFOC Commander:
-  - Register motor, PID gains, control mode
-  - Real-time telemetry streaming: angle, velocity, current, target
-- [ ] Verify VCP does not block the FOC loop (use circular buffers or DMA)
-- [ ] Document available Commander commands in `MEMORY.md`
+- [x] Activate `SimpleFOCDebug::enable(&Serial)` — telemetry via USB VCP ✅
+- [x] Create `src/comms/VCP.cpp` — SimpleFOC Commander: ✅
+  - [x] Register motor, PID gains, control mode
+  - [x] Real-time telemetry streaming: angle, velocity, current, target
+- [x] Verify VCP does not block the FOC loop (use circular buffers or DMA) ✅
+- [x] Document available Commander commands in `MEMORY.md` ✅
 
 ---
 
@@ -225,3 +225,4 @@
 | 2026-03-14 | **HARDWARE BUG v1: U1 Pin 23 to D5** | Driver nSLEEP was powered down. Will be fixed in v2. |
 | 2026-03-24 | **WAITING FOR HARDWARE V2** | We have updated pins and are blocked waiting for PCB. |
 | 2026-04-21 | **REORGANIZATION: Advanced FOC postponed** | Decided to wait for gripper assembly. Moved comm and safety phases forward. |
+| 2026-04-22 | **Phase 4: USB VCP implemented** | Created `VCPManager` to manage Commander and non-blocking telemetry. |
