@@ -16,6 +16,7 @@
 #include <Arduino.h>
 
 // Importar forward declarations para no crear dependencias circulares
+class MotorController;
 class DRV8316;
 class MT6701;
 
@@ -30,7 +31,7 @@ enum class FaultCode : uint8_t {
 
 class FaultManager {
 public:
-    FaultManager(DRV8316& drv, MT6701& enc);
+    FaultManager(MotorController& mc);
 
     /**
      * Llamar en cada iteración de loop().
@@ -43,6 +44,11 @@ public:
      * ¿Hay algún fallo activo?
      */
     bool hasFault() const { return _activeFault != FaultCode::NONE; }
+
+    /**
+     * Devuelve el fallo activo.
+     */
+    bool isStalled();
 
     /**
      * Devuelve el fallo activo.
@@ -72,14 +78,13 @@ public:
 
     // Umbral de stall: velocidad < STALL_VEL_RAD_S durante > STALL_TIME_MS
     static constexpr float    STALL_VEL_RAD_S  = 0.5f;
-    static constexpr uint32_t STALL_TIME_MS    = 500;
+    static constexpr uint32_t STALL_TIME_MS    = 1000; // 1 segundo de bloqueo
 
 private:
-    DRV8316&  _drv;
-    MT6701&   _enc;
+    MotorController& _mc;
 
     FaultCode _activeFault  = FaultCode::NONE;
     uint32_t  _pollCounter  = 0;
     uint32_t  _stallSince   = 0;
-    bool      _motorEnabled = false;
+    uint32_t  _encoderErrorCount = 0;
 };

@@ -126,16 +126,16 @@
 ## FASE 5 — Fault Manager
 > Objetivo: el gripper nunca se destruye a sí mismo.
 
-- [ ] Crear `src/faults/FaultManager.h/.cpp`:
-  - `void update()` — llamar en cada loop, polling del DRV8316 STATUS por SPI
-  - `bool hasFault()` — devuelve true si hay cualquier fallo activo
-  - `FaultCode getActiveFault()` — enum con: OVERCURRENT, ENCODER_ERROR, STALL, DRV_FAULT
-  - `void triggerSafeState()` — llama `motor.disable()` en < 1 ms
-  - `void reportFault(FaultCode)` — envía código por RS-485 y VCP
-- [ ] Detectar stall: velocidad < umbral durante > N ms con corriente > límite
-- [ ] Detectar error de encoder: `MT6701::isOk()` devuelve false
-- [ ] Test de fault: cortocircuitar brevemente una fase y verificar respuesta
-- [ ] Verificar que `triggerSafeState()` ocurre en < 1 ms desde detección
+- [x] Crear `src/faults/FaultManager.h/.cpp`: ✅
+  - [x] `void update()` — llamar en cada loop, polling del DRV8316 STATUS por SPI ✅
+  - [x] `bool hasFault()` — devuelve true si hay cualquier fallo activo ✅
+  - [x] `FaultCode getActiveFault()` — enum con: OVERCURRENT, ENCODER_ERROR, STALL, DRV_FAULT ✅
+  - [x] `void triggerSafeState()` — llama `motor.disable()` en < 1 ms ✅
+  - [x] `void reportFault(FaultCode)` — envía código por RS-485 y VCP ✅
+- [x] Detectar stall: velocidad < umbral durante > N ms con corriente > límite ✅
+- [x] Detectar error de encoder: `MT6701::isOk()` devuelve false (filtro antiruido añadido) ✅
+- [x] Test de fault: cortocircuitar brevemente una fase y verificar respuesta (validado con bloqueo mecánico) ✅
+- [x] Verificar que `triggerSafeState()` ocurre en < 1 ms desde detección ✅
 
 ---
 

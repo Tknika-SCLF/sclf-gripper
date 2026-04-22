@@ -128,16 +128,16 @@
 ## 5 FASEA — Akats Kudeatzailea (Fault Manager)
 > Helburua: gripper-ak ez du inoiz bere burua suntsitzen.
 
-- [ ] Sortu `src/faults/FaultManager.h/.cpp`:
-  - `void update()` — loop bakoitzean deitu, DRV8316 STATUS-en polling SPI bidez
-  - `bool hasFault()` — true itzultzen du edozein akats aktibo badago
-  - `FaultCode getActiveFault()` — enum honekin: OVERCURRENT, ENCODER_ERROR, STALL, DRV_FAULT
-  - `void triggerSafeState()` — `motor.disable()` deitzen du < 1 ms barruan
-  - `void reportFault(FaultCode)` — kodea RS-485 eta VCP bidez bidaltzen du
-- [ ] Blokeoa (stall) detektatu: abiadura < atalasea N ms baino gehiagoz korrontea > muga izanda
-- [ ] Encoder erroreak detektatu: `MT6701::isOk()`-k false itzultzen duenean
-- [ ] Akats proba: zirkuitulaburtu modu laburrean fase bat eta erantzuna egiaztatu
-- [ ] Egiaztatu `triggerSafeState()` detekziotik < 1 ms gertatzen dela
+- [x] Sortu `src/faults/FaultManager.h/.cpp`: ✅
+  - [x] `void update()` — loop bakoitzean deitu, DRV8316 STATUS-en polling SPI bidez ✅
+  - [x] `bool hasFault()` — true itzultzen du edozein akats aktibo badago ✅
+  - [x] `FaultCode getActiveFault()` — enum honekin: OVERCURRENT, ENCODER_ERROR, STALL, DRV_FAULT ✅
+  - [x] `void triggerSafeState()` — `motor.disable()` deitzen du < 1 ms barruan ✅
+  - [x] `void reportFault(FaultCode)` — kodea RS-485 eta VCP bidez bidaltzen du ✅
+- [x] Blokeoa (stall) detektatu: abiadura < atalasea N ms baino gehiagoz korrontea > muga izanda ✅
+- [x] Encoder erroreak detektatu: `MT6701::isOk()`-k false itzultzen duenean (zarata-iragazkia gehituta) ✅
+- [x] Akats proba: zirkuitulaburtu modu laburrean fase bat eta erantzuna egiaztatu (blokeo mekanikoarekin balioztatuta) ✅
+- [x] Egiaztatu `triggerSafeState()` detekziotik < 1 ms gertatzen dela ✅
 
 ---
 

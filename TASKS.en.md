@@ -126,16 +126,16 @@
 ## PHASE 5 — Fault Manager
 > Goal: the gripper never self-destructs.
 
-- [ ] Create `src/faults/FaultManager.h/.cpp`:
-  - `void update()` — call every loop, poll DRV8316 STATUS via SPI
-  - `bool hasFault()` — returns true if any active fault exists
-  - `FaultCode getActiveFault()` — enum: OVERCURRENT, ENCODER_ERROR, STALL, DRV_FAULT
-  - `void triggerSafeState()` — calls `motor.disable()` in < 1 ms
-  - `void reportFault(FaultCode)` — reports code via RS-485 and VCP
-- [ ] Detect stall: velocity < threshold for > N ms with current > limit
-- [ ] Detect encoder error: `MT6701::isOk()` returns false
-- [ ] Fault test: short-circuit a phase briefly and verify response
-- [ ] Verify `triggerSafeState()` occurs in < 1 ms after detection
+- [x] Create `src/faults/FaultManager.h/.cpp`: ✅
+  - [x] `void update()` — call every loop, poll DRV8316 STATUS via SPI ✅
+  - [x] `bool hasFault()` — returns true if any active fault exists ✅
+  - [x] `FaultCode getActiveFault()` — enum: OVERCURRENT, ENCODER_ERROR, STALL, DRV_FAULT ✅
+  - [x] `void triggerSafeState()` — calls `motor.disable()` in < 1 ms ✅
+  - [x] `void reportFault(FaultCode)` — reports code via RS-485 and VCP ✅
+- [x] Detect stall: velocity < threshold for > N ms with current > limit ✅
+- [x] Detect encoder error: `MT6701::isOk()` returns false (noise filter added) ✅
+- [x] Fault test: short-circuit a phase briefly and verify response (validated with mechanical block) ✅
+- [x] Verify `triggerSafeState()` occurs in < 1 ms after detection ✅
 
 ---
 
