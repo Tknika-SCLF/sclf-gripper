@@ -114,12 +114,12 @@
 ## FASE 4 — USB VCP y Commander
 > Objetivo: tuning en vivo desde el PC por USB.
 
-- [ ] Activar `SimpleFOCDebug::enable(&Serial)` — telemetría por USB VCP
-- [ ] Crear `src/comms/VCP.cpp` — Commander de SimpleFOC:
-  - Registrar motor, PID gains, modo de control
-  - Stream de telemetría en tiempo real: ángulo, velocidad, corriente, target
-- [ ] Verificar que VCP no bloquea el loop FOC (usar buffer circular o DMA)
-- [ ] Documentar comandos Commander disponibles en `MEMORY.md`
+- [x] Activar `SimpleFOCDebug::enable(&Serial)` — telemetría por USB VCP ✅
+- [x] Crear `src/comms/VCP.cpp` — Commander de SimpleFOC: ✅
+  - [x] Registrar motor, PID gains, modo de control
+  - [x] Stream de telemetría en tiempo real: ángulo, velocidad, corriente, target
+- [x] Verificar que VCP no bloquea el loop FOC (usar buffer circular o DMA) ✅
+- [x] Documentar comandos Commander disponibles en `MEMORY.md` ✅
 
 ---
 
@@ -225,3 +225,4 @@
 | 2026-03-14 | **HARDWARE BUG IDENTIFICADO en v1.0:** Pin 23 de U1 (DRV8316C) conectado a D5 | El nSLEEP estaba apagado a 0.25V. Retirar D5 y puntear a 3.3V para activar SPI. |
 | 2026-03-24 | **MIGRACIÓN A HARDWARE V2 EN ESPERA** | Pins y diagramas actualizados a V2 esperando la nueva PCB. |
 | 2026-04-21 | **REORGANIZACIÓN: FOC Avanzado pospuesto** | Se decide esperar a montar las pinzas. Se adelantan fases de comm y safety. |
+| 2026-04-22 | **Fase 4: USB VCP implementado** | Creado `VCPManager` para gestionar Commander y telemetría de forma no bloqueante. |

@@ -168,6 +168,21 @@
 
 ---
 
+## Komando Gida (Commander USB)
+
+| Komandoa | Deskribapena | Adibidea |
+|---|---|---|
++| `M` | Motorraren egoera orokorra | `M` |
++| `M<balioa>` | Setpoint-a ezarri (rad/s edo rad) | `M1.5` |
++| `ME<0/1>` | Motorra desgaitu/gaitu | `ME0`, `ME1` |
++| `MC<0/1/2/3>` | Kontrol modua aldatu (0:Voltage, 1:Torque, 2:Vel, 3:Pos) | `MC2` |
++| `MV<P/I/D>` | Abiadura PID-a doitu | `MVP0.1`, `MVI1.0` |
++| `MP<P/I/D>` | Posizio PID-a doitu | `MPP5.0` |
++| `T<0/1>` | Telemetria automatikoa desgaitu/gaitu | `T1`, `T0` |
++| `?` | Laguntza orokorra | `?` |
+
+---
+
 ## Garapen Saioak
 
 ### 2026-02-25 — Hasierako saioa
@@ -198,6 +213,15 @@
 - ✅ **Fase 1.3 (Motorra)**: Prototipo berrian balioztatua. Motorra begizta irekian (open loop) biratzen du 24V-ekin. 
 - 💡 **Oharra**: Hasierako "pivoteoa" motorreko kable baten deskonexioagatik zen, ez hardware arazoagatik.
 - ⏳ Zain: RS485 komunikazio probak (Fase 1.4).
+
+### 2026-04-22 — Fase 4 (USB VCP) Implementazioa
+- ✅ `VCPManager` osagaia sortua (`src/comms/VCP.h/.cpp`):
+    - SimpleFOC-en `Commander` interfazea kapsulatzen du.
+    - Telemetria ez-blokeatzailea implementatua (`T1` aginduarekin aktibatzen da).
+    - Motorraren aginduak (`M`) zuzenean kudeatzen ditu.
+- ✅ `examples/phase4_USB_VCP` sortua eta balioztatua (kode egitura).
+- ✅ `platformio.ini` eguneratua `test_usb_vcp` ingurunearekin.
+- 💡 **Oharra**: USB CDC-a (VCP) doikuntzak denbora errealean egiteko (tuning) bideratuta dago batez ere.
 
 ---
 
