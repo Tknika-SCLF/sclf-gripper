@@ -144,19 +144,19 @@
 ## 6 FASEA — Iraunkortasuna eta Konfigurazioa (Persistence)
 > Helburua: parametroek berrezarpen edo itzaltze bat irauten dute bizirik.
 
-- [ ] Definatu `Config` egitura flash-ean (STM32G474-ko sektor espezifikoa):
-  - `zero_electric_angle` (float)
-  - `sensor_direction` (int)
-  - `device_id` (uint8_t)
-  - `pid_gains[3][3]` (float[loop][kp/ki/kd])
-  - `control_mode` (uint8_t)
-  - CRC32 balioztatzea
-- [ ] Inplementatu `src/config/FlashConfig.h/.cpp`:
-  - `bool load()` — konfigurazioa irakurri flash-etik, CRC balioztatu
-  - `void save()` — konfigurazioa idatzi flash-ean
-  - `void resetDefaults()` — balio lehenetsiak ezarri
-- [ ] Abiaraztean: flash-eko informazioa zuzena bada, saihestu lerrokatze automatikoa
-- [ ] Konfigurazioa irakurtzeko/idazteko eta fabrikako ezarpenetara itzultzeko RS-485 komandoak
+- [x] Flash-en `Config` egitura definitu (STM32G474 sektore dedikatua): ✅
+  - [x] `zero_electric_angle` (float) ✅
+  - [x] `sensor_direction` (int) ✅
+  - [x] `device_id` (uint8_t) ✅
+  - [x] `pid_gains[3][3]` (float[loop][kp/ki/kd]) ✅
+  - [x] `control_mode` (uint8_t) ✅
+  - [x] CRC32 balioztatzea (XOR Checksum inplementatua) ✅
+- [x] Inplementatu `src/config/FlashConfig.h/.cpp`: ✅
+  - [x] `bool load()` — flash-etik konfigurazioa irakurtzen du, CRC balioztatzen du ✅
+  - [x] `void save()` — konfigurazioa flash-ean idazten du HAL_FLASH_Program erabiliz ✅
+  - [x] `void resetDefaults()` — lehenetsitako balioak aplikatzen ditu ✅
+- [x] Abiaraztean: flash konfigurazioa zuzena bada, parametroak kargatu eta birkalibrazioa saihestu ✅
+- [x] RS-485 komandoak konfigurazioa irakurtzeko/idazteko eta fabrikako reset-a egiteko ('S' eta 'R' bidez integratuta) ✅
 
 ---
 

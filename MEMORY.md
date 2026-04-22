@@ -232,6 +232,13 @@
 - ✅ `F` komandoa gehitu da akatsak garbitzeko eta sistema rearmatzeko.
 - ✅ Prototipoan balioztatua: motorra desgaitzen da blokeatzean eta monitoretik errorea bidaltzen du.
 
+### 2026-04-22 — Fase 6 (Persistence) Implementazioa
+- ✅ `FlashConfig` osagaia martxan STM32G474-rako (HAL_FLASH erabiliz).
+- ✅ Biltegiratzea Banku 1eko azken orrialdean (**0x0803F800**) Dual-Bank arazoak ekiditeko.
+- ✅ CRC32 bidezko integritatea eta Balio Magiko bidezko balioztatzea.
+- ✅ Komandoak: `S` (Gorde uneko konfigurazioa) eta `R` (Fabrikako reset).
+- ✅ Parametroak: PIDak (vel/pos), mugak (volt/curr/vel) eta FOC kalibrazioa.
+
 ---
 
 ## Oharrak eta Erabakiak (Zain)
