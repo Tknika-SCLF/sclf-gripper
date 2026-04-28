@@ -26,6 +26,12 @@ public:
     void update();
 
     /**
+     * @brief Realiza la alineación FOC (eléctrica) entre motor y sensor.
+     * @return true si la alineación fue exitosa.
+     */
+    bool initFOC();
+
+    /**
      * @brief Establece el valor objetivo (depende del modo de control).
      */
     void setTarget(float target);

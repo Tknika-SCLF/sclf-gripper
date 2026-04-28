@@ -42,14 +42,32 @@ void FaultManager::update() {
     }
 
     // 3. Detección de Bloqueo (Stall)
-    // Solo detectamos stall si el motor está habilitado y tiene un objetivo > 0.1
-    if (_mc.getMotor().enabled && abs(_mc.getMotor().target) > 0.1f) {
-        if (abs(_mc.getMotor().shaft_velocity) < STALL_VEL_RAD_S) {
-            if (_stallSince == 0) {
-                _stallSince = millis();
-            } else if (millis() - _stallSince > STALL_TIME_MS) {
-                triggerSafeState(FaultCode::STALL);
-                return;
+    if (_mc.getMotor().enabled) {
+        bool isTryingToMove = false;
+        
+        if (_mc.getMotor().controller == MotionControlType::angle ||
+            _mc.getMotor().controller == MotionControlType::angle_openloop) {
+            // En modo posición, el motor "intenta moverse" si hay un error de posición significativo
+            if (abs(_mc.getMotor().target - _mc.getMotor().shaft_angle) > 0.1f) {
+                isTryingToMove = true;
+            }
+        } else {
+            // En modo velocidad o torque, target es la consigna de movimiento o fuerza
+            if (abs(_mc.getMotor().target) > 0.1f) {
+                isTryingToMove = true;
+            }
+        }
+
+        if (isTryingToMove) {
+            if (abs(_mc.getMotor().shaft_velocity) < STALL_VEL_RAD_S) {
+                if (_stallSince == 0) {
+                    _stallSince = millis();
+                } else if (millis() - _stallSince > STALL_TIME_MS) {
+                    triggerSafeState(FaultCode::STALL);
+                    return;
+                }
+            } else {
+                _stallSince = 0;
             }
         } else {
             _stallSince = 0;

@@ -45,18 +45,23 @@ bool MotorController::begin() {
     _motor.linkSensor(&_encoder);
     _motor.init();
 
-    // 5. Alineación FOC (Forzamos detección de dirección)
-    SimpleFOCDebug::println("MC: Force calibrating FOC...");
-    _motor.sensor_direction = Direction::UNKNOWN;
+    return true;
+}
+
+bool MotorController::initFOC() {
+    SimpleFOCDebug::println("MC: Initializing FOC...");
+    
+    // Si el usuario no ha cargado valores de flash, SimpleFOC hará la alineación
+    // Si ya los ha cargado (sensor_direction != UNKNOWN), initFOC usará esos valores.
     _motor.initFOC();
 
     if (_motor.motor_status == FOCMotorStatus::motor_ready) {
         SimpleFOCDebug::println("MC: FOC Ready!");
+        return true;
     } else {
-        SimpleFOCDebug::println("MC: FOC Alignment FAILED");
+        SimpleFOCDebug::println("MC: FOC Initialization FAILED");
+        return false;
     }
-
-    return true;
 }
 
 void MotorController::update() {
