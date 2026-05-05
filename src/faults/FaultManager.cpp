@@ -10,12 +10,18 @@ FaultManager::FaultManager(MotorController& mc)
 void FaultManager::update() {
     // Si ya hay un fallo activo, mantener el estado seguro
     if (hasFault()) {
-        // Prevenir que el usuario reactive el motor sin limpiar el fallo
         if (_mc.getMotor().enabled) {
             _mc.getMotor().disable();
             Serial.println("\n[SAFETY] Motor disabled. Clear fault first!");
         }
         return;
+    }
+
+    // Reset del timer de STALL en cambio de modo (evita falsos positivos en transiciones)
+    MotionControlType currentMode = _mc.getMotor().controller;
+    if (currentMode != _lastMode) {
+        _stallSince = 0;
+        _lastMode = currentMode;
     }
 
     _pollCounter++;
@@ -32,7 +38,6 @@ void FaultManager::update() {
     // 2. Monitorización del Encoder MT6701 (con filtro antiruido)
     if (!_mc.getEncoder().isOk()) {
         _encoderErrorCount++;
-        // Si falla durante 10 ciclos consecutivos (~1ms), es un error real
         if (_encoderErrorCount > 10) {
             triggerSafeState(FaultCode::ENCODER_ERROR);
             return;
@@ -42,14 +47,35 @@ void FaultManager::update() {
     }
 
     // 3. Detección de Bloqueo (Stall)
-    // Solo detectamos stall si el motor está habilitado y tiene un objetivo > 0.1
-    if (_mc.getMotor().enabled && abs(_mc.getMotor().target) > 0.1f) {
-        if (abs(_mc.getMotor().shaft_velocity) < STALL_VEL_RAD_S) {
-            if (_stallSince == 0) {
-                _stallSince = millis();
-            } else if (millis() - _stallSince > STALL_TIME_MS) {
-                triggerSafeState(FaultCode::STALL);
-                return;
+    if (_mc.getMotor().enabled && _stallEnabled) {
+        bool isTryingToMove = false;
+
+        if (_mc.getMotor().controller == MotionControlType::angle ||
+            _mc.getMotor().controller == MotionControlType::angle_openloop) {
+            if (abs(_mc.getMotor().target - _mc.getMotor().shaft_angle) > 0.1f) {
+                isTryingToMove = true;
+            }
+        } else {
+            if (abs(_mc.getMotor().target) > 0.1f) {
+                isTryingToMove = true;
+            }
+        }
+
+        if (isTryingToMove) {
+            // Un STALL real es: motor no se mueve Y el controlador está haciendo mucho esfuerzo.
+            // Si el PID es bajo y el esfuerzo (voltaje) es pequeño, simplemente no tiene fuerza, no es un STALL.
+            float effort = abs(_mc.getMotor().voltage.q) + abs(_mc.getMotor().voltage.d);
+            bool highEffort = effort > (_mc.getMotor().voltage_limit * 0.5f); // Más del 50% del límite
+
+            if (abs(_mc.getMotor().shaft_velocity) < STALL_VEL_RAD_S && highEffort) {
+                if (_stallSince == 0) {
+                    _stallSince = millis();
+                } else if (millis() - _stallSince > STALL_TIME_MS) {
+                    triggerSafeState(FaultCode::STALL);
+                    return;
+                }
+            } else {
+                _stallSince = 0;
             }
         } else {
             _stallSince = 0;

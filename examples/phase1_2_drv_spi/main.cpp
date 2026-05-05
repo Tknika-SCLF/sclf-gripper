@@ -1,5 +1,5 @@
 /**
- * SCLF Gripper v1.0 — Firmware Hardware Initialization
+ * SCLF Gripper — Firmware Hardware Initialization
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
  *
@@ -29,7 +29,7 @@ void setup() {
     }
 
     Serial.println("========================================");
-    Serial.println("  SCLF Gripper v1.0 — Fase 1.2          ");
+    Serial.println("  SCLF Gripper — Fase 1.2               ");
     Serial.println("  Iniciando Test DRV8316 (Driver SPI)   ");
     Serial.println("========================================");
 

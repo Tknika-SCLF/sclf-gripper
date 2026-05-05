@@ -1,3 +1,8 @@
+/**
+ * SCLF Gripper — Phase 5: Fault Manager & Safety
+ * Board:     STM32G474CEU6
+ * Framework: Arduino (STM32duino) via PlatformIO
+ */
 #include <Arduino.h>
 #include <SimpleFOC.h>
 #include "motor/MotorController.h"
@@ -20,7 +25,7 @@ void setup() {
     while (!Serial && millis() < 3000);
 
     Serial.println("\n\n========================================");
-    Serial.println("  SCLF Gripper v2.0 — PHASE 5           ");
+    Serial.println("  SCLF Gripper — PHASE 5                ");
     Serial.println("  Fault Manager & Safety Test           ");
     Serial.println("========================================");
 

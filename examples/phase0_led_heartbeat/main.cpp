@@ -1,5 +1,5 @@
 /**
- * SCLF Gripper v1.0 — Pre-test 0: LED Heartbeat
+ * SCLF Gripper — Pre-test 0: LED Heartbeat
  * ─────────────────────────────────────────────
  * USO: Verificar que el STM32 arranca y ejecuta código.
  * No requiere alimentación de 24V ni cables adicionales.

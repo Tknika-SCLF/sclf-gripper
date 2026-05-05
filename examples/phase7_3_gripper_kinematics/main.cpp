@@ -1,9 +1,9 @@
 /**
- * SCLF Gripper v1.0 — Firmware
+ * SCLF Gripper — Firmware
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
  *
- * ─── FASE 3.2 — Gripper Kinematics Test ────────────────────────────────────
+ * ─── FASE 7.3 — Gripper Kinematics Test ────────────────────────────────────
  * Objetivo: Probar las conversiones cinemáticas (ángulo ↔ mm ↔ %)
  *           usando la configuración Robotiq 2F-85 como placeholder.
  *           No se activa el motor, solo Serial para verificar la matemática.
@@ -28,7 +28,7 @@ void setup() {
     }
 
     Serial.println("========================================");
-    Serial.println("  SCLF Gripper v1.0 — Fase 3.2          ");
+    Serial.println("  SCLF Gripper — Fase 7.3               ");
     Serial.println("  Gripper Kinematics Test               ");
     Serial.println("========================================");
 

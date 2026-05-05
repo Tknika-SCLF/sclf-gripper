@@ -1,5 +1,5 @@
 /**
- * SCLF Gripper v1.0 — Phase 1.4: RS485 Ping-Pong Test
+ * SCLF Gripper — Phase 1.4: RS485 Ping-Pong Test
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
  *
@@ -40,7 +40,7 @@ void setup() {
 
     // 3. Initialize RS485 (ID 1, 115200 baud)
     Serial.println("\n\n========================================");
-    Serial.println("  SCLF Gripper v1.0 — Phase 1.4         ");
+    Serial.println("  SCLF Gripper — Phase 1.4              ");
     Serial.println("  RS485 Ping-Pong Test                  ");
     Serial.println("========================================");
     

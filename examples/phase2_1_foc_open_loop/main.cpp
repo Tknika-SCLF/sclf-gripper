@@ -1,3 +1,8 @@
+/**
+ * SCLF Gripper — Phase 2.1: FOC Open-Loop Test
+ * Board:     STM32G474CEU6
+ * Framework: Arduino (STM32duino) via PlatformIO
+ */
 #include <Arduino.h>
 #include <SimpleFOC.h>
 #include "motor/MotorController.h"
@@ -30,7 +35,7 @@ void setup() {
     SimpleFOCDebug::enable(&Serial); 
 
     Serial.println("\n\n========================================");
-    Serial.println("  SCLF Gripper v1.0 — PHASE 2.1         ");
+    Serial.println("  SCLF Gripper — PHASE 2.1              ");
     Serial.println("  FOC Test (Open-Loop Priority)        ");
     Serial.println("========================================");
 

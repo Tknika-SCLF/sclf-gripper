@@ -4,7 +4,9 @@
 MotorController::MotorController()
     : _encoder(),
       _motor(11), // GM3506 (11 pole pairs)
-      _driver(PIN_CH, PIN_CL, PIN_BH, PIN_BL, PIN_AH, PIN_AL) {
+      _driver(PIN_CH, PIN_CL, PIN_BH, PIN_BL, PIN_AH, PIN_AL),
+      // SPI dedicado en PB5(MOSI), PB4(MISO), PB3(SCK) — nunca toca PA5/PA6
+      _spi_drv(PIN_DRV_MOSI, PIN_DRV_MISO, PIN_DRV_CLK) {
 }
 
 bool MotorController::begin() {
@@ -12,12 +14,11 @@ bool MotorController::begin() {
     _configureMotor();
 
     // 1. Inicializar el driver del chip DRV8316
-    SPI.setSCLK(PIN_DRV_CLK);
-    SPI.setMISO(PIN_DRV_MISO);
-    SPI.setMOSI(PIN_DRV_MOSI);
-    SPI.begin();
+    // Usar instancia SPI dedicada (PB3/PB4/PB5) para no interferir con
+    // el bit-banging del encoder MT6701 en PA5/PA6.
+    _spi_drv.begin();
 
-    if (!_drv.begin(&SPI)) {
+    if (!_drv.begin(&_spi_drv)) {
         SimpleFOCDebug::println("MC: DRV8316 Init FAILED");
         return false;
     }
@@ -41,22 +42,40 @@ bool MotorController::begin() {
     _driver.init();
     _motor.linkDriver(&_driver);
 
+    // ⚠️ CRÍTICO: Re-forzar GPIO en los pines del encoder DESPUÉS de driver.init().
+    // En STM32G474, PA6 = TIM1_BKIN (AF). Al inicializar TIM1 para 6-PWM,
+    // STM32duino puede reconfigurarlo como función alternativa, rompiendo
+    // el bit-banging del MT6701. pinMode() fuerza el modo GPIO de vuelta.
+    pinMode(PIN_ENC_CS,  OUTPUT); digitalWrite(PIN_ENC_CS, HIGH);
+    pinMode(PIN_ENC_CLK, OUTPUT); digitalWrite(PIN_ENC_CLK, LOW);
+    pinMode(PIN_ENC_SDO, INPUT);
+
     // 4. Inicializar Motor SimpleFOC
     _motor.linkSensor(&_encoder);
     _motor.init();
 
-    // 5. Alineación FOC (Forzamos detección de dirección)
-    SimpleFOCDebug::println("MC: Force calibrating FOC...");
-    _motor.sensor_direction = Direction::UNKNOWN;
+    return true;
+}
+
+bool MotorController::initFOC() {
+    SimpleFOCDebug::println("MC: Initializing FOC...");
+    
+    // Si el usuario no ha cargado valores de flash, SimpleFOC hará la alineación
+    // Si ya los ha cargado (sensor_direction != UNKNOWN), initFOC usará esos valores.
     _motor.initFOC();
+
+    // Asegurar que el motor queda habilitado tras initFOC()
+    // (cuando se carga calibración de Flash y se salta la alineación física,
+    //  SimpleFOC puede no llamar a enable() internamente)
+    _motor.enable();
 
     if (_motor.motor_status == FOCMotorStatus::motor_ready) {
         SimpleFOCDebug::println("MC: FOC Ready!");
+        return true;
     } else {
-        SimpleFOCDebug::println("MC: FOC Alignment FAILED");
+        SimpleFOCDebug::println("MC: FOC Initialization FAILED");
+        return false;
     }
-
-    return true;
 }
 
 void MotorController::update() {
@@ -112,15 +131,21 @@ void MotorController::_configureMotor() {
     _driver.voltage_limit = 8.0f;
     _motor.velocity_limit = 20.0f;
     
-    // Voltaje de alineación para superar fricción - Aumentado un poco para asegurar giro
-    _motor.voltage_sensor_align = 6.0f;
+    // Voltaje de alineación — suficiente para superar fricción y detent torque
+    _motor.voltage_sensor_align = 10.0f;
 
-    // Ganancias PID para velocidad (por defecto)
-    _motor.PID_velocity.P = 0.5f;
-    _motor.PID_velocity.I = 5.0f;
-    _motor.PID_velocity.D = 0.0f;
-    _motor.LPF_velocity.Tf = 0.01f;
+    // ── PIDs — Valores conservadores para primer tuning ─────────────────────
+    // GM3506: motor de gimbal, alta reluctancia, sensible a ganancias altas.
+    // I=0 hasta encontrar P estable — el windup del integral bloquea el motor.
+    _motor.PID_velocity.P  = 0.15f;
+    _motor.PID_velocity.I  = 0.0f;   // ← CRÍTICO: I=0 hasta tuning estable
+    _motor.PID_velocity.D  = 0.0f;
+    _motor.LPF_velocity.Tf = 0.05f;  // Filtro más suave — reduce ruido del encoder
 
-    // Modo por defecto: Lazo Abierto (Velocidad)
-    _motor.controller = MotionControlType::velocity_openloop;
+    // Lazo de posición — ajustar solo tras tener velocidad estable
+    _motor.P_angle.P       = 5.0f;
+
+    // Modo por defecto: velocidad cerrada con target=0 (no mueve al inicio)
+    _motor.controller = MotionControlType::velocity;
+
 }

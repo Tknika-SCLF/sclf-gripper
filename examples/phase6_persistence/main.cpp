@@ -1,3 +1,8 @@
+/**
+ * SCLF Gripper — Phase 6: Persistence & Configuration
+ * Board:     STM32G474CEU6
+ * Framework: Arduino (STM32duino) via PlatformIO
+ */
 #include <Arduino.h>
 #include <SimpleFOC.h>
 #include "motor/MotorController.h"
@@ -21,7 +26,7 @@ void setup() {
     while (!Serial && millis() < 3000);
 
     Serial.println("\n\n========================================");
-    Serial.println("  SCLF Gripper v2.0 — PHASE 6           ");
+    Serial.println("  SCLF Gripper — PHASE 6                ");
     Serial.println("  Persistence & Flash Config Test       ");
     Serial.println("========================================");
 
