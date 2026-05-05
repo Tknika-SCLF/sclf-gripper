@@ -4,9 +4,9 @@
 
 ---
 > 📢 **ESTADO ACTUAL Y PRÓXIMOS PASOS**
-> **v2.0 Prototipo Validado (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> **Fase 3 completa (Protocolo RS-485) COMPLETADA.** ✅
-> El siguiente paso es la **FASE 4 (USB VCP y Commander)** [~].
+> **Fase 4, 5 y 6 COMPLETADAS.** ✅
+> **Fase 7.1 (Alineación Motor-Encoder y Tuning base) COMPLETADA.** ✅
+> El siguiente paso es la **FASE 7.2 (Ajuste PID con Carga)** o la **FASE 7.3 (Cinemática)**.
 ---
 
 ---
@@ -160,17 +160,26 @@
 
 ## FASE 7 — FOC Closed-Loop (Ajuste Avanzado)
 > Objetivo: FOC completo con encoder y current sense. El motor responde a comandos.
-> **Nota:** Se recomienda realizar esta fase una vez montadas las pinzas para ajustar torque y posición con carga real.
 
-- [ ] Conectar encoder MT6701 a SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
-- [ ] Ejecutar `motor.initFOC()` — alineación eléctrica automática
+### 7.1 Alineación Motor-Encoder (Bench Test) [x]
+- [x] Conectar encoder MT6701 a SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
+- [x] Ejecutar `motor.initFOC()` — alineación eléctrica automática
   - Capturar y guardar `motor.zero_electric_angle` y `motor.sensor_direction` en flash
-- [ ] Probar torque mode: `motor.controller = MotionControlType::torque`
-- [ ] Probar velocity closed-loop con encoder
-- [ ] Probar position closed-loop con encoder
-- [ ] Ajustar PID gains iniciales (KP, KI, KD) para cada loop
-- [ ] Conectar `InlineCurrentSense` y activar FOC con corriente real
+- [x] Probar torque mode: `motor.controller = MotionControlType::torque`
+- [x] Probar velocity closed-loop con encoder y ajustar PID base
+- [x] Probar position closed-loop con encoder
+- [x] Guardar configuración base en Flash para saltar recalibración física
+
+### 7.2 Ajuste PID con Carga
+- [ ] Montar el motor en la estructura mecánica de las pinzas
+- [ ] Ajustar PID gains (KP, KI, KD) para cada loop con inercia real
 - [ ] Verificar que `motor.loopFOC()` corre a ≥ 10 kHz sin bloqueos
+- [ ] Conectar `InlineCurrentSense` y activar FOC con corriente real
+
+### 7.3 Cinemática de la Pinza
+- [ ] Convertir radianes del motor a mm de apertura de la pinza
+- [ ] Implementar límites por software (apertura máxima/mínima)
+- [ ] Implementar control de agarre por límite de torque/corriente
 
 ---
 

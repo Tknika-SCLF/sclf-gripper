@@ -1,5 +1,5 @@
 /**
- * SCLF Gripper v1.0 — Phase 1.5: Current Sense Test
+ * SCLF Gripper — Phase 1.5: Current Sense Test
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
  *
@@ -32,7 +32,7 @@ void setup() {
     for(int i=0; i<50 && !Serial; i++) { delay(100); }
 
     Serial.println("\n\n========================================");
-    Serial.println("  SCLF Gripper v1.0 — Phase 1.5         ");
+    Serial.println("  SCLF Gripper — Phase 1.5              ");
     Serial.println("  Current Sense Validation              ");
     Serial.println("========================================");
 

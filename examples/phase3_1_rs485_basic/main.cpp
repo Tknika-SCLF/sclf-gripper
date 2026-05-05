@@ -1,5 +1,5 @@
 /**
- * SCLF Gripper v1.0 — Phase 3.1: Full RS485 Protocol Test (STABLE)
+ * SCLF Gripper — Phase 3.1: Full RS485 Protocol Test (STABLE)
  * Board:     STM32G474CEU6
  *
  * Objetivo:  Validar comunicación RS485 usando HSE (16MHz Crystal) para 
@@ -65,7 +65,7 @@ void setup() {
     comms.begin(1, 9600);
     
     Serial.println("\n\n========================================");
-    Serial.println("  SCLF Gripper v1.0 — Phase 4.2 (STABLE)");
+    Serial.println("  SCLF Gripper — Phase 3.1 (STABLE)     ");
     Serial.println("  RS485 Bus Speed: 9600 Baud");
     Serial.println("========================================");
 }

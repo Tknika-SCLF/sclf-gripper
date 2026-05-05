@@ -11,13 +11,15 @@ void FlashConfig::resetToDefaults() {
     _currentConfig.version = 1;
     _currentConfig.rs485_id = 1;
     _currentConfig.zero_electric_angle = 0.0f;
-    _currentConfig.sensor_direction = 1;
-    _currentConfig.vel_kp = 0.1f;
-    _currentConfig.vel_ki = 2.0f;
+    // CRÍTICO: sensor_direction = 0 = Direction::UNKNOWN.
+    // Fuerza la calibración completa en el próximo arranque.
+    _currentConfig.sensor_direction = 0;
+    _currentConfig.vel_kp = 0.5f;
+    _currentConfig.vel_ki = 5.0f;
     _currentConfig.vel_kd = 0.0f;
     _currentConfig.pos_kp = 20.0f;
-    _currentConfig.voltage_limit = 2.0f; // Seguro para pruebas
-    _currentConfig.current_limit = 1.0f;
+    _currentConfig.voltage_limit = 8.0f;  // Suficiente para mover el motor
+    _currentConfig.current_limit = 2.0f;
     _currentConfig.velocity_limit = 20.0f;
     _currentConfig.crc = 0;
 }
@@ -94,19 +96,20 @@ uint32_t FlashConfig::calculateCRC(const DeviceConfig& config) {
 
 void FlashConfig::applyTo(MotorController& mc) {
     BLDCMotor& motor = mc.getMotor();
-    
+
+    // Parámetros de calibración eléctrica
     motor.zero_electric_angle = _currentConfig.zero_electric_angle;
     motor.sensor_direction = (Direction)_currentConfig.sensor_direction;
-    
+
+    // Ganancias PID (sintonizables en tiempo de ejecución)
     motor.PID_velocity.P = _currentConfig.vel_kp;
     motor.PID_velocity.I = _currentConfig.vel_ki;
     motor.PID_velocity.D = _currentConfig.vel_kd;
-    
-    motor.P_angle.P = _currentConfig.pos_kp;
-    
-    motor.voltage_limit = _currentConfig.voltage_limit;
-    motor.current_limit = _currentConfig.current_limit;
-    motor.velocity_limit = _currentConfig.velocity_limit;
+    motor.P_angle.P      = _currentConfig.pos_kp;
+
+    // NOTA: NO se aplican voltage_limit / velocity_limit desde Flash.
+    // Esos límites de seguridad los gestiona MotorController::_configureMotor()
+    // y deben ser invariantes respecto a la Flash.
 }
 
 void FlashConfig::updateFrom(MotorController& mc) {

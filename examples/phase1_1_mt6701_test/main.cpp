@@ -1,5 +1,5 @@
 /**
- * SCLF Gripper v1.0 — Firmware Hardware Initialization
+ * SCLF Gripper — Firmware Hardware Initialization
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
  *
@@ -48,7 +48,8 @@ void setup() {
     // while (!Serial) delay(10);
     
     Serial.println("=============================================");
-    Serial.println("SCLF Gripper v1.0 - MT6701 Test (con Serial)");
+    Serial.println("  SCLF Gripper — Fase 1.1                    ");
+    Serial.println("  MT6701 Standalone Test (con Serial)        ");
     Serial.println("=============================================");
 
     // Inicializar SPI del encoder

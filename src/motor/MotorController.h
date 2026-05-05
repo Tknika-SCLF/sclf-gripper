@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+#include <SPI.h>
 #include <SimpleFOC.h>
 #include "config/pins.h"
 #include "motor/DRV8316.h"
@@ -63,6 +65,11 @@ public:
     DRV8316& getDrv() { return _drv; }
 
 private:
+    // SPI dedicado para el DRV8316 (PB5=MOSI, PB4=MISO, PB3=SCK).
+    // CRÍTICO: No usar el objeto SPI global para evitar conflicto con
+    // el bit-banging del encoder MT6701 en PA5/PA6 (pines SPI por defecto).
+    SPIClass _spi_drv;
+
     DRV8316 _drv;
     MT6701 _encoder;
     BLDCMotor _motor;

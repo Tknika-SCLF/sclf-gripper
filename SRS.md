@@ -1,8 +1,8 @@
 # Software Requirements Specification (SRS)
 ## SCLF Gripper — Brushless Motor Controller Firmware
 **Project:** SCLF_Gripper
-**Version:** Prototype
-**Date:** 2026-04-15
+**Version:** Prototype v2.0
+**Date:** 2026-04-30
 **License:** CC BY-SA 4.0
 
 ---
@@ -21,7 +21,7 @@ The firmware controls a three-phase BLDC/PMSM motor via the DRV8316C gate driver
 |---|---|---|
 | MCU | STM32G474CEU6 | 32-bit Cortex-M4, 170 MHz, CORDIC, Hi-Res Timers |
 | Gate Driver | DRV8316CRRGFR | 3-phase FOC driver with current sense & step-down |
-| Encoder | MT6701QT | Contactless magnetic angle sensor (SPI/I2C) |
+| Encoder | MT6701QT | Contactless magnetic angle sensor (SPI) |
 | RS-485 | MAX3485 | Half-duplex serial communication |
 | LDO | XC6206P332MR | 3.3V supply |
 | Crystal | 16 MHz | HSE clock source |
@@ -64,8 +64,8 @@ The firmware controls a three-phase BLDC/PMSM motor via the DRV8316C gate driver
 |---|---|---|
 | SWD | PA13 (DIO), PA14 (CLK), PG10 (RST) | Programming and debug |
 | USB-C | USB FS | VCP: monitoring and configuration |
-| RS-485 | UART + MAX3485 | Robot bus communication (pads 7, 8) |
-| SPI/I2C | — | MT6701 encoder reading |
+| RS-485 | UART3 + MAX3485 | Robot bus communication (PB9 DIR) |
+| SPI | SPI1 | Shared bus for DRV8316 and MT6701 |
 
 ### 2.3 Power Supply
 - Input: 24V (pad 3) with GND (pad 1)
@@ -104,7 +104,7 @@ The firmware controls a three-phase BLDC/PMSM motor via the DRV8316C gate driver
 | FR-COM-01 | The firmware SHALL implement a command/response protocol over RS-485. |
 | FR-COM-02 | The firmware SHALL support at minimum: set target, get position, get velocity, get current, set PID gains, get status. |
 | FR-COM-03 | The protocol SHALL support multi-device addressing. |
-| FR-COM-04 | RS-485 direction control SHALL be handled automatically via a GPIO. |
+| FR-COM-04 | RS-485 direction control SHALL be handled automatically via GPIO PB9. |
 
 ### 3.4 USB / VCP
 
@@ -129,7 +129,7 @@ The firmware controls a three-phase BLDC/PMSM motor via the DRV8316C gate driver
 |---|---|
 | FR-BOOT-01 | The BOOT button (PB8) SHALL enter DFU bootloader mode when held during reset. |
 | FR-BOOT-02 | The RESET button (PG10) SHALL perform a hardware reset. |
-| FR-BOOT-03 | On power-up, the firmware SHALL perform motor auto-alignment to identify electrical angle offset. |
+| FR-BOOT-03 | On power-up, the firmware SHALL load calibration data from Flash; if not available, it SHALL perform motor auto-alignment. |
 
 ### 3.7 Indicators
 
@@ -171,7 +171,7 @@ lib_deps =
 ```ini
 [env:SCLF_Gripper]
 platform = ststm32
-board = genericSTM32G474CE
+board = nucleo_g474re
 framework = arduino
 board_build.mcu = stm32g474ceux
 board_build.f_cpu = 170000000L
@@ -180,27 +180,39 @@ debug_tool = stlink
 monitor_speed = 115200
 
 lib_deps =
-    askuric/Simple FOC @ ^2.3.3
+    SimpleFOC=https://github.com/simplefoc/Arduino-FOC.git#v2.3.3
 
 build_flags =
+    -D HSE_VALUE=16000000U
     -DHAL_TIM_MODULE_ENABLED
+    -DHAL_HRTIM_MODULE_ENABLED
     -DHAL_SPI_MODULE_ENABLED
     -DHAL_UART_MODULE_ENABLED
     -DHAL_ADC_MODULE_ENABLED
+    -DHAL_DMA_MODULE_ENABLED
+    -DHAL_CORDIC_MODULE_ENABLED
+    -DUSBCON
+    -DUSBD_USE_CDC
+    -DPIO_FRAMEWORK_ARDUINO_ENABLE_CDC
 ```
 
 ### 5.4 Pin Mapping (STM32G474CEU6)
 
 | Signal | STM32 Pin | Notes |
 |---|---|---|
-| DIO (SWD) | PA13 | Programming pad |
-| CLK (SWD) | PA14 | Programming pad |
-| RST | PG10 | Reset / SWD reset |
-| BOOT | PB8 | Boot0 button |
-| DRV_FAULT | PC13 | Hardware fault input |
-| CURR (sense) | PA2 | ADC current sense test point |
-| PWM (test) | PA10 | PWM test point |
-| Motor A/B/C | DRV8316 | Via HRTIM |
+| SWDIO (SWD) | PA13 | Programming pad |
+| SWCLK (SWD) | PA14 | Programming pad |
+| NRST | PG10 | Reset button |
+| BOOT0 | PB8 | DFU mode button |
+| nFAULT | PC13 | DRV8316 fault (active low) |
+| Phase A H/L | PA10 / PB15 | HRTIM PWM |
+| Phase B H/L | PA9 / PB14 | HRTIM PWM |
+| Phase C H/L | PA8 / PB13 | HRTIM PWM |
+| CURA/B/C | PA0, PA1, PA2 | Inline current sense ADC |
+| RS485 TX/RX | PC10 / PC11 | UART3 |
+| RS485 DIR | PB9 | DE/RE control |
+| ENC CS/CLK/SDO| PA4, PA5, PA6 | SPI1 |
+| Status LED | PC6 | Active high |
 
 ---
 
@@ -212,16 +224,18 @@ SCLF_Gripper_firmware/
 │   ├── main.cpp               # Entry point, setup/loop
 │   ├── motor/
 │   │   ├── MotorController.h/.cpp   # SimpleFOC wrapper
-│   │   └── CurrentSense.h/.cpp      # DRV8316 inline current sense
+│   │   ├── CurrentSense.h/.cpp      # DRV8316 inline current sense
+│   │   └── DRV8316.h/.cpp           # Low-level SPI driver for DRV8316
 │   ├── encoder/
-│   │   └── MT6701.h/.cpp            # SPI/I2C encoder driver
+│   │   └── MT6701.h/.cpp            # SPI encoder driver
 │   ├── comms/
 │   │   ├── RS485.h/.cpp             # RS-485 protocol handler
 │   │   └── VCP.h/.cpp               # USB Virtual COM Port
 │   ├── faults/
 │   │   └── FaultManager.h/.cpp      # Fault detection and handling
 │   └── config/
-│       └── pins.h                   # Pin definitions
+│       ├── pins.h                   # Pin definitions
+│       └── FlashConfig.h/.cpp       # NVM Persistence
 ├── lib/                       # Local libraries
 ├── test/                      # Unit tests
 ├── platformio.ini
@@ -236,3 +250,4 @@ SCLF_Gripper_firmware/
 | Version | Date | Author | Description |
 |---|---|---|---|
 | 2.0 | 2026-04-15 | — | Updated SRS for new prototype with DRV_FAULT routing |
+| 2.1 | 2026-04-30 | Antigravity | Refined pinout, persistence, and RS-485 specs |

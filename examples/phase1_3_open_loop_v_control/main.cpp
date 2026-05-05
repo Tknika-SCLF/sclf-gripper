@@ -1,5 +1,5 @@
 /**
- * SCLF Gripper v1.0 — Firmware
+ * SCLF Gripper — Firmware
  * Board:     STM32G474CEU6
  * Framework: Arduino (STM32duino) via PlatformIO
  *
@@ -44,7 +44,7 @@ void setup() {
     }
 
     Serial.println("========================================");
-    Serial.println("  SCLF Gripper v1.0 — Fase 1.3          ");
+    Serial.println("  SCLF Gripper — Fase 1.3               ");
     Serial.println("  Open-Loop Velocity Control            ");
     Serial.println("========================================");
 

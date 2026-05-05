@@ -57,21 +57,14 @@ Si necesitas un pin nuevo, primero lo añades a `pins.h` con nombre descriptivo,
 
 ---
 
-## R04 · Los fallos del DRV8316 se detectan por SPI, no por GPIO
+## R04 · Detección de fallos del DRV8316
 
-El pin `nFAULT` del DRV8316 **no está conectado** al STM32 (confirmado en esquemático). La única forma de detectar un fallo del driver es leer los registros STATUS1 y STATUS2 por SPI.
+El pin `nFAULT` del DRV8316 **está conectado** al pin **PC13** del STM32 (confirmado en esquemático v2.0). Este pin es de tipo open-drain y se pone en LOW cuando el driver detecta un error.
 
-```cpp
-// ✅ CORRECTO — polling en cada ciclo o cada N ciclos
-if (drv.hasFault()) {
-    faultManager.triggerSafeState(FaultCode::DRV_FAULT);
-}
+- **Detección por Hardware**: Se puede usar una interrupción en PC13 para una parada de emergencia inmediata.
+- **Detección por Software**: También se deben leer los registros STATUS1 y STATUS2 por SPI para identificar la causa exacta del fallo (overcurrent, thermal, etc.).
 
-// ❌ INCORRECTO — no existe este pin en el STM32
-attachInterrupt(PIN_DRV_NFAULT, onFault, FALLING);
-```
-
-El `FaultManager` debe llamar a `drv.hasFault()` en cada iteración del loop principal.
+El `FaultManager` debe monitorizar tanto el pin PC13 como los registros SPI en cada iteración del loop principal.
 
 ---
 

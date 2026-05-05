@@ -1,3 +1,8 @@
+/**
+ * SCLF Gripper — Phase 4: USB VCP & Commander
+ * Board:     STM32G474CEU6
+ * Framework: Arduino (STM32duino) via PlatformIO
+ */
 #include <Arduino.h>
 #include <SimpleFOC.h>
 #include "motor/MotorController.h"
@@ -20,7 +25,7 @@ void setup() {
     while (!Serial && millis() < 3000); 
 
     Serial.println("\n\n========================================");
-    Serial.println("  SCLF Gripper v2.0 — PHASE 4           ");
+    Serial.println("  SCLF Gripper — PHASE 4                ");
     Serial.println("  USB VCP & Commander Interface         ");
     Serial.println("========================================");
 

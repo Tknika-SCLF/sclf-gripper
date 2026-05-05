@@ -4,9 +4,9 @@
 
 ---
 > 📢 **CURRENT STATUS AND NEXT STEPS**
-> **v2.0 Prototype Validated (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> **Phase 3 (RS-485 Protocol) COMPLETED.** ✅
-> The next step is **PHASE 4 (USB VCP & Commander)** [~].
+> **Phases 4, 5 and 6 COMPLETED.** ✅
+> **Phase 7.1 (Motor-Encoder Alignment and Base Tuning) COMPLETED.** ✅
+> The next step is **PHASE 7.2 (PID Tuning with Load)** or **PHASE 7.3 (Kinematics)**.
 ---
 
 ---
@@ -160,17 +160,26 @@
 
 ## PHASE 7 — Advanced FOC Tuning
 > Goal: Full FOC with encoder and current sense. Motor responds to targets.
-> **Note:** This phase is recommended to be done once gripper claws are mounted to tune torque and position with real load.
 
-- [ ] Connect MT6701 encoder to SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
-- [ ] Run `motor.initFOC()` — automatic electrical alignment
+### 7.1 Motor-Encoder Alignment (Bench Test) [x]
+- [x] Connect MT6701 encoder to SimpleFOC: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
+- [x] Run `motor.initFOC()` — automatic electrical alignment
   - Capture and save `motor.zero_electric_angle` and `motor.sensor_direction` to flash
-- [ ] Test torque mode: `motor.controller = MotionControlType::torque`
-- [ ] Test closed-loop velocity with encoder
-- [ ] Test closed-loop position with encoder
-- [ ] Tune initial PID gains (KP, KI, KD) for each loop
-- [ ] Connect `InlineCurrentSense` and activate FOC with real currents
+- [x] Test torque mode: `motor.controller = MotionControlType::torque`
+- [x] Test closed-loop velocity with encoder and tune base PID
+- [x] Test closed-loop position with encoder
+- [x] Save base configuration to Flash to skip physical recalibration
+
+### 7.2 PID Tuning with Load
+- [ ] Mount the motor on the gripper's mechanical structure
+- [ ] Tune PID gains (KP, KI, KD) for each loop with real inertia
 - [ ] Verify `motor.loopFOC()` runs at ≥ 10 kHz without blocking
+- [ ] Connect `InlineCurrentSense` and activate FOC with real currents
+
+### 7.3 Gripper Kinematics
+- [ ] Convert motor radians to gripper opening in millimeters
+- [ ] Implement software limits (max/min opening)
+- [ ] Implement grip control via torque/current limiting
 
 ---
 

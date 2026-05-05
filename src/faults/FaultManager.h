@@ -14,6 +14,7 @@
  */
 
 #include <Arduino.h>
+#include <SimpleFOC.h>
 
 // Importar forward declarations para no crear dependencias circulares
 class MotorController;
@@ -68,6 +69,13 @@ public:
     void clearFault();
 
     /**
+     * Activa o desactiva el detector de STALL.
+     * Usar solo en modo tuning en banco — nunca en producción.
+     */
+    void setStallEnabled(bool enabled) { _stallEnabled = enabled; }
+    bool isStallEnabled() const { return _stallEnabled; }
+
+    /**
      * Devuelve el nombre del fallo como string (para VCP/RS485).
      */
     static const char* faultName(FaultCode code);
@@ -87,4 +95,7 @@ private:
     uint32_t  _pollCounter  = 0;
     uint32_t  _stallSince   = 0;
     uint32_t  _encoderErrorCount = 0;
+    MotionControlType _lastMode = MotionControlType::velocity_openloop;
+    bool _stallEnabled = true; // Desactivar solo durante tuning en banco
 };
+

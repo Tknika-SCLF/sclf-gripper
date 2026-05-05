@@ -1,6 +1,6 @@
-# 7. Fasea - Pintzaren Zinematika (Gripper Kinematics)
+# 7.3 Fasea - Pintzaren Zinematika (Gripper Kinematics)
 
-Karpeta honetan 7. Fasearen (`phase7_gripper_kinematics`) kode egiaztatua dago. Fase honen helburua motorraren angelua (radianetan) pintzaren hatzen irekidurarekin (milimetrotan) lotzea da.
+Karpeta honetan 7.3 Fasearen (`phase7_3_gripper_kinematics`) kode egiaztatua dago. Fase honen helburua motorraren angelua (radianetan) pintzaren hatzen irekidurarekin (milimetrotan) lotzea da.
 
 ### Zer egiten du?
 
@@ -44,9 +44,9 @@ gripper.begin(nireConfig);
 
 ---
 
-# Fase 7 - Cinemática de la Pinza (Gripper Kinematics) [ES]
+# Fase 7.3 - Cinemática de la Pinza (Gripper Kinematics) [ES]
 
-En esta carpeta se encuentra el código verificado de la Fase 7 (`phase7_gripper_kinematics`). El objetivo de esta fase es relacionar el ángulo del motor (en radianes) con la apertura de los dedos de la pinza (en milímetros).
+En esta carpeta se encuentra el código verificado de la Fase 7.3 (`phase7_3_gripper_kinematics`). El objetivo de esta fase es relacionar el ángulo del motor (en radianes) con la apertura de los dedos de la pinza (en milímetros).
 
 ### ¿Qué hace?
 
@@ -90,9 +90,9 @@ gripper.begin(miConfig);
 
 ---
 
-# Phase 7 - Gripper Kinematics [EN]
+# Phase 7.3 - Gripper Kinematics [EN]
 
-This folder contains the verified code for Phase 7 (`phase7_gripper_kinematics`). The goal of this phase is to link the motor angle (in radians) with the gripper finger opening (in millimeters).
+This folder contains the verified code for Phase 7.3 (`phase7_3_gripper_kinematics`). The goal of this phase is to link the motor angle (in radians) with the gripper finger opening (in millimeters).
 
 ### What does it do?
 

@@ -4,9 +4,9 @@
 
 ---
 > 📢 **UNEKO EGOERA ETA HURRENGO URRATSAK**
-> **v2.0 Prototipoa Balioztatuta (1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 2.2).**
-> **3. Fase osoa (RS-485 Protokoloa) AMAITUTA.** ✅
-> Hurrengo urratsa **4. FASEA (USB VCP eta Commander)** [~] da.
+> **Fase 4, 5 eta 6 AMAITUTA.** ✅
+> **7.1 Fasea (Motor-Encoder Lerrokatzea eta Tuning-a) AMAITUTA.** ✅
+> Hurrengo urratsa **7.2 FASEA (PID Doikuntza Kargarekin)** edo **7.3 FASEA (Zinematika)** da.
 ---
 
 ---
@@ -160,19 +160,28 @@
 
 ---
 
-## 7 FASEA — FOC Begi-itxia (Advanced Tuning)
+## 7 FASEA — FOC Begi-itxia (Ajuste Aurreratua)
 > Helburua: FOC osoa encoder eta current sense erabiliz. Motorrak aginduei erantzuten die.
-> **Oharra:** Fase hau pinzak muntatuta daudenean egitea gomendatzen da, torkea eta posizioa kargarekin doitzeko.
 
-- [ ] Konektatu MT6701 encoderra SimpleFOC-era: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
-- [ ] `motor.initFOC()` exekutatu — lerrokatze elektriko automatikoa
+### 7.1 Motor-Encoder Lerrokatzea (Bench Test) [x]
+- [x] Konektatu MT6701 encoderra SimpleFOC-era: `MagneticSensorSPI encoder(PIN_ENC_CS, 14, 0x3FFF)`
+- [x] `motor.initFOC()` exekutatu — lerrokatze elektriko automatikoa
   - `motor.zero_electric_angle` eta `motor.sensor_direction` flash-ean gorde
-- [ ] Torke modua probatu: `motor.controller = MotionControlType::torque`
-- [ ] Abiadura begi-itxia probatu encoderrarekin
-- [ ] Posizio begi-itxia probatu encoderrarekin
-- [ ] PID hasierako irabaziak doitu (KP, KI, KD) loop bakoitzerako
-- [ ] Konektatu `InlineCurrentSense` eta aktibatu FOC korronte errealarekin
+- [x] Torke modua probatu: `motor.controller = MotionControlType::torque`
+- [x] Abiadura begi-itxia probatu encoderrarekin eta oinarrizko PIDa doitu
+- [x] Posizio begi-itxia probatu encoderrarekin
+- [x] Konfigurazioa Flash-ean gorde berrabiaraztean kalibrazioa saihesteko
+
+### 7.2 PID Doikuntza Kargarekin
+- [ ] Motorra pinzen egitura mekanikoan muntatu
+- [ ] PID irabaziak doitu (KP, KI, KD) inertzia errealarekin
 - [ ] Egiaztatu `motor.loopFOC()` ≥ 10 kHz ibiltzen dela trabarik gabe
+- [ ] Konektatu `InlineCurrentSense` eta aktibatu FOC korronte errealarekin
+
+### 7.3 Pinzaren Zinematika
+- [ ] Motorraren radianak pinzaren irekiera milimetrotara bihurtu
+- [ ] Software bidezko mugak inplementatu (irekiera max/min)
+- [ ] Heldulekuaren kontrola inplementatu torke/korronte mugaren bidez
 
 ---
 

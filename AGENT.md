@@ -40,19 +40,20 @@ The board is built around an **STM32G474CEU6** microcontroller and implements **
 | PA10 | AH | Motor Phase A High PWM |
 | PA9 | BH | Motor Phase B High PWM |
 | PA8 | CH | Motor Phase C High PWM |
-| PB13 | AL | Motor Phase A Low PWM |
+| PB13 | CL | Motor Phase C Low PWM |
 | PB14 | BL | Motor Phase B Low PWM |
-| PB15 | CL | Motor Phase C Low PWM |
-| PA0 | CURA | Phase A current sense ADC |
-| PA1 | CURB | Phase B current sense ADC |
-| PA2 | CURC | Phase C current sense ADC (test pad) |
-| PB11 | VSENS | DC bus voltage sense ADC |
+| PB15 | AL | Motor Phase A Low PWM |
+| PA0 | CURA | Phase A current sense ADC (ADC1_IN1) |
+| PA1 | CURB | Phase B current sense ADC (ADC1_IN2) |
+| PA2 | CURC | Phase C current sense ADC (ADC1_IN3) |
+| PB11 | VSENS | DC bus voltage sense ADC (ADC12_IN14) |
 | PA4 | ENC_CS | MT6701 Encoder SPI CS |
 | PA5 | ENC_CLK | MT6701 Encoder SPI Clock |
 | PA6 | ENC_SDO | MT6701 Encoder SPI MISO |
-| PC10 | RS485_TX | RS-485 UART TX |
-| PC11 | RS485_RX | RS-485 UART RX |
+| PC10 | RS485_TX | RS-485 UART TX (UART3) |
+| PC11 | RS485_RX | RS-485 UART RX (UART3) |
 | PB9 | RS485_DIR | RS-485 DE/RE direction control |
+| PC13 | nFAULT | DRV8316 hardware fault (active low) |
 | PC6 | LED_PC6 | Status LED |
 | PF0/PF1 | XIN/XOUT | 16 MHz crystal (HSE) |
 | PA11/PA12 | D-/D+ | USB Virtual COM Port |
@@ -63,7 +64,7 @@ The board is built around an **STM32G474CEU6** microcontroller and implements **
 
 > ⚠️ **Power Supply Discovery (07/03/2026)**: The MT6701 encoder is powered by the 3.3V rail. It **does not** need the 24V supply to operate; it works perfectly just with the ST-Link 3.3V connected. Only the DRV8316 driver and the motor require the external 24V supply.
 
-> ⚠️ **nFAULT / DRVOFF**: These DRV8316 pins are NOT connected to the STM32. nFAULT has a local pull-up resistor only. DRVOFF is tied to GND (driver always on). Fault detection MUST be done via SPI status register polling, not GPIO interrupt.
+> ⚠️ **nFAULT / DRVOFF**: The **nFAULT** pin is connected to **PC13**. It is an open-drain output from the DRV8316 that pulls low during any fault (overcurrent, thermal, undervoltage, etc.). Fault detection can be done via GPIO interrupt on PC13 or by polling SPI status registers. **DRVOFF** is tied to GND (driver always enabled).
 - **LEDs:** D2 = PWR (red, always on with 3.3V), D4 = Status LED on PC6 (controllable by firmware)
 
 ---
@@ -142,7 +143,7 @@ src/
 ├── encoder/
 │   └── MT6701.h/.cpp            ← MT6701 SPI driver, returns angle in radians
 ├── comms/
-│   ├── RS485.h/.cpp             ← Command parser, response builder, DE/RE control
+│   ├── RS485.h/.cpp             ← Command parser, response builder, DE/RE control (UART3)
 │   └── VCP.h/.cpp               ← SimpleFOC Commander over USB VCP
 ├── faults/
 │   └── FaultManager.h/.cpp      ← nFAULT pin monitoring, stall detection
@@ -152,7 +153,7 @@ src/
 
 **Rules:**
 - `main.cpp` must not contain hardware register access — delegate to modules.
-- Each module owns its peripheral: `MT6701.cpp` owns SPI, `RS485.cpp` owns UART2, etc.
+- Each module owns its peripheral: `MT6701.cpp` owns SPI, `RS485.cpp` owns UART3, etc.
 - `pins.h` is the single source of truth for all GPIO assignments.
 
 ---
