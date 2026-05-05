@@ -96,14 +96,14 @@
 
 | Parametroa | Balioa | Egoera |
 |---|---|---|
-| Fabrikatzailea/Modeloa | ? | ⏳ Zain |
-| Mota | BLDC / PMSM | — |
-| Polo pare kopurua | ? | ⏳ Zain |
+| Fabrikatzailea/Modeloa | GM3506 | ✅ Egiaztatuta |
+| Mota | BLDC / PMSM (24N22P) | ✅ Egiaztatuta |
+| Polo pare kopurua | 11 | ✅ Egiaztatuta |
 | Fase-erresistentzia (Ω) | ? | ⏳ Zain |
 | Fase-induktantzia (mH) | ? | ⏳ Zain |
 | Korronte izendatua (A) | ? | ⏳ Zain |
 | Korronte-gailurra (A) | ? | ⏳ Zain |
-| Abiadura maximoa (rpm) | ? | ⏳ Zain |
+| Abiadura maximoa (rpm) | ~35 rad/s (lazo itxian 2V-rekin) | ✅ Egiaztatuta |
 
 ---
 
@@ -113,8 +113,8 @@
 
 | Parametroa | Balioa | Data |
 |---|---|---|
-| `zero_electric_angle` | ? | — |
-| `sensor_direction` | ? | — |
+| `zero_electric_angle` | 1.1098 rad | 2026-05-05 |
+| `sensor_direction` | -1 (CCW) | 2026-05-05 |
 | PWM frequency (kHz) | ? | — |
 | FOC loop time (µs) | ? | — |
 
@@ -134,14 +134,14 @@
 ### Velocity loop
 | Irabazia | Balioa | Oharrak |
 |---|---|---|
-| KP | 0.1 | Hasierakoa (kontserbadorea) |
-| KI | 1.0 | Hasierakoa (kontserbadorea) |
+| KP | 2.0 | Bench test-erako doikuntza (marruskadura estatikoa gainditzeko) |
+| KI | 0.0 | Integralik gabe hasierako tuning-ean windup ekiditeko |
 | KD | 0.0 | — |
 
 ### Position loop
 | Irabazia | Balioa | Oharrak |
 |---|---|---|
-| KP | 5.0 | Hasierakoa (kontserbadorea) |
+| KP | 5.0 | Bench test-erako doikuntza lehenetsia |
 | KI | 0.0 | — |
 | KD | 0.0 | — |
 
@@ -238,6 +238,13 @@
 - ✅ CRC32 bidezko integritatea eta Balio Magiko bidezko balioztatzea.
 - ✅ Komandoak: `S` (Gorde uneko konfigurazioa) eta `R` (Fabrikako reset).
 - ✅ Parametroak: PIDak (vel/pos), mugak (volt/curr/vel) eta FOC kalibrazioa.
+
+### 2026-05-05 — Fase 7.1 (Motor-Encoder Lerrokatzea)
+- ✅ `initFOC()` exekuzio egonkorra: `ZEA = 1.1098`, `dir = -1`.
+- ✅ Lazo itxiko Torque modua (`MC0`) 35 rad/s abiadurarekin Uq=2V-tan.
+- ✅ Lazo itxiko Abiadura modua (`MC1`) egonkorra PID P=2 y I=0 doikuntzekin.
+- ✅ MT6701-ren `shaft_angle` biraketa askotarako egokia dela baieztatu da.
+- ✅ STALL detekzio optimizatua `highEffort` flag-aren bitartez epe laburreko gainkargak iragazteko.
 
 ---
 
