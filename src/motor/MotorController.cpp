@@ -6,7 +6,8 @@ MotorController::MotorController()
       _motor(11), // GM3506 (11 pole pairs)
       _driver(PIN_CH, PIN_CL, PIN_BH, PIN_BL, PIN_AH, PIN_AL),
       // SPI dedicado en PB5(MOSI), PB4(MISO), PB3(SCK) — nunca toca PA5/PA6
-      _spi_drv(PIN_DRV_MOSI, PIN_DRV_MISO, PIN_DRV_CLK) {
+      _spi_drv(PIN_DRV_MOSI, PIN_DRV_MISO, PIN_DRV_CLK),
+      _current_sense(_drv) {
 }
 
 bool MotorController::begin() {
@@ -42,6 +43,14 @@ bool MotorController::begin() {
     _driver.init();
     _motor.linkDriver(&_driver);
 
+    // 3.5 Inicializar sensor de corriente y vincularlo
+    _current_sense.getSimpleFOC().linkDriver(&_driver);
+    if (!_current_sense.begin()) {
+        SimpleFOCDebug::println("MC: CurrentSense Init FAILED");
+    } else {
+        _motor.linkCurrentSense(&_current_sense.getSimpleFOC());
+    }
+
     // ⚠️ CRÍTICO: Re-forzar GPIO en los pines del encoder DESPUÉS de driver.init().
     // En STM32G474, PA6 = TIM1_BKIN (AF). Al inicializar TIM1 para 6-PWM,
     // STM32duino puede reconfigurarlo como función alternativa, rompiendo
@@ -60,13 +69,7 @@ bool MotorController::begin() {
 bool MotorController::initFOC() {
     SimpleFOCDebug::println("MC: Initializing FOC...");
     
-    // Si el usuario no ha cargado valores de flash, SimpleFOC hará la alineación
-    // Si ya los ha cargado (sensor_direction != UNKNOWN), initFOC usará esos valores.
     _motor.initFOC();
-
-    // Asegurar que el motor queda habilitado tras initFOC()
-    // (cuando se carga calibración de Flash y se salta la alineación física,
-    //  SimpleFOC puede no llamar a enable() internamente)
     _motor.enable();
 
     if (_motor.motor_status == FOCMotorStatus::motor_ready) {

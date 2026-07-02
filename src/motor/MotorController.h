@@ -6,6 +6,7 @@
 #include "config/pins.h"
 #include "motor/DRV8316.h"
 #include "encoder/MT6701.h"
+#include "motor/CurrentSense.h"
 
 /**
  * @brief MotorController — Wrapper para SimpleFOC adaptado al SCLF Gripper.
@@ -63,6 +64,7 @@ public:
     BLDCDriver6PWM& getDriver() { return _driver; }
     MT6701& getEncoder() { return _encoder; }
     DRV8316& getDrv() { return _drv; }
+    SCLF_CurrentSense& getCurrentSense() { return _current_sense; }
 
 private:
     // SPI dedicado para el DRV8316 (PB5=MOSI, PB4=MISO, PB3=SCK).
@@ -74,6 +76,7 @@ private:
     MT6701 _encoder;
     BLDCMotor _motor;
     BLDCDriver6PWM _driver;
+    SCLF_CurrentSense _current_sense;
 
     void _initHardware();
     void _configureMotor();
