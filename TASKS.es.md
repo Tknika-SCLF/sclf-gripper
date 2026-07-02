@@ -109,6 +109,11 @@
 - [x] Test de roundtrip y visual feedback mejorado (VCP Mirror) ✅
 - [ ] Test de timing: medir latencia TX→RX en bus RS-485
 
+### 3.3 Integración UR Robot / URCap RS-485 [ ]
+- [ ] Validar la conexión y comunicación con el robot UR mediante el conector J3 (115200 baudios)
+- [ ] Diseñar la estructura del URCap y el daemon de comunicación (servidor XML-RPC)
+- [ ] Probar el control de posición (P), velocidad (V), fuerza (T) y estado (?S) mediante URScript
+
 ---
 
 ## FASE 4 — USB VCP y Commander

@@ -33,7 +33,7 @@ public:
     /**
      * @brief Activa o desactiva la telemetría periódica.
      */
-    void setTelemetry(bool enabled) { _telemetryEnabled = enabled; }
+    void setTelemetry(uint8_t mode) { _telemetryEnabled = mode; }
 
     /**
      * @brief Permite añadir comandos personalizados al Commander interno.
@@ -46,7 +46,7 @@ private:
     Stream& _serial;
     Commander _commander;
     MotorController* _mc = nullptr;
-    bool _telemetryEnabled = false;
+    uint8_t _telemetryEnabled = 0;
     uint32_t _lastTelemetryTime = 0;
 
     // Callbacks estáticos para el Commander
