@@ -111,10 +111,10 @@
 - [x] Roundtrip proba eta visual feedback hobetua (VCP Mirror) ✅
 - [ ] Latentzia proba: neurtu latentzia TX→RX RS-485 bus-ean
 
-### 3.3 UR Robot / URCap RS-485 Integrazioa [ ]
-- [ ] UR Robotaren konexioa eta komunikazioa balioztatu J3 konektorearen bidez (115200 baud)
-- [ ] URCap egitura eta daemon (XML-RPC zerbitzaria) diseinatu
-- [ ] Gripperraren egoera (P, V, T eta ?S) URScript bidezko kontrolean probatu
+### 3.3 UR Robot / URCap RS-485 Integrazioa [x] ✅
+- [x] UR Robotaren konexioa eta komunikazioa balioztatu J3 konektorearen bidez (115200 baud) ✅
+- [x] URCap egitura eta daemon (XML-RPC zerbitzaria) diseinatu ✅
+- [x] Gripperraren egoera (P, V, T eta ?S) URScript bidezko kontrolean probatu (URSim + URCap bidez balioztatuta) ✅
 
 ---
 

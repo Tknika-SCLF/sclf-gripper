@@ -283,12 +283,16 @@ SCLF_Gripper_firmware/
 ├── test/                           ← Tests Unitarios PlatformIO (FASE 8)
 │
 ├── examples/
-│   ├── fase0_led_heartbeat/        ← Pre-test: LED blink sin dependencias (verificar MCU)
-│   ├── fase1_1_mt6701_test/        ← Fase 1.1: Test encoder MT6701 vía SPI (debug por LED)
-│   ├── fase1_2_drv_spi/            ← Fase 1.2: Test comunicación SPI con DRV8316
-│   ├── fase1_3_open_loop_v_control/← Fase 1.3: Control open-loop voltaje
-│   ├── fase3_2_gripper_kinematics/ ← Fase 3.2: Cinemática del gripper
-│   └── fase4_2_rs485/              ← Fase 4.2: Comunicación RS-485
+│   ├── phase0_led_heartbeat/        ← Pre-test: LED blink sin dependencias (verificar MCU)
+│   ├── phase1_1_mt6701_test/        ← Fase 1.1: Test encoder MT6701 vía SPI (debug por LED)
+│   ├── phase1_2_drv_spi/            ← Fase 1.2: Test comunicación SPI con DRV8316
+│   ├── phase1_3_open_loop_v_control/← Fase 1.3: Control open-loop voltaje
+│   ├── phase1_4_rs485_ping/         ← Fase 1.4: RS-485 PING/PONG básico
+│   ├── phase2_1_foc_open_loop/      ← Fase 2.1: FOC open-loop velocidad
+│   ├── phase2_2_foc_closed_loop/    ← Fase 2.2: FOC closed-loop posición/velocidad
+│   ├── phase3_1_rs485_basic/        ← Fase 3.1: Protocolo base RS-485
+│   ├── phase3_2_rs485_control/      ← Fase 3.2: Comandos de control RS-485
+│   └── phase3_3_ur_rs485/           ← Fase 3.3: Integración RS-485 con Robot UR / URCap
 │
 ├── .vscode/
 │   ├── settings.json               ← Config IDE (IntelliSense, formato)

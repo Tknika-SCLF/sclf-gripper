@@ -250,6 +250,18 @@ SCLF_Gripper_firmware/
 ├── lib/                            ← Local libraries (currently empty)
 ├── test/                           ← PlatformIO Unity tests (PHASE 8)
 │
+├── examples/
+│   ├── phase0_led_heartbeat/        ← Pre-test: LED blink without dependencies
+│   ├── phase1_1_mt6701_test/        ← Phase 1.1: MT6701 encoder test over SPI
+│   ├── phase1_2_drv_spi/            ← Phase 1.2: DRV8316 SPI communication test
+│   ├── phase1_3_open_loop_v_control/← Phase 1.3: Open-loop voltage control
+│   ├── phase1_4_rs485_ping/         ← Phase 1.4: Basic RS-485 PING/PONG
+│   ├── phase2_1_foc_open_loop/      ← Phase 2.1: Open-loop FOC velocity control
+│   ├── phase2_2_foc_closed_loop/    ← Phase 2.2: Closed-loop FOC position/velocity
+│   ├── phase3_1_rs485_basic/        ← Phase 3.1: RS-485 base protocol
+│   ├── phase3_2_rs485_control/      ← Phase 3.2: Full RS-485 control commands
+│   └── phase3_3_ur_rs485/           ← Phase 3.3: UR Robot / URCap RS-485 integration
+│
 ├── .vscode/
 │   ├── settings.json               ← IDE config (IntelliSense, formatting)
 │   ├── extensions.json             ← Recommended extensions

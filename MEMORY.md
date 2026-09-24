@@ -246,6 +246,12 @@
 - ✅ MT6701-ren `shaft_angle` biraketa askotarako egokia dela baieztatu da.
 - ✅ STALL detekzio optimizatua `highEffort` flag-aren bitartez epe laburreko gainkargak iragazteko.
 
+### 2026-09-24 — Fase 3.3 (UR Robot / URCap RS-485 Integrazioa)
+- ✅ RS-485 bidezko komunikazioa balioztatuta Universal Robots URSim eta URCap-ekin (115200 baud, J3 konektorea).
+- ✅ `PING` eta `EN` komandoek berehalako erantzuna eta feedback bisuala (LED) eskaintzen dute.
+- ✅ `V` (abiadura), `P` (posizioa) eta `?S` (egoera) komandoak zuzen kudeatzen dira modu ez-blokeatzailean.
+- ✅ Agiriak hiru hizkuntzetan (Euskera, Gaztelania, Ingelesa) osatu dira `examples/phase3_3_ur_rs485/README.md`-n.
+
 ---
 
 ## Oharrak eta Erabakiak (Zain)
