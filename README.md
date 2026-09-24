@@ -211,10 +211,10 @@ Test konplexuak egin aurretik, egiaztatu STM32 abiarazten dela:
 Proiektu honen firmware garapena fase ezberdinetan banatuta dago (ikusi `TASKS.md`). Fase bakoitzean idatzitako kode-probak (test standalone-ak) **`examples/`** karpetaren barruan gordetzen dira.
 
 Hardware berria muntatzen baduzu edo sentsore zehatz bat probatu nahi baduzu:
-1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `fase1_1_mt6701_test`, `fase1_2_drv_spi`, `fase1_3_open_loop_v_control`, `fase1_4_rs485_ping`, `fase3_2_gripper_kinematics` edo `fase4_2_rs485`).
+1. Sartu `examples/` karpetan eta aukeratu fasea (adib. `phase1_1_mt6701_test`, `phase1_2_drv_spi`, `phase1_4_rs485_ping`, `phase3_2_rs485_control` edo `phase3_3_ur_rs485`).
 2. **Irakurri karpeta horretan dagoen `README.md` fitxategia** argibide zehatzak ikusteko.
-   - **Oharra (Phase 4.2):** RS485-ak 9600 baud erabiltzen ditu eta konfiguratuta dago 16MHz-eko kristalerako (`HSE_VALUE`).
-3. Kopiatu bertako `main.cpp` fitxategia eta ordezkatu zure probako `src/main.cpp` fitxategiarekin. 
+   - **Oharra (Phase 3.3):** RS485 komunikazioa 115200 baud-etan doa UR robot eta URCap/URSim integrazio probarako.
+3. Kopiatu bertako `main.cpp` fitxategia eta ordezkatu zure probako `src/main.cpp` fitxategiarekin (edo erabili dagokion ingurunea `platformio.ini`-n). 
 4. Konpilatu eta igo (`pio run --target upload`).
 
 ---
@@ -254,14 +254,26 @@ SCLF_Gripper_firmware/
 │   │   ├── DRV8316.h               ← Gate driver-aren APIa (eskeletoa prest)
 │   │   └── DRV8316.cpp             ← 1.2 FASEAN inplementatu
 │   ├── comms/
-│   │   ├── RS485.h                 ← RS-485 APIa (eskeletoa prest)
-│   │   └── RS485.cpp               ← 1.4 FASEAN inplementatu
+│   │   ├── RS485.h                 ← RS-485 APIa
+│   │   └── RS485.cpp               ← RS-485 inplementazioa
 │   └── faults/
 │       ├── FaultManager.h          ← Akats kudeatzailearen APIa (eskeletoa prest)
 │       └── FaultManager.cpp        ← 6 FASEAN inplementatu
 │
-├── lib/                            ← Bertako liburutegiak (oraindik hutsik)
+├── lib/                            ← Bertako liburutegiak
 ├── test/                           ← PlatformIO Unity testak (8 FASEA)
+│
+├── examples/
+│   ├── phase0_led_heartbeat/        ← 0 Fasea: LED keinua menpekotasunik gabe
+│   ├── phase1_1_mt6701_test/        ← 1.1 Fasea: MT6701 encoder proba SPI bidez
+│   ├── phase1_2_drv_spi/            ← 1.2 Fasea: DRV8316 SPI komunikazio proba
+│   ├── phase1_3_open_loop_v_control/← 1.3 Fasea: Begizta irekiko tentsio kontrola
+│   ├── phase1_4_rs485_ping/         ← 1.4 Fasea: RS-485 PING/PONG oinarrizkoa
+│   ├── phase2_1_foc_open_loop/      ← 2.1 Fasea: FOC begizta irekiko kontrola
+│   ├── phase2_2_foc_closed_loop/    ← 2.2 Fasea: FOC begizta itxia
+│   ├── phase3_1_rs485_basic/        ← 3.1 Fasea: RS-485 oinarrizko protokoloa
+│   ├── phase3_2_rs485_control/      ← 3.2 Fasea: RS-485 kontrol komando osoak
+│   └── phase3_3_ur_rs485/           ← 3.3 Fasea: UR Robot / URCap RS-485 integrazioa
 │
 ├── .vscode/
 │   ├── settings.json               ← IDE konfigurazioa (IntelliSense, formatua)
