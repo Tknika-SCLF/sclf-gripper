@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="images/Logo/Logo_gripper.jpg" alt="SCLF Gripper Logo" width="240">
+</p>
+
 # SCLF Gripper — Firmwarea
 
 [ Euskara ](README.md) | [ English ](README.en.md) | [ Español ](README.es.md)
